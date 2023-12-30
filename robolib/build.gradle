@@ -1,0 +1,62 @@
+buildscript {
+    repositories {
+      maven {
+        url "https://plugins.gradle.org/m2/"
+      }
+    }
+    dependencies {
+        classpath "edu.wpi.first:GradleRIO:2023.3.2"
+    }
+}
+
+plugins {
+    id "java-library"
+    id "jacoco"
+}
+
+if(!project.getPlugins().hasPlugin("edu.wpi.first.GradleRIO")) {
+    apply plugin: "edu.wpi.first.GradleRIO"
+}
+
+repositories {
+    jcenter()
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+// Set to true to use debug for JNI.
+wpi.java.debugJni = false
+
+dependencies {
+    implementation wpi.java.deps.wpilib()
+    implementation wpi.java.vendor.java()
+
+    nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
+    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
+    simulationDebug wpi.sim.enableDebug()
+
+    nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
+    nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
+    simulationRelease wpi.sim.enableRelease()
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
+    testImplementation group: 'org.jfree', name: 'jfreechart', version: '1.5.0'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+test {
+    maxParallelForks = 2
+    systemProperty "graph", System.getProperty("graph")
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    finalizedBy jacocoTestReport
+}
