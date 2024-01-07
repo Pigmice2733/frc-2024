@@ -14,13 +14,13 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ClimberConfig;
 
 public class ClimberExtension extends PIDSubsystemBase {
-  public ClimberExtension() {
-    super(new CANSparkMax(CANConfig.CLIMBER_EXTENSION, MotorType.kBrushless), ClimberConfig.p, ClimberConfig.i,
-        ClimberConfig.d, new Constraints(ClimberConfig.maxVelocity, ClimberConfig.maxAcceleration), false,
-        ClimberConfig.motorPositionConversion, Constants.CLIMBER_TAB, true);
-  }
+    public ClimberExtension() {
+        super(new CANSparkMax(CANConfig.CLIMBER_EXTENSION, MotorType.kBrushless), ClimberConfig.p, ClimberConfig.i,
+                ClimberConfig.d, new Constraints(ClimberConfig.maxVelocity, ClimberConfig.maxAcceleration), false,
+                ClimberConfig.motorPositionConversion, Constants.CLIMBER_TAB, true);
+    }
 
-  @Override
-  public void periodic() {
-  }
+    @Override
+    public void periodic() {
+    }
 }

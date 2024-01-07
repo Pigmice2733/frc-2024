@@ -175,7 +175,7 @@ public final class Constants {
     }
 
     public final static class VisionConfig {
-
+        public final static String CAM_NAME = "";
     }
 
     /** Details for auto such as timings and speeds */
