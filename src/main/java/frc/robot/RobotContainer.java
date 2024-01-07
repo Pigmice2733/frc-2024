@@ -10,11 +10,23 @@ import com.pigmice.frc.lib.drivetrain.swerve.commands.DriveWithJoysticksSwerve;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DrivetrainConfig;
+import frc.robot.Constants.ArmConfig.ArmState;
+import frc.robot.Constants.ClimberConfig.ClimberState;
+import frc.robot.Constants.IntakeConfig.IntakeState;
+import frc.robot.commands.actions.FireShooter;
+import frc.robot.commands.actions.HandoffToShooter;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.ClimberExtension;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -26,8 +38,12 @@ import frc.robot.subsystems.Arm;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    public final SwerveDrivetrain drivetrain = new SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
-    public final Arm arm = new Arm();
+    private final SwerveDrivetrain drivetrain = new SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
+    private final Arm arm = new Arm();
+    private final ClimberExtension climberExtension = new ClimberExtension();
+    private final Intake intake = new Intake();
+    private final Shooter shooter = new Shooter();
+    private final Vision vision = new Vision();
 
     private final XboxController driver;
     private final XboxController operator;
@@ -83,12 +99,30 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        // TODO: Arm Setpoint Buttons - operator dpad (also set shooter mode (speed))
-        // TODO: Slow Mode - driver y (hold)
-        // TODO: Shoot Button - operator x (hold)
 
-        // TODO: Retract/extend intake
-        // TODO: Handoff to indexer wheels
+        // Operator B (hold) - Handoff to Shooter
+        new JoystickButton(operator, Button.kB.value)
+                .whileTrue(new HandoffToShooter(intake, shooter))
+                .onFalse(Commands.sequence(intake.stopWheels(), shooter.stopFeeder(),
+                        intake.setTargetState(IntakeState.DOWN)));
+
+        // Operator X (hold) - fire shooter high
+        new JoystickButton(operator, Button.kX.value)
+                .whileTrue(new FireShooter(arm, shooter, ArmState.HIGH))
+                .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN), shooter.stopFlywheels(),
+                        shooter.stopFeeder()));
+
+        // Operator B (hold) - fire shooter mid
+        new JoystickButton(operator, Button.kB.value)
+                .whileTrue(new FireShooter(arm, shooter, ArmState.MIDDLE))
+                .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN), shooter.stopFlywheels(),
+                        shooter.stopFeeder()));
+
+        // Operator Y (hold) - climber up on press down on release
+        new JoystickButton(operator, Button.kX.value)
+                .onTrue(climberExtension.setTargetState(ClimberState.UP))
+                .onFalse(climberExtension.setTargetState(ClimberState.DOWN));
+
     }
 
     /**

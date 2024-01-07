@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.IntakeConfig;
+import frc.robot.Constants.IntakeConfig.IntakeState;
 
 public class Intake extends PIDSubsystemBase {
     private final CANSparkMax wheelsMotor = new CANSparkMax(CANConfig.INTAKE_WHEELS, MotorType.kBrushless);
@@ -48,5 +49,10 @@ public class Intake extends PIDSubsystemBase {
     /** Sets intake wheels to zero output. */
     public Command stopWheels() {
         return Commands.runOnce(() -> outputToMotor(0));
+    }
+
+    /** Sets the rotation state of the intake */
+    public Command setTargetState(IntakeState state) {
+        return Commands.runOnce(() -> setTargetRotation(state.getPosition()));
     }
 }

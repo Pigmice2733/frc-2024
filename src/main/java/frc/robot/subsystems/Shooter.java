@@ -16,28 +16,45 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ShooterConfig;
 
 public class Shooter extends SubsystemBase {
-    private final CANSparkMax motor = new CANSparkMax(CANConfig.SHOOTER_MOTOR, MotorType.kBrushless);
+    private final CANSparkMax flywheelsMotor = new CANSparkMax(CANConfig.SHOOTER_MOTOR, MotorType.kBrushless);
+    private final CANSparkMax feederMotor = new CANSparkMax(CANConfig.FEEDER_MOTOR, MotorType.kBrushless);
 
     public Shooter() {
-        motor.restoreFactoryDefaults();
-        motor.setInverted(false);
+        flywheelsMotor.restoreFactoryDefaults();
+        flywheelsMotor.setInverted(false);
 
-        ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> motor.get());
+        ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> flywheelsMotor.get());
     }
 
-    private void outputToMotor(double output) {
-        motor.set(output);
+    private void outputToFlywheels(double output) {
+        flywheelsMotor.set(output);
     }
 
     public Command spinFlywheelsForward() {
-        return Commands.runOnce(() -> outputToMotor(ShooterConfig.DEFAULT_FLYWHEEL_SPEED));
+        return Commands.runOnce(() -> outputToFlywheels(ShooterConfig.DEFAULT_FLYWHEEL_SPEED));
     }
 
     public Command spinFlywheelsBackward() {
-        return Commands.runOnce(() -> outputToMotor(-ShooterConfig.DEFAULT_FLYWHEEL_SPEED));
+        return Commands.runOnce(() -> outputToFlywheels(-ShooterConfig.DEFAULT_FLYWHEEL_SPEED));
     }
 
     public Command stopFlywheels() {
-        return Commands.runOnce(() -> outputToMotor(0));
+        return Commands.runOnce(() -> outputToFlywheels(0));
+    }
+
+    private void outputToFeeder(double output) {
+        feederMotor.set(output);
+    }
+
+    public Command spinFeederForward() {
+        return Commands.runOnce(() -> outputToFeeder(ShooterConfig.DEFAULT_FLYWHEEL_SPEED));
+    }
+
+    public Command spinFeederBackward() {
+        return Commands.runOnce(() -> outputToFeeder(-ShooterConfig.DEFAULT_FLYWHEEL_SPEED));
+    }
+
+    public Command stopFeeder() {
+        return Commands.runOnce(() -> outputToFeeder(0));
     }
 }

@@ -9,9 +9,12 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ClimberConfig;
+import frc.robot.Constants.ClimberConfig.ClimberState;
 
 public class ClimberExtension extends PIDSubsystemBase {
     public ClimberExtension() {
@@ -22,5 +25,10 @@ public class ClimberExtension extends PIDSubsystemBase {
 
     @Override
     public void periodic() {
+    }
+
+    /** Sets the height state of the climber */
+    public Command setTargetState(ClimberState state) {
+        return Commands.runOnce(() -> setTargetRotation(state.getPosition()));
     }
 }
