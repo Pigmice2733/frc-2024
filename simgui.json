@@ -1,0 +1,10 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Driver/Auto Command": "String Chooser",
+      "/Shuffleboard/Driver/Bunny Auto": "String Chooser",
+      "/Shuffleboard/Drivetrain/Heading": "Gyro"
+    }
+  }
+}

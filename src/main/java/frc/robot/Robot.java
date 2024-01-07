@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pigmice.frc.lib.motor_tester.MotorTester;
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -113,12 +114,14 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
+    MotorTester.createWidgets();
     CommandScheduler.getInstance().cancelAll();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
+    MotorTester.periodic();
   }
 
   /** This function is called once when the robot is first started up. */

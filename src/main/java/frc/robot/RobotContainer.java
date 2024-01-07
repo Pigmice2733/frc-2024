@@ -51,17 +51,17 @@ public class RobotContainer {
                 () -> true));
 
         configureButtonBindings();
-        configureAutoChoosers();
+        configureAutoChooser();
     }
 
-    private void configureAutoChoosers() {
+    private void configureAutoChooser() {
         autoChooser.addOption("Example",
                 new InstantCommand().withName("Example Option"));
 
         // Default to doing nothing
         autoChooser.setDefaultOption("None", new InstantCommand());
 
-        Constants.DRIVER_TAB.add("Bunny Auto", autoChooser);
+        Constants.DRIVER_TAB.add("Auto Command", autoChooser);
     }
 
     public void onEnable() {

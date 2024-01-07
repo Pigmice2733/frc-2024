@@ -1,5 +1,5 @@
 <div align="center">
-    <img alt="Charged Up 2024 Icon" src="https://www.firstinspires.org/sites/default/files/first-in-show/game-and-season/crescendo-logo.svg" width="200px" />
+    <img alt="Crescendo 2024 Icon" src="https://www.firstinspires.org/sites/default/files/first-in-show/game-and-season/crescendo-logo.svg" width="200px" />
     <h3><strong>frc-2024</strong></h3>
     <h7>Robot code for FRC 2024 Crescendo</h7>
 </div>
@@ -19,7 +19,7 @@ And you're done! The project will have been downloaded into a new folder called 
 
 ## Building and Running
 
-1. Open a terminal and [`cd`](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/cd) into the project directory (`frc-2023`).
+1. Open a terminal and [`cd`](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/cd) into the project directory (`frc-2024`).
 2. To build the code, run `./gradlew build`.
 3. To run all unit tests, run `./gradlew test`.
 4. To deploy the code to the robot, make sure you're connected to the robot either over WiFi or through Ethernet. Then run `./gradlew deploy`.
