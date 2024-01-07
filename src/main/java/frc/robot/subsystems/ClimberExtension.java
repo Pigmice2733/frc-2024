@@ -10,15 +10,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.Constants;
-import frc.robot.Constants.ArmConfig;
 import frc.robot.Constants.CANConfig;
+import frc.robot.Constants.ClimberConfig;
 
-public class Arm extends PIDSubsystemBase {
-
-  public Arm() {
-    super(new CANSparkMax(CANConfig.ARM, MotorType.kBrushless), ArmConfig.p, ArmConfig.i, ArmConfig.d,
-        new Constraints(ArmConfig.maxVelocity, ArmConfig.maxAcceleration), false, ArmConfig.motorPositionConversion,
-        Constants.ARM_TAB, true);
+public class ClimberExtension extends PIDSubsystemBase {
+  public ClimberExtension() {
+    super(new CANSparkMax(CANConfig.CLIMBER_EXTENSION, MotorType.kBrushless), ClimberConfig.p, ClimberConfig.i,
+        ClimberConfig.d, new Constraints(ClimberConfig.maxVelocity, ClimberConfig.maxAcceleration), false,
+        ClimberConfig.motorPositionConversion, Constants.CLIMBER_TAB, true);
   }
 
   @Override

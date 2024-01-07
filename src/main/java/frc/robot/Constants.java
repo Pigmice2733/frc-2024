@@ -33,6 +33,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public final class Constants {
     public static final ShuffleboardTab DRIVER_TAB = Shuffleboard.getTab("Driver");
     public static final ShuffleboardTab SWERVE_TAB = Shuffleboard.getTab("Drivetrain");
+    public static final ShuffleboardTab ARM_TAB = Shuffleboard.getTab("Arm");
+    public static final ShuffleboardTab CLIMBER_TAB = Shuffleboard.getTab("Climber");
+    public static final ShuffleboardTab INTAKE_TAB = Shuffleboard.getTab("Intake");
+    public static final ShuffleboardTab SHOOTER_TAB = Shuffleboard.getTab("Shooter");
+    public static final ShuffleboardTab VISION_TAB = Shuffleboard.getTab("Vision");
 
     public static final double AXIS_THRESHOLD = 0.25;
 
@@ -50,6 +55,9 @@ public final class Constants {
         public static final int FRONT_RIGHT_ABS_ENCODER = 24;// done
         public static final int BACK_LEFT_ABS_ENCODER = 22;// done
         public static final int BACK_RIGHT_ABS_ENCODER = 26;// done
+
+        public static final int ARM = 30;
+        public static final int CLIMBER_EXTENSION = 40;
     }
 
     public final static class DrivetrainConfig {
@@ -134,6 +142,40 @@ public final class Constants {
                 MAX_DRIVE_SPEED, MAX_TURN_SPEED,
                 SLOWMODE_MULTIPLIER, KINEMATICS, DRIVE_FEED_FORWARD, SWERVE_TAB,
                 ROTATION_CENTER_OFFSET);
+    }
+
+    public final static class ArmConfig {
+        public static final double p = 0;
+        public static final double i = 0;
+        public static final double d = 0;
+
+        public static final double maxAcceleration = 0;
+        public static final double maxVelocity = 0;
+
+        public static final double motorPositionConversion = 1;
+    }
+
+    public final static class ClimberConfig {
+        public static final double p = 0;
+        public static final double i = 0;
+        public static final double d = 0;
+
+        public static final double maxAcceleration = 0;
+        public static final double maxVelocity = 0;
+
+        public static final double motorPositionConversion = 1;
+    }
+
+    public final static class IntakeConfig {
+
+    }
+
+    public final static class ShooterConfig {
+
+    }
+
+    public final static class VisionConfig {
+
     }
 
     /** Details for auto such as timings and speeds */

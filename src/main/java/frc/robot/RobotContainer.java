@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConfig;
+import frc.robot.subsystems.Arm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -26,6 +27,7 @@ import frc.robot.Constants.DrivetrainConfig;
  */
 public class RobotContainer {
     public final SwerveDrivetrain drivetrain = new SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
+    public final Arm arm = new Arm();
 
     private final XboxController driver;
     private final XboxController operator;
@@ -65,7 +67,7 @@ public class RobotContainer {
     }
 
     public void onEnable() {
-
+        arm.resetPID();
     }
 
     public void onDisable() {
