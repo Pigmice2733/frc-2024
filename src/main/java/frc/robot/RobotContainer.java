@@ -83,7 +83,12 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        // TODO: Arm Setpoint Buttons - operator dpad (also set shooter mode (speed))
+        // TODO: Slow Mode - driver y (hold)
+        // TODO: Shoot Button - operator x (hold)
 
+        // TODO: Retract/extend intake
+        // TODO: Handoff to indexer wheels
     }
 
     /**

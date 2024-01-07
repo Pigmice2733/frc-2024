@@ -16,10 +16,9 @@ import frc.robot.Constants.CANConfig;
 public class Arm extends PIDSubsystemBase {
 
     public Arm() {
-        super(new CANSparkMax(CANConfig.ARM, MotorType.kBrushless), ArmConfig.p, ArmConfig.i, ArmConfig.d,
-                new Constraints(ArmConfig.maxVelocity, ArmConfig.maxAcceleration), false,
-                ArmConfig.motorPositionConversion,
-                Constants.ARM_TAB, true);
+        super(new CANSparkMax(CANConfig.ARM, MotorType.kBrushless), ArmConfig.P, ArmConfig.i, ArmConfig.D,
+                new Constraints(ArmConfig.MAX_VELOCITY, ArmConfig.MAX_ACCELERATION), false,
+                ArmConfig.MOTOR_POSITION_CONVERSION, 50, Constants.ARM_TAB, true);
     }
 
     @Override

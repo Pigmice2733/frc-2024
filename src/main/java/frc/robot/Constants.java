@@ -57,7 +57,13 @@ public final class Constants {
         public static final int BACK_RIGHT_ABS_ENCODER = 26;// done
 
         public static final int ARM = 30;
+
         public static final int CLIMBER_EXTENSION = 40;
+
+        public static final int INTAKE_WHEELS = 50;
+        public static final int INTAKE_PIVOT = 51;
+
+        public static final int SHOOTER_MOTOR = 60;
     }
 
     public final static class DrivetrainConfig {
@@ -145,33 +151,42 @@ public final class Constants {
     }
 
     public final static class ArmConfig {
-        public static final double p = 0;
+        public static final double P = 0;
         public static final double i = 0;
-        public static final double d = 0;
+        public static final double D = 0;
 
-        public static final double maxAcceleration = 0;
-        public static final double maxVelocity = 0;
+        public static final double MAX_ACCELERATION = 0;
+        public static final double MAX_VELOCITY = 0;
 
-        public static final double motorPositionConversion = 1;
+        public static final double MOTOR_POSITION_CONVERSION = 1;
     }
 
     public final static class ClimberConfig {
-        public static final double p = 0;
-        public static final double i = 0;
-        public static final double d = 0;
+        public static final double P = 0;
+        public static final double I = 0;
+        public static final double D = 0;
 
-        public static final double maxAcceleration = 0;
-        public static final double maxVelocity = 0;
+        public static final double MAX_ACCELERATION = 0;
+        public static final double MAX_VELOCITY = 0;
 
-        public static final double motorPositionConversion = 1;
+        public static final double MOTOR_POSITION_CONVERSION = 1;
     }
 
     public final static class IntakeConfig {
+        public static final double P = 0;
+        public static final double I = 0;
+        public static final double D = 0;
 
+        public static final double MAX_ACCELERATION = 0;
+        public static final double MAX_VELOCITY = 0;
+
+        public static final double MOTOR_POSITION_CONVERSION = 1;
+
+        public static final double WHEELS_SPEED = 0.3;
     }
 
     public final static class ShooterConfig {
-
+        public static final double DEFAULT_FLYWHEEL_SPEED = 0.3;
     }
 
     public final static class VisionConfig {
