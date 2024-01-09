@@ -162,8 +162,8 @@ public final class Constants {
         public static final double MOTOR_POSITION_CONVERSION = 1;
 
         public static enum ArmState {
-            HIGH(90),
-            MIDDLE(45),
+            SPEAKER(90),
+            AMP(45),
             DOWN(0);
 
             private double position;

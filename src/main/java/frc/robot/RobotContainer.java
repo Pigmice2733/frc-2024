@@ -20,7 +20,7 @@ import frc.robot.Constants.DrivetrainConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
 import frc.robot.Constants.ClimberConfig.ClimberState;
 import frc.robot.Constants.IntakeConfig.IntakeState;
-import frc.robot.commands.actions.FireShooter;
+import frc.robot.commands.actions.DepositRing;
 import frc.robot.commands.actions.HandoffToShooter;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ClimberExtension;
@@ -108,13 +108,13 @@ public class RobotContainer {
 
         // Operator X (hold) - fire shooter high
         new JoystickButton(operator, Button.kX.value)
-                .whileTrue(new FireShooter(arm, shooter, ArmState.HIGH))
+                .whileTrue(new DepositRing(arm, shooter, ArmState.SPEAKER))
                 .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN), shooter.stopFlywheels(),
                         shooter.stopFeeder()));
 
         // Operator B (hold) - fire shooter mid
         new JoystickButton(operator, Button.kB.value)
-                .whileTrue(new FireShooter(arm, shooter, ArmState.MIDDLE))
+                .whileTrue(new DepositRing(arm, shooter, ArmState.AMP))
                 .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN), shooter.stopFlywheels(),
                         shooter.stopFeeder()));
 
