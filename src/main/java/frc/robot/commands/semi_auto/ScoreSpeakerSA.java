@@ -4,14 +4,20 @@
 
 package frc.robot.commands.semi_auto;
 
+import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
+import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
+import com.pigmice.frc.lib.pathfinder.Pathfinder;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.AutoConfig.Locations;
 
 public class ScoreSpeakerSA extends SequentialCommandGroup {
     /** Drives to the speaker then scores */
-    public ScoreSpeakerSA() {
+    public ScoreSpeakerSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder) {
         addCommands(
-        // TODO: implementation
-        // Pathfind to a point right in front of the speaker
+                // TODO: implementation
+                // Pathfind to a point right in front of the speaker
+                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.SPEAKER_SCORING)
         // Score on the speaker
         );
 

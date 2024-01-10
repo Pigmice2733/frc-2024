@@ -4,14 +4,20 @@
 
 package frc.robot.commands.semi_auto;
 
+import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
+import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
+import com.pigmice.frc.lib.pathfinder.Pathfinder;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.AutoConfig.Locations;
 
 public class ClimbSA extends SequentialCommandGroup {
     /** Drives to the chain and climbs */
-    public ClimbSA() {
+    public ClimbSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder) {
         addCommands(
-        // TODO: implementation
-        // Pathfind to the chain and stop in front of it
+                // TODO: implementation
+                // Pathfind to the chain and stop in front of it
+                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.CLIMBING)
         // Climb
         );
 

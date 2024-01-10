@@ -12,6 +12,8 @@ import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -245,6 +247,15 @@ public final class Constants {
         public final static double INTAKE_MOVE_TIME = 3;
         public final static double INTAKE_FEED_TIME = 1;
         public final static double FLYWHEEL_SPINUP_TIME = 3;
+
+        public static class Locations {
+            // TODO
+            public final static Pose2d HUMAN_PLAYER_PICKUP = new Pose2d(0, 0, new Rotation2d());
+            public final static Pose2d AMP_SCORING = new Pose2d(0, 0, new Rotation2d());
+            public final static Pose2d SPEAKER_SCORING = new Pose2d(0, 0, new Rotation2d());
+            public final static Pose2d CLIMBING = new Pose2d(0, 0, new Rotation2d());
+            public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(0, 0, new Rotation2d());
+        }
 
     }
 }
