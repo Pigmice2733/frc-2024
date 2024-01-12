@@ -263,17 +263,17 @@ public final class Constants {
 
     public final static class ShooterConfig {
         public static final double DEFAULT_FLYWHEEL_SPEED = 0.3;
+        public static final double DEFAULT_FEEDER_SPEED = 0.3;
     }
 
     public final static class VisionConfig {
         public final static String CAM_NAME = "";
     }
 
-    /** Details for auto such as timings and speeds */
+    /** Details for auto such as timings and speeds. All times in seconds. */
     public static class AutoConfig {
         public final static double INTAKE_MOVE_TIME = 3;
         public final static double INTAKE_FEED_TIME = 1;
         public final static double FLYWHEEL_SPINUP_TIME = 3;
-
     }
 }

@@ -17,7 +17,7 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
 
 public class Arm extends PIDSubsystemBase {
-
+    /** Moves the shooter box up, down, and around the space above the robot. */
     public Arm() {
         super(new CANSparkMax(CANConfig.ARM, MotorType.kBrushless), ArmConfig.P, ArmConfig.i, ArmConfig.D,
                 new Constraints(ArmConfig.MAX_VELOCITY, ArmConfig.MAX_ACCELERATION), false,
