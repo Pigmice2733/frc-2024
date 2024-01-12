@@ -19,11 +19,19 @@ public class Shooter extends SubsystemBase {
     private final CANSparkMax flywheelsMotor = new CANSparkMax(CANConfig.SHOOTER_MOTOR, MotorType.kBrushless);
     private final CANSparkMax feederMotor = new CANSparkMax(CANConfig.FEEDER_MOTOR, MotorType.kBrushless);
 
+    /**
+     * Shoots notes out of one end into the speaker and dumps them out of the other
+     * end into the amp.
+     * Intakes from the source into the speaker-shooting end.
+     */
     public Shooter() {
         flywheelsMotor.restoreFactoryDefaults();
         flywheelsMotor.setInverted(false);
 
         ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> flywheelsMotor.get());
+
+        feederMotor.restoreFactoryDefaults();
+        feederMotor.setInverted(false);
     }
 
     private void outputToFlywheels(double output) {
@@ -34,8 +42,12 @@ public class Shooter extends SubsystemBase {
         return Commands.runOnce(() -> outputToFlywheels(ShooterConfig.DEFAULT_FLYWHEEL_SPEED));
     }
 
+    /** Intake into the shooter box, as long as no note is being carried. */
     public Command spinFlywheelsBackward() {
-        return Commands.runOnce(() -> outputToFlywheels(-ShooterConfig.DEFAULT_FLYWHEEL_SPEED));
+        if (!NoteSensor.getNoteState())
+            return Commands.runOnce(() -> outputToFlywheels(-ShooterConfig.DEFAULT_FLYWHEEL_SPEED));
+        else
+            return Commands.none();
     }
 
     public Command stopFlywheels() {
@@ -47,11 +59,11 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command spinFeederForward() {
-        return Commands.runOnce(() -> outputToFeeder(ShooterConfig.DEFAULT_FLYWHEEL_SPEED));
+        return Commands.runOnce(() -> outputToFeeder(ShooterConfig.DEFAULT_FEEDER_SPEED));
     }
 
     public Command spinFeederBackward() {
-        return Commands.runOnce(() -> outputToFeeder(-ShooterConfig.DEFAULT_FLYWHEEL_SPEED));
+        return Commands.runOnce(() -> outputToFeeder(-ShooterConfig.DEFAULT_FEEDER_SPEED));
     }
 
     public Command stopFeeder() {

@@ -18,6 +18,7 @@ public class Vision extends SubsystemBase {
     private LimelightTarget_Fiducial bestTarget;
     private boolean hasTarget;
 
+    /** Finds and uses AprilTags and other vision targets. */
     public Vision() {
         ShuffleboardHelper.addOutput("Target X", Constants.VISION_TAB,
                 () -> bestTarget == null ? 0 : bestTarget.tx);

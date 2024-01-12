@@ -20,6 +20,10 @@ import frc.robot.Constants.IntakeConfig.IntakeState;
 public class Intake extends PIDSubsystemBase {
     private final CANSparkMax wheelsMotor = new CANSparkMax(CANConfig.INTAKE_WHEELS, MotorType.kBrushless);
 
+    /**
+     * Spins notes up from the ground in front of the robot and carries them to the
+     * shooter box.
+     */
     public Intake() {
         super(new CANSparkMax(CANConfig.INTAKE_PIVOT, MotorType.kBrushless), IntakeConfig.P, IntakeConfig.I,
                 IntakeConfig.D, new Constraints(IntakeConfig.MAX_VELOCITY, IntakeConfig.MAX_ACCELERATION), false,
@@ -31,14 +35,26 @@ public class Intake extends PIDSubsystemBase {
         ShuffleboardHelper.addOutput("Motor Output", Constants.INTAKE_TAB, () -> wheelsMotor.get());
     }
 
-    /** Sets the intake motor to a percent output (0.0 - 1.0) */
+    /**
+     * Sets the intake motor to a percent output (0.0 - 1.0) if no note is being
+     * carried, and stops it otherwise.
+     */
     public void outputToMotor(double percent) {
-        wheelsMotor.set(percent);
+        if (!NoteSensor.getNoteState())
+            wheelsMotor.set(percent);
+        else
+            wheelsMotor.set(0);
     }
 
-    /** Spins intake wheels to intake balls. */
+    /**
+     * Spins intake wheels to intake balls if no note is being carried, and stops it
+     * otherwise.
+     */
     public Command runWheelsForward() {
-        return Commands.runOnce(() -> outputToMotor(IntakeConfig.WHEELS_SPEED));
+        if (!NoteSensor.getNoteState())
+            return Commands.runOnce(() -> outputToMotor(IntakeConfig.WHEELS_SPEED));
+        else
+            return Commands.none();
     }
 
     /** Spins intake wheels to eject balls. */

@@ -17,6 +17,7 @@ import frc.robot.Constants.ClimberConfig;
 import frc.robot.Constants.ClimberConfig.ClimberState;
 
 public class ClimberExtension extends PIDSubsystemBase {
+    /** Moves the chain hooks into position to raise the robot. */
     public ClimberExtension() {
         super(new CANSparkMax(CANConfig.CLIMBER_EXTENSION, MotorType.kBrushless), ClimberConfig.P, ClimberConfig.I,
                 ClimberConfig.D, new Constraints(ClimberConfig.MAX_VELOCITY, ClimberConfig.MAX_ACCELERATION), false,
