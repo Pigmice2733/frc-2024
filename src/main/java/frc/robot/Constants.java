@@ -37,6 +37,7 @@ public final class Constants {
     public static final ShuffleboardTab CLIMBER_TAB = Shuffleboard.getTab("Climber");
     public static final ShuffleboardTab INTAKE_TAB = Shuffleboard.getTab("Intake");
     public static final ShuffleboardTab SHOOTER_TAB = Shuffleboard.getTab("Shooter");
+    public static final ShuffleboardTab WRIST_TAB = Shuffleboard.getTab("Wrist");
     public static final ShuffleboardTab VISION_TAB = Shuffleboard.getTab("Vision");
 
     public static final double AXIS_THRESHOLD = 0.25;
@@ -65,6 +66,8 @@ public final class Constants {
 
         public static final int SHOOTER_MOTOR = 60;
         public static final int FEEDER_MOTOR = 61;
+
+        public static final int WRIST_ROTATION = 70;
     }
 
     public final static class DrivetrainConfig {
@@ -195,6 +198,32 @@ public final class Constants {
             private double position;
 
             ClimberState(double position) {
+                this.position = position;
+            }
+
+            public double getPosition() {
+                return position;
+            }
+        }
+    }
+
+    public final static class WristConfig {
+        public static final double P = 0;
+        public static final double I = 0;
+        public static final double D = 0;
+
+        public static final double MAX_ACCELERATION = 0;
+        public static final double MAX_VELOCITY = 0;
+
+        public static final double MOTOR_POSITION_CONVERSION = 1;
+
+        public static enum WristState {
+            UP(45),
+            DOWN(0);
+
+            private double position;
+
+            WristState(double position) {
                 this.position = position;
             }
 

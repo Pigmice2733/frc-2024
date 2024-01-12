@@ -27,6 +27,7 @@ import frc.robot.subsystems.ClimberExtension;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Wrist;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -43,6 +44,7 @@ public class RobotContainer {
     private final ClimberExtension climberExtension = new ClimberExtension();
     private final Intake intake = new Intake();
     private final Shooter shooter = new Shooter();
+    private final Wrist wrist = new Wrist();
     private final Vision vision = new Vision();
 
     private final XboxController driver;
