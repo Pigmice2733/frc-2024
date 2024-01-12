@@ -32,7 +32,9 @@ public class DriveToPose extends FollowPathSwerve {
         PathPoint currentPoint = new PathPoint(currentPose.getTranslation(), angleToEnd, currentPose.getRotation());
         PathPoint endPoint = new PathPoint(targetPose.getTranslation(), angleToEnd, targetPose.getRotation());
 
-        return PathPlanner.generatePath(DrivetrainConfig.SWERVE_CONFIG.PATH_CONSTRAINTS,
-                List.of(currentPoint, endPoint));
+        // return
+        // PathPlanner.generatePath(DrivetrainConfig.SWERVE_CONFIG.PATH_CONSTRAINTS,
+        // List.of(currentPoint, endPoint));
+        return null;
     }
 }

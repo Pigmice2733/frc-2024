@@ -4,10 +4,16 @@
 
 package frc.robot;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
 import com.pigmice.frc.lib.drivetrain.swerve.commands.DriveWithJoysticksSwerve;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -27,6 +33,8 @@ import frc.robot.subsystems.ClimberExtension;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
+import swervelib.SwerveDrive;
+import swervelib.parser.SwerveParser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -38,23 +46,33 @@ import frc.robot.subsystems.Vision;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    private final SwerveDrivetrain drivetrain = new SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
-    private final Arm arm = new Arm();
-    private final ClimberExtension climberExtension = new ClimberExtension();
-    private final Intake intake = new Intake();
-    private final Shooter shooter = new Shooter();
-    private final Vision vision = new Vision();
+    // private final SwerveDrivetrain drivetrain = new
+    // SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
+    // private final Arm arm = new Arm();
+    // private final ClimberExtension climberExtension = new ClimberExtension();
+    // private final Intake intake = new Intake();
+    // private final Shooter shooter = new Shooter();
+    // private final Vision vision = new Vision();
 
     private final XboxController driver;
     private final XboxController operator;
-    private final Controls controls;
+    public final Controls controls;
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
+    public SwerveDrive swerveDrive;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+
+        try {
+            swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
+                    .createSwerveDrive(Units.feetToMeters(14.5));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         driver = new XboxController(0);
         operator = new XboxController(1);
@@ -62,11 +80,13 @@ public class RobotContainer {
         controls = new Controls(driver, operator);
         ControllerRumbler.setControllers(driver, operator);
 
-        drivetrain.setDefaultCommand(new DriveWithJoysticksSwerve(drivetrain,
-                controls::getDriveSpeedX,
-                controls::getDriveSpeedY,
-                controls::getTurnSpeed,
-                () -> true));
+        // swerveDrive.driveFieldOriented(new ChassisSpeeds(1, 0, 0));
+
+        // new DriveWithJoysticksSwerve(swerveDrive,
+        // () -> 0,
+        // () -> 0,
+        // () -> 0,
+        // () -> true).schedule();
 
         configureButtonBindings();
         configureAutoChooser();
@@ -83,7 +103,7 @@ public class RobotContainer {
     }
 
     public void onEnable() {
-        arm.resetPID();
+        // arm.resetPID();
     }
 
     public void onDisable() {
@@ -100,28 +120,30 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
 
-        // Operator B (hold) - Handoff to Shooter
-        new JoystickButton(operator, Button.kB.value)
-                .whileTrue(new HandoffToShooter(intake, shooter))
-                .onFalse(Commands.sequence(intake.stopWheels(), shooter.stopFeeder(),
-                        intake.setTargetState(IntakeState.DOWN)));
+        // // Operator B (hold) - Handoff to Shooter
+        // new JoystickButton(operator, Button.kB.value)
+        // .whileTrue(new HandoffToShooter(intake, shooter))
+        // .onFalse(Commands.sequence(intake.stopWheels(), shooter.stopFeeder(),
+        // intake.setTargetState(IntakeState.DOWN)));
 
-        // Operator X (hold) - fire shooter high
-        new JoystickButton(operator, Button.kX.value)
-                .whileTrue(new DepositRing(arm, shooter, ArmState.SPEAKER))
-                .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN), shooter.stopFlywheels(),
-                        shooter.stopFeeder()));
+        // // Operator X (hold) - fire shooter high
+        // new JoystickButton(operator, Button.kX.value)
+        // .whileTrue(new DepositRing(arm, shooter, ArmState.SPEAKER))
+        // .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN),
+        // shooter.stopFlywheels(),
+        // shooter.stopFeeder()));
 
-        // Operator B (hold) - fire shooter mid
-        new JoystickButton(operator, Button.kB.value)
-                .whileTrue(new DepositRing(arm, shooter, ArmState.AMP))
-                .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN), shooter.stopFlywheels(),
-                        shooter.stopFeeder()));
+        // // Operator B (hold) - fire shooter mid
+        // new JoystickButton(operator, Button.kB.value)
+        // .whileTrue(new DepositRing(arm, shooter, ArmState.AMP))
+        // .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN),
+        // shooter.stopFlywheels(),
+        // shooter.stopFeeder()));
 
-        // Operator Y (hold) - climber up on press down on release
-        new JoystickButton(operator, Button.kX.value)
-                .onTrue(climberExtension.setTargetState(ClimberState.UP))
-                .onFalse(climberExtension.setTargetState(ClimberState.DOWN));
+        // // Operator Y (hold) - climber up on press down on release
+        // new JoystickButton(operator, Button.kX.value)
+        // .onTrue(climberExtension.setTargetState(ClimberState.UP))
+        // .onFalse(climberExtension.setTargetState(ClimberState.DOWN));
 
     }
 

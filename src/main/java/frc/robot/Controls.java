@@ -23,7 +23,7 @@ public class Controls {
     public double getDriveSpeedY() {
         double joystickY = MathUtil.applyDeadband(-driver.getLeftY(), threshold);
 
-        joystickY = driveSpeedYFilter.calculate(joystickY); // input smoothing
+        // joystickY = driveSpeedYFilter.calculate(joystickY); // input smoothing
 
         return joystickY * DrivetrainConfig.MAX_DRIVE_SPEED
                 * (driver.getYButton() ? DrivetrainConfig.SLOWMODE_MULTIPLIER : 1);
@@ -39,7 +39,7 @@ public class Controls {
     public double getDriveSpeedX() {
         double joystickX = MathUtil.applyDeadband(-driver.getLeftX(), threshold);
 
-        joystickX = driveSpeedXFilter.calculate(joystickX); // input smoothing
+        // joystickX = driveSpeedXFilter.calculate(joystickX); // input smoothing
 
         return joystickX * DrivetrainConfig.MAX_DRIVE_SPEED
                 * (driver.getYButton() ? DrivetrainConfig.SLOWMODE_MULTIPLIER : 1);
@@ -55,7 +55,7 @@ public class Controls {
     public double getTurnSpeed() {
         double joystickTurn = MathUtil.applyDeadband(driver.getRightX(), threshold);
 
-        joystickTurn = turnSpeedFilter.calculate(joystickTurn); // input smoothing
+        // joystickTurn = turnSpeedFilter.calculate(joystickTurn); // input smoothing
 
         return joystickTurn * DrivetrainConfig.MAX_TURN_SPEED;
     }

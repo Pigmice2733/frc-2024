@@ -19,6 +19,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import swervelib.encoders.CANCoderSwerve;
+import swervelib.motors.SparkMaxSwerve;
+import swervelib.motors.SwerveMotor;
+import swervelib.parser.PIDFConfig;
+import swervelib.parser.SwerveDriveConfiguration;
+import swervelib.parser.SwerveModuleConfiguration;
+import swervelib.parser.SwerveModulePhysicalCharacteristics;
+import swervelib.parser.json.MotorConfigDouble;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -100,57 +108,74 @@ public final class Constants {
         // Offset from chassis center that the robot will rotate about
         private static final Translation2d ROTATION_CENTER_OFFSET = new Translation2d(0, 0);
 
-        private static final MkSwerveModuleBuilder FRONT_LEFT_MODULE = new MkSwerveModuleBuilder()
-                .withLayout(SWERVE_TAB
-                        .getLayout("Front Left", BuiltInLayouts.kList)
-                        .withSize(1, 3)
-                        .withPosition(0, 0))
-                .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, CANConfig.FRONT_LEFT_DRIVE)
-                .withSteerMotor(MotorType.NEO, CANConfig.FRONT_LEFT_STEER)
-                .withSteerEncoderPort(CANConfig.FRONT_LEFT_ABS_ENCODER)
-                .withSteerOffset(Math.toRadians(73));
+        // private static final MkSwerveModuleBuilder FRONT_LEFT_MODULE = new
+        // MkSwerveModuleBuilder()
+        // .withLayout(SWERVE_TAB
+        // .getLayout("Front Left", BuiltInLayouts.kList)
+        // .withSize(1, 3)
+        // .withPosition(0, 0))
+        // .withGearRatio(SdsModuleConfigurations.MK4I_L2)
+        // .withDriveMotor(MotorType.NEO, CANConfig.FRONT_LEFT_DRIVE)
+        // .withSteerMotor(MotorType.NEO, CANConfig.FRONT_LEFT_STEER)
+        // .withSteerEncoderPort(CANConfig.FRONT_LEFT_ABS_ENCODER)
+        // .withSteerOffset(Math.toRadians(73));
 
-        private static final MkSwerveModuleBuilder FRONT_RIGHT_MODULE = new MkSwerveModuleBuilder()
-                .withLayout(SWERVE_TAB
-                        .getLayout("Front Right", BuiltInLayouts.kList)
-                        .withSize(1, 3)
-                        .withPosition(1, 0))
-                .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, CANConfig.FRONT_RIGHT_DRIVE)
-                .withSteerMotor(MotorType.NEO, CANConfig.FRONT_RIGHT_STEER)
-                .withSteerEncoderPort(CANConfig.FRONT_RIGHT_ABS_ENCODER)
-                .withSteerOffset(Math.toRadians(-99));
+        // private static final MkSwerveModuleBuilder FRONT_RIGHT_MODULE = new
+        // MkSwerveModuleBuilder()
+        // .withLayout(SWERVE_TAB
+        // .getLayout("Front Right", BuiltInLayouts.kList)
+        // .withSize(1, 3)
+        // .withPosition(1, 0))
+        // .withGearRatio(SdsModuleConfigurations.MK4I_L2)
+        // .withDriveMotor(MotorType.NEO, CANConfig.FRONT_RIGHT_DRIVE)
+        // .withSteerMotor(MotorType.NEO, CANConfig.FRONT_RIGHT_STEER)
+        // .withSteerEncoderPort(CANConfig.FRONT_RIGHT_ABS_ENCODER)
+        // .withSteerOffset(Math.toRadians(-99));
 
-        private static final MkSwerveModuleBuilder BACK_LEFT_MODULE = new MkSwerveModuleBuilder()
-                .withLayout(SWERVE_TAB
-                        .getLayout("Back Left", BuiltInLayouts.kList)
-                        .withSize(1, 3)
-                        .withPosition(2, 0))
-                .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, CANConfig.BACK_LEFT_DRIVE)
-                .withSteerMotor(MotorType.NEO, CANConfig.BACK_LEFT_STEER)
-                .withSteerEncoderPort(CANConfig.BACK_LEFT_ABS_ENCODER)
-                .withSteerOffset(Math.toRadians(219));
+        // private static final MkSwerveModuleBuilder BACK_LEFT_MODULE = new
+        // MkSwerveModuleBuilder()
+        // .withLayout(SWERVE_TAB
+        // .getLayout("Back Left", BuiltInLayouts.kList)
+        // .withSize(1, 3)
+        // .withPosition(2, 0))
+        // .withGearRatio(SdsModuleConfigurations.MK4I_L2)
+        // .withDriveMotor(MotorType.NEO, CANConfig.BACK_LEFT_DRIVE)
+        // .withSteerMotor(MotorType.NEO, CANConfig.BACK_LEFT_STEER)
+        // .withSteerEncoderPort(CANConfig.BACK_LEFT_ABS_ENCODER)
+        // .withSteerOffset(Math.toRadians(219));
 
-        private static final MkSwerveModuleBuilder BACK_RIGHT_MODULE = new MkSwerveModuleBuilder()
-                .withLayout(SWERVE_TAB
-                        .getLayout("Back Right", BuiltInLayouts.kList)
-                        .withSize(1, 3)
-                        .withPosition(3, 0))
-                .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, CANConfig.BACK_RIGHT_DRIVE)
-                .withSteerMotor(MotorType.NEO, CANConfig.BACK_RIGHT_STEER)
-                .withSteerEncoderPort(CANConfig.BACK_RIGHT_ABS_ENCODER)
-                .withSteerOffset(Math.toRadians(-285));
+        // private static final MkSwerveModuleBuilder BACK_RIGHT_MODULE = new
+        // MkSwerveModuleBuilder()
+        // .withLayout(SWERVE_TAB
+        // .getLayout("Back Right", BuiltInLayouts.kList)
+        // .withSize(1, 3)
+        // .withPosition(3, 0))
+        // .withGearRatio(SdsModuleConfigurations.MK4I_L2)
+        // .withDriveMotor(MotorType.NEO, CANConfig.BACK_RIGHT_DRIVE)
+        // .withSteerMotor(MotorType.NEO, CANConfig.BACK_RIGHT_STEER)
+        // .withSteerEncoderPort(CANConfig.BACK_RIGHT_ABS_ENCODER)
+        // .withSteerOffset(Math.toRadians(-285));
 
-        public static final SwerveConfig SWERVE_CONFIG = new SwerveConfig(
-                FRONT_LEFT_MODULE, FRONT_RIGHT_MODULE, BACK_LEFT_MODULE,
-                BACK_RIGHT_MODULE,
-                PATH_CONSTRAINTS, PATH_DRIVE_PID, PATH_TURN_PID,
-                MAX_DRIVE_SPEED, MAX_TURN_SPEED,
-                SLOWMODE_MULTIPLIER, KINEMATICS, DRIVE_FEED_FORWARD, SWERVE_TAB,
-                ROTATION_CENTER_OFFSET);
+        public static final SwerveModuleConfiguration FRONT_LEFT_MODULE = new SwerveModuleConfiguration(
+                new SparkMaxSwerve(CANConfig.FRONT_LEFT_DRIVE, true),
+                new SparkMaxSwerve(CANConfig.FRONT_LEFT_DRIVE, false), new MotorConfigDouble(1, 1),
+                new CANCoderSwerve(0), 0.0, 0.0, 0.0, new PIDFConfig(0, 0, 0), new PIDFConfig(0, 0, 0),
+                new SwerveModulePhysicalCharacteristics(new MotorConfigDouble(0, 0), 1, 0.1), false, false, false,
+                "Front Left");
+
+        // private static final SwerveDriveConfiguration SWERVE_LIB_CONFIG = new
+        // SwerveDriveConfiguration(new SwerveModuleConfiguration[] {new
+        // SwerveModuleConfiguration(new SparkMaxSwerve(0, true)) }, null, null, null,
+        // AXIS_THRESHOLD, TRACK_WIDTH_METERS, TRACK_WIDTH_METERS, null, null, null,
+        // null)}, null, false, DRIVE_FEED_FORWARD, null);
+
+        // public static final SwerveConfig SWERVE_CONFIG = new SwerveConfig(
+        // FRONT_LEFT_MODULE, FRONT_RIGHT_MODULE, BACK_LEFT_MODULE,
+        // BACK_RIGHT_MODULE,
+        // PATH_CONSTRAINTS, PATH_DRIVE_PID, PATH_TURN_PID,
+        // MAX_DRIVE_SPEED, MAX_TURN_SPEED,
+        // SLOWMODE_MULTIPLIER, KINEMATICS, DRIVE_FEED_FORWARD, SWERVE_TAB,
+        // ROTATION_CENTER_OFFSET);
     }
 
     public final static class ArmConfig {
