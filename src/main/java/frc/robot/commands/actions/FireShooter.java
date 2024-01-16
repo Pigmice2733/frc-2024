@@ -9,12 +9,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmConfig.ArmState;
 import frc.robot.Constants.AutoConfig;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 
 public class FireShooter extends SequentialCommandGroup {
-  public FireShooter(Arm arm, Shooter shooter, ArmState armAngle) {
+  public FireShooter(Arm arm, Shooter shooter, Indexer indexer, ArmState armAngle) {
     addCommands(Commands.sequence(arm.setTargetState(armAngle), shooter.spinFlywheelsForward(),
-        Commands.waitSeconds(AutoConfig.FLYWHEEL_SPINUP_TIME), shooter.spinFeederForward()));
+        Commands.waitSeconds(AutoConfig.FLYWHEEL_SPINUP_TIME), indexer.indexForward()));
     addRequirements(arm, shooter);
   }
 

@@ -13,40 +13,41 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CANConfig;
-import frc.robot.Constants.ShooterConfig;
+import frc.robot.Constants.IndexerConfig;
 
-public class Shooter extends SubsystemBase {
-    private final CANSparkMax motor = new CANSparkMax(CANConfig.SHOOTER_ROTATION, MotorType.kBrushless);
+public class Indexer extends SubsystemBase {
+    private final CANSparkMax motor = new CANSparkMax(CANConfig.INDEXER_ROTATION, MotorType.kBrushless);
 
     /**
      * Shoots notes out of one end into the speaker and dumps them out of the other
      * end into the amp.
      * Intakes from the source into the speaker-shooting end.
      */
-    public Shooter() {
+    public Indexer() {
         motor.restoreFactoryDefaults();
         motor.setInverted(false);
 
-        ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> motor.get());
+        ShuffleboardHelper.addOutput("Motor Output", Constants.INDEXER_TAB, () -> motor.get());
     }
 
-    private void outputToFlywheels(double output) {
+    private void outputToMotor(double output) {
         motor.set(output);
     }
 
-    public Command spinFlywheelsForward() {
-        return Commands.runOnce(() -> outputToFlywheels(ShooterConfig.DEFAULT_SPEED));
+    public Command indexForward() {
+        return Commands.runOnce(() -> outputToMotor(IndexerConfig.DEFAULT_SPEED));
     }
 
     /** Intake into the shooter box, as long as no note is being carried. */
-    public Command spinFlywheelsBackward() {
+    public Command indexBackward() {
         if (!NoteSensor.getNoteState())
-            return Commands.runOnce(() -> outputToFlywheels(ShooterConfig.BACKWARD_SPEED));
+            return Commands.runOnce(() -> outputToMotor(IndexerConfig.BACKWARD_SPEED));
         else
             return Commands.none();
     }
 
-    public Command stopFlywheels() {
-        return Commands.runOnce(() -> outputToFlywheels(0));
+    public Command stopIndexer() {
+        return Commands.runOnce(() -> outputToMotor(0));
     }
+
 }

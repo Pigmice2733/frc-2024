@@ -11,14 +11,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConfig;
 import frc.robot.Constants.IntakeConfig.IntakeState;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class HandoffToShooter extends SequentialCommandGroup {
-    public HandoffToShooter(Intake intake, Shooter shooter) {
+    public HandoffToShooter(Intake intake, Shooter shooter, Indexer indexer) {
         addCommands(intake.setTargetState(IntakeState.UP),
                 Commands.waitSeconds(AutoConfig.INTAKE_MOVE_TIME), intake.runWheelsBackward(),
-                shooter.spinFeederForward(), Commands.waitSeconds(AutoConfig.INTAKE_FEED_TIME),
+                indexer.indexForward(), Commands.waitSeconds(AutoConfig.INTAKE_FEED_TIME),
                 Commands.runOnce(() -> ControllerRumbler.rumblerOperator(RumbleType.kBothRumble, 0.25, 0.3)));
         addRequirements(intake, shooter);
     }

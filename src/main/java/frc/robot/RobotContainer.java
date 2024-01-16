@@ -24,6 +24,7 @@ import frc.robot.commands.actions.FireShooter;
 import frc.robot.commands.actions.HandoffToShooter;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ClimberExtension;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
@@ -44,6 +45,7 @@ public class RobotContainer {
     private final ClimberExtension climberExtension = new ClimberExtension();
     private final Intake intake = new Intake();
     private final Shooter shooter = new Shooter();
+    private final Indexer indexer = new Indexer();
     private final Wrist wrist = new Wrist();
     private final Vision vision = new Vision();
 
@@ -104,21 +106,21 @@ public class RobotContainer {
 
         // Operator B (hold) - Handoff to Shooter
         new JoystickButton(operator, Button.kB.value)
-                .whileTrue(new HandoffToShooter(intake, shooter))
-                .onFalse(Commands.sequence(intake.stopWheels(), shooter.stopFeeder(),
+                .whileTrue(new HandoffToShooter(intake, shooter, indexer))
+                .onFalse(Commands.sequence(intake.stopWheels(), indexer.stopIndexer(),
                         intake.setTargetState(IntakeState.DOWN)));
 
         // Operator X (hold) - fire shooter high
         new JoystickButton(operator, Button.kX.value)
-                .whileTrue(new FireShooter(arm, shooter, ArmState.HIGH))
+                .whileTrue(new FireShooter(arm, shooter, indexer, ArmState.HIGH))
                 .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN), shooter.stopFlywheels(),
-                        shooter.stopFeeder()));
+                        indexer.stopIndexer()));
 
         // Operator B (hold) - fire shooter mid
         new JoystickButton(operator, Button.kB.value)
-                .whileTrue(new FireShooter(arm, shooter, ArmState.MIDDLE))
+                .whileTrue(new FireShooter(arm, shooter, indexer, ArmState.MIDDLE))
                 .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN), shooter.stopFlywheels(),
-                        shooter.stopFeeder()));
+                        indexer.stopIndexer()));
 
         // Operator Y (hold) - climber up on press down on release
         new JoystickButton(operator, Button.kX.value)

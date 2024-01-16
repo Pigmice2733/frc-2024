@@ -36,6 +36,7 @@ public final class Constants {
     public static final ShuffleboardTab ARM_TAB = Shuffleboard.getTab("Arm");
     public static final ShuffleboardTab CLIMBER_TAB = Shuffleboard.getTab("Climber");
     public static final ShuffleboardTab INTAKE_TAB = Shuffleboard.getTab("Intake");
+    public static final ShuffleboardTab INDEXER_TAB = Shuffleboard.getTab("Indexer");
     public static final ShuffleboardTab SHOOTER_TAB = Shuffleboard.getTab("Shooter");
     public static final ShuffleboardTab WRIST_TAB = Shuffleboard.getTab("Wrist");
     public static final ShuffleboardTab VISION_TAB = Shuffleboard.getTab("Vision");
@@ -64,10 +65,12 @@ public final class Constants {
         public static final int INTAKE_WHEELS = 50;
         public static final int INTAKE_PIVOT = 51;
 
-        public static final int SHOOTER_MOTOR = 60;
-        public static final int FEEDER_MOTOR = 61;
+        public static final int SHOOTER_ROTATION = 60;
 
         public static final int WRIST_ROTATION = 70;
+
+        public static final int INDEXER_ROTATION = 61;
+
     }
 
     public final static class DrivetrainConfig {
@@ -262,8 +265,13 @@ public final class Constants {
     }
 
     public final static class ShooterConfig {
-        public static final double DEFAULT_FLYWHEEL_SPEED = 0.3;
-        public static final double DEFAULT_FEEDER_SPEED = 0.3;
+        public static final double DEFAULT_SPEED = 0.3;
+        public static final double BACKWARD_SPEED = -0.3;
+    }
+
+    public final static class IndexerConfig {
+        public static final double DEFAULT_SPEED = 0.3;
+        public static final double BACKWARD_SPEED = -0.3;
     }
 
     public final static class VisionConfig {
