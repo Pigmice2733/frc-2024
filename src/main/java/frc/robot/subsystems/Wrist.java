@@ -23,12 +23,19 @@ public class Wrist extends PIDSubsystemBase {
                 WristConfig.MOTOR_POSITION_CONVERSION, 50, Constants.CLIMBER_TAB, true);
     }
 
-    @Override
-    public void periodic() {
-    }
-
     /** Sets the height state of the climber */
     public Command setTargetState(WristState state) {
         return Commands.runOnce(() -> setTargetRotation(state.getPosition()));
+    }
+
+    /** Sets the rotation state to 'STOW' */
+    public Command stow() {
+        return setTargetState(WristState.STOW);
+    }
+
+    /** Sets the target rotation, then waits until it gets to that rotation */
+    public Command goToState(WristState state) {
+        return Commands.parallel(setTargetState(state), Commands.waitUntil(
+                () -> Math.abs(getCurrentRotation() - state.getPosition()) < WristConfig.POSITION_TOLERANCE));
     }
 }

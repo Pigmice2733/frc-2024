@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class NoteSensor extends SubsystemBase {
@@ -21,5 +23,10 @@ public class NoteSensor extends SubsystemBase {
 
     public static boolean getNoteState() {
         return noteState;
+    }
+
+    /** Ends as soon as a note is detected */
+    public Command waitForNote() {
+        return Commands.waitUntil(() -> getNoteState());
     }
 }

@@ -167,10 +167,12 @@ public final class Constants {
 
         public static final double MOTOR_POSITION_CONVERSION = 1;
 
+        public static final double POSITION_TOLERANCE = 1;
+
         public static enum ArmState {
-            HIGH(90),
-            MIDDLE(45),
-            DOWN(0);
+            STOW(90),
+            AMP(45),
+            SPEAKER(0);
 
             private double position;
 
@@ -193,6 +195,8 @@ public final class Constants {
         public static final double MAX_VELOCITY = 0;
 
         public static final double MOTOR_POSITION_CONVERSION = 1;
+
+        public static final double POSITION_TOLERANCE = 1;
 
         public static enum ClimberState {
             UP(45),
@@ -220,9 +224,12 @@ public final class Constants {
 
         public static final double MOTOR_POSITION_CONVERSION = 1;
 
+        public static final double POSITION_TOLERANCE = 1;
+
         public static enum WristState {
-            UP(45),
-            DOWN(0);
+            STOW(0),
+            AMP(30),
+            SPEAKER(60);
 
             private double position;
 
@@ -246,11 +253,13 @@ public final class Constants {
 
         public static final double MOTOR_POSITION_CONVERSION = 1;
 
+        public static final double POSITION_TOLERANCE = 1;
+
         public static final double WHEELS_SPEED = 0.3;
 
         public static enum IntakeState {
-            UP(45),
-            DOWN(0);
+            STOW(0),
+            DOWN(30);
 
             private double position;
 
@@ -282,6 +291,6 @@ public final class Constants {
     public static class AutoConfig {
         public final static double INTAKE_MOVE_TIME = 3;
         public final static double INTAKE_FEED_TIME = 1;
-        public final static double FLYWHEEL_SPINUP_TIME = 3;
+        public final static double SHOOTER_SPINUP_TIME = 3;
     }
 }

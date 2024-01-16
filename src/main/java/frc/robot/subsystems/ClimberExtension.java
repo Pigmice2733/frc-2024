@@ -32,4 +32,10 @@ public class ClimberExtension extends PIDSubsystemBase {
     public Command setTargetState(ClimberState state) {
         return Commands.runOnce(() -> setTargetRotation(state.getPosition()));
     }
+
+    /** Sets the target rotation, then waits until it gets to that rotation */
+    public Command goToState(ClimberState state) {
+        return Commands.parallel(setTargetState(state), Commands.waitUntil(
+                () -> Math.abs(getCurrentRotation() - state.getPosition()) < ClimberConfig.POSITION_TOLERANCE));
+    }
 }

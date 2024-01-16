@@ -28,4 +28,15 @@ public class Arm extends PIDSubsystemBase {
     public Command setTargetState(ArmState state) {
         return Commands.runOnce(() -> setTargetRotation(state.getPosition()));
     }
+
+    /** Sets the rotation state to 'STOW' */
+    public Command stow() {
+        return setTargetState(ArmState.STOW);
+    }
+
+    /** Sets the target rotation, then waits until it gets to that rotation */
+    public Command goToState(ArmState state) {
+        return Commands.parallel(setTargetState(state), Commands.waitUntil(
+                () -> Math.abs(getCurrentRotation() - state.getPosition()) < ArmConfig.POSITION_TOLERANCE));
+    }
 }

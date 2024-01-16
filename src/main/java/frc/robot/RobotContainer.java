@@ -13,19 +13,18 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DrivetrainConfig;
-import frc.robot.Constants.ArmConfig.ArmState;
 import frc.robot.Constants.ClimberConfig.ClimberState;
-import frc.robot.Constants.IntakeConfig.IntakeState;
-import frc.robot.commands.actions.FireShooter;
-import frc.robot.commands.actions.HandoffToShooter;
+import frc.robot.commands.actions.intake.IntakeFromGround;
+import frc.robot.commands.actions.shooter.FireIntoAmp;
+import frc.robot.commands.actions.shooter.FireIntoSpeaker;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ClimberExtension;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.NoteSensor;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Wrist;
@@ -48,6 +47,7 @@ public class RobotContainer {
     private final Indexer indexer = new Indexer();
     private final Wrist wrist = new Wrist();
     private final Vision vision = new Vision();
+    private final NoteSensor noteSensor = new NoteSensor();
 
     private final XboxController driver;
     private final XboxController operator;
@@ -103,30 +103,22 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-
-        // Operator B (hold) - Handoff to Shooter
-        new JoystickButton(operator, Button.kB.value)
-                .whileTrue(new HandoffToShooter(intake, shooter, indexer))
-                .onFalse(Commands.sequence(intake.stopWheels(), indexer.stopIndexer(),
-                        intake.setTargetState(IntakeState.DOWN)));
-
-        // Operator X (hold) - fire shooter high
+        // Operator X (hold) - fire shooter into speaker
         new JoystickButton(operator, Button.kX.value)
-                .whileTrue(new FireShooter(arm, shooter, indexer, ArmState.HIGH))
-                .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN), shooter.stopFlywheels(),
-                        indexer.stopIndexer()));
+                .whileTrue(new FireIntoSpeaker(arm, wrist, shooter, indexer));
 
-        // Operator B (hold) - fire shooter mid
+        // Operator B (hold) - fire shooter into amp
         new JoystickButton(operator, Button.kB.value)
-                .whileTrue(new FireShooter(arm, shooter, indexer, ArmState.MIDDLE))
-                .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN), shooter.stopFlywheels(),
-                        indexer.stopIndexer()));
+                .whileTrue(new FireIntoAmp(arm, wrist, shooter, indexer));
 
-        // Operator Y (hold) - climber up on press down on release
+        // Operator A (hold) - intake a note from the ground
+        new JoystickButton(operator, Button.kA.value)
+                .whileTrue(new IntakeFromGround(intake, indexer, arm, wrist, noteSensor));
+
+        // Operator Y (hold) - climber up on press then down on release
         new JoystickButton(operator, Button.kX.value)
                 .onTrue(climberExtension.setTargetState(ClimberState.UP))
                 .onFalse(climberExtension.setTargetState(ClimberState.DOWN));
-
     }
 
     /**
