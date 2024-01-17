@@ -2,9 +2,15 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Arm/Reset Encoder": "Command",
+      "/Shuffleboard/Climber/Reset Encoder": "Command",
+      "/Shuffleboard/Driver/1": "Command",
+      "/Shuffleboard/Driver/4": "Command",
       "/Shuffleboard/Driver/Auto Command": "String Chooser",
       "/Shuffleboard/Driver/Bunny Auto": "String Chooser",
-      "/Shuffleboard/Drivetrain/Heading": "Gyro"
+      "/Shuffleboard/Drivetrain/Heading": "Gyro",
+      "/Shuffleboard/Intake/Reset Encoder": "Command",
+      "/Shuffleboard/Wrist/Reset Encoder": "Command"
     }
   }
 }

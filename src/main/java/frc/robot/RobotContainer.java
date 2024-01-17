@@ -7,6 +7,7 @@ package frc.robot;
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
 import com.pigmice.frc.lib.drivetrain.swerve.commands.DriveWithJoysticksSwerve;
+import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -20,6 +21,11 @@ import frc.robot.Constants.ClimberConfig.ClimberState;
 import frc.robot.commands.actions.intake.IntakeFromGround;
 import frc.robot.commands.actions.shooter.FireIntoAmp;
 import frc.robot.commands.actions.shooter.FireIntoSpeaker;
+import frc.robot.commands.semi_auto.ClimbSA;
+import frc.robot.commands.semi_auto.FetchRingSA;
+import frc.robot.commands.semi_auto.FindRingSA;
+import frc.robot.commands.semi_auto.ScoreAmpSA;
+import frc.robot.commands.semi_auto.ScoreSpeakerSA;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Indexer;
@@ -53,6 +59,9 @@ public class RobotContainer {
     private final XboxController operator;
     private final Controls controls;
 
+    private final Pathfinder pathfinder = null;
+    private final SemiAutoManager semiAutoManager = new SemiAutoManager();
+
     private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
     /**
@@ -73,6 +82,7 @@ public class RobotContainer {
 
         configureButtonBindings();
         configureAutoChooser();
+        configureSemiAutoManager();
     }
 
     public void onEnable() {
@@ -86,8 +96,19 @@ public class RobotContainer {
         ControllerRumbler.stopBothControllers();
     }
 
-    private void configureSemiAutoButtons() {
-
+    /** Initialize all semi auto tasks */
+    private void configureSemiAutoManager() {
+        semiAutoManager.addTasksToShuffleboard(
+                new ClimbSA(drivetrain, pathfinder, arm, wrist, climberExtension, intake)
+                        .withName("Climb"),
+                new FetchRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist, noteSensor)
+                        .withName("Fetch Ring"),
+                new FindRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist, noteSensor, vision)
+                        .withName("Find Ring"),
+                new ScoreAmpSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
+                        .withName("Score AMP"),
+                new ScoreSpeakerSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
+                        .withName("Score Speaker"));
     }
 
     private void configureAutoChooser() {

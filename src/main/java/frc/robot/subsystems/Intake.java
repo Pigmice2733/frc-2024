@@ -32,7 +32,7 @@ public class Intake extends PIDSubsystemBase {
         wheelsMotor.restoreFactoryDefaults();
         wheelsMotor.setInverted(false);
 
-        ShuffleboardHelper.addOutput("Motor Output", Constants.INTAKE_TAB, () -> wheelsMotor.get());
+        ShuffleboardHelper.addOutput("Wheel Motor Output", Constants.INTAKE_TAB, () -> wheelsMotor.get());
     }
 
     /**
