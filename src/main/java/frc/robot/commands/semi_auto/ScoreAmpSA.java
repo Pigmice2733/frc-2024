@@ -10,17 +10,24 @@ import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConfig.Locations;
+import frc.robot.commands.actions.shooter.FireIntoAmp;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Wrist;
 
 public class ScoreAmpSA extends SequentialCommandGroup {
     /** Drives to the amp then scores */
-    public ScoreAmpSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder) {
-        addCommands(
-                // TODO: implementation
-                // Pathfind to a point right in front of the amp
-                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.AMP_SCORING)
-        // Score on the amp
-        );
+    public ScoreAmpSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder, Arm arm, Wrist wrist, Shooter shooter,
+            Indexer indexer) {
 
-        addRequirements();
+        addCommands(
+                // Pathfind to a point right in front of the amp
+                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.AMP_SCORING),
+                // Score on the amp
+
+                new FireIntoAmp(arm, wrist, shooter, indexer));
+
+        addRequirements(drivetrain, arm, wrist, shooter, indexer);
     }
 }

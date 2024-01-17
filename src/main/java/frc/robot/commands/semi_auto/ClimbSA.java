@@ -10,17 +10,22 @@ import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConfig.Locations;
+import frc.robot.commands.actions.Climb;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Wrist;
 
 public class ClimbSA extends SequentialCommandGroup {
     /** Drives to the chain and climbs */
-    public ClimbSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder) {
+    public ClimbSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder, Arm arm, Wrist wrist, Climber climber,
+            Intake intake) {
         addCommands(
-                // TODO: implementation
                 // Pathfind to the chain and stop in front of it
-                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.CLIMBING)
-        // Climb
-        );
+                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.CLIMBING),
+                // Climb
+                new Climb(drivetrain, arm, wrist, climber, intake));
 
-        addRequirements();
+        addRequirements(drivetrain, arm, wrist, climber, intake);
     }
 }

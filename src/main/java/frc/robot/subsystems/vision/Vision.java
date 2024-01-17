@@ -1,15 +1,16 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.vision;
 
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.LimelightHelpers;
 import frc.robot.Constants.VisionConfig;
-import frc.robot.LimelightHelpers.LimelightResults;
-import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
-import frc.robot.LimelightHelpers.Results;
+import frc.robot.subsystems.vision.LimelightHelpers.LimelightResults;
+import frc.robot.subsystems.vision.LimelightHelpers.LimelightTarget_Fiducial;
+import frc.robot.subsystems.vision.LimelightHelpers.Results;
 
 public class Vision extends SubsystemBase {
     private static String camName = VisionConfig.CAM_NAME;
@@ -65,5 +66,14 @@ public class Vision extends SubsystemBase {
     /** Returns the estimated 2d translation to the best target */
     public Pose2d getTranslationToBestTarget() {
         return !hasTarget ? null : bestTarget.getRobotPose_TargetSpace2D();
+    }
+
+    public boolean ringVisible() {
+        // TODO: implementation
+        return false;
+    }
+
+    public Command waitForRing() {
+        return Commands.waitUntil(() -> ringVisible());
     }
 }

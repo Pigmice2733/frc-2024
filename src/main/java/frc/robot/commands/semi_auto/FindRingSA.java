@@ -8,20 +8,32 @@ import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
 import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConfig.Locations;
+import frc.robot.commands.actions.intake.IntakeFromGround;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.NoteSensor;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.Wrist;
 
 public class FindRingSA extends SequentialCommandGroup {
     /** Searches for a ring on the floor and picks it up */
-    public FindRingSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder) {
-        addCommands(
-                // TODO: implementation
-                // Search for a ring (maybe pathfind to a central location)
-                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.CENTRAL_RING_SEARCH)
-        // Once a ring is found, drive in front of it
-        // Intake from ground
-        );
+    public FindRingSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder, Intake intake, Indexer indexer, Arm arm,
+            Wrist wrist, NoteSensor noteSensor, Vision vision) {
 
-        addRequirements();
+        addCommands(
+                // Search for a ring (maybe pathfind to a central location)
+                Commands.parallel(
+                        new PathfindToPointSwerve(drivetrain, pathfinder, Locations.CENTRAL_RING_SEARCH),
+                        vision.waitForRing()),
+                // Once a ring is spotted, drive in front of it
+                // TODO
+                // Pick the ring up
+                new IntakeFromGround(intake, indexer, arm, wrist, noteSensor));
+
+        addRequirements(drivetrain, intake, indexer, arm, wrist);
     }
 }

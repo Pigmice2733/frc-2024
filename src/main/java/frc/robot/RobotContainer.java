@@ -21,12 +21,12 @@ import frc.robot.commands.actions.intake.IntakeFromGround;
 import frc.robot.commands.actions.shooter.FireIntoAmp;
 import frc.robot.commands.actions.shooter.FireIntoSpeaker;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.ClimberExtension;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NoteSensor;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.Wrist;
 
 /**
@@ -41,7 +41,7 @@ import frc.robot.subsystems.Wrist;
 public class RobotContainer {
     private final SwerveDrivetrain drivetrain = new SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
     private final Arm arm = new Arm();
-    private final ClimberExtension climberExtension = new ClimberExtension();
+    private final Climber climberExtension = new Climber();
     private final Intake intake = new Intake();
     private final Shooter shooter = new Shooter();
     private final Indexer indexer = new Indexer();
@@ -59,11 +59,10 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-
         driver = new XboxController(0);
         operator = new XboxController(1);
-
         controls = new Controls(driver, operator);
+
         ControllerRumbler.setControllers(driver, operator);
 
         drivetrain.setDefaultCommand(new DriveWithJoysticksSwerve(drivetrain,
@@ -76,6 +75,21 @@ public class RobotContainer {
         configureAutoChooser();
     }
 
+    public void onEnable() {
+        arm.resetPID();
+        climberExtension.resetPID();
+        intake.resetPID();
+        wrist.resetPID();
+    }
+
+    public void onDisable() {
+        ControllerRumbler.stopBothControllers();
+    }
+
+    private void configureSemiAutoButtons() {
+
+    }
+
     private void configureAutoChooser() {
         autoChooser.addOption("Example",
                 new InstantCommand().withName("Example Option"));
@@ -84,14 +98,6 @@ public class RobotContainer {
         autoChooser.setDefaultOption("None", new InstantCommand());
 
         Constants.DRIVER_TAB.add("Auto Command", autoChooser);
-    }
-
-    public void onEnable() {
-        arm.resetPID();
-    }
-
-    public void onDisable() {
-        ControllerRumbler.stopBothControllers();
     }
 
     /**

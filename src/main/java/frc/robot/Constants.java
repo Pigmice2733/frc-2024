@@ -294,6 +294,8 @@ public final class Constants {
         public final static double INTAKE_MOVE_TIME = 3;
         public final static double INTAKE_FEED_TIME = 1;
         public final static double SHOOTER_SPINUP_TIME = 3;
+        public final static double CLIMB_DRIVE_TIME = 1;
+        public final static double CLIMB_DRIVE_SPEED = 0.5;
 
         public static class Locations {
             // TODO

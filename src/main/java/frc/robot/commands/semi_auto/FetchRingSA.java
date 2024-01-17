@@ -10,17 +10,23 @@ import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConfig.Locations;
+import frc.robot.commands.actions.intake.IntakeFromGround;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.NoteSensor;
+import frc.robot.subsystems.Wrist;
 
 public class FetchRingSA extends SequentialCommandGroup {
     /** Drives to the human player then picks up a ring */
-    public FetchRingSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder) {
+    public FetchRingSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder, Intake intake, Indexer indexer, Arm arm,
+            Wrist wrist, NoteSensor noteSensor) {
         addCommands(
-                // TODO: implementation
                 // Pathfind to a point right in front of the human player
-                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.HUMAN_PLAYER_PICKUP)
-        // Pickup a ring from the ground
-        );
+                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.HUMAN_PLAYER_PICKUP),
+                // Pick up the ring
+                new IntakeFromGround(intake, indexer, arm, wrist, noteSensor));
 
-        addRequirements();
+        addRequirements(drivetrain, intake, indexer, arm, wrist);
     }
 }
