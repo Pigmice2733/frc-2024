@@ -59,7 +59,7 @@ public class RobotContainer {
     private final XboxController operator;
     private final Controls controls;
 
-    private final Pathfinder pathfinder = null;
+    private final Pathfinder pathfinder = new Pathfinder(DrivetrainConfig.TRACK_WIDTH_METERS, "frc-2024");
     private final SemiAutoManager semiAutoManager = new SemiAutoManager();
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
