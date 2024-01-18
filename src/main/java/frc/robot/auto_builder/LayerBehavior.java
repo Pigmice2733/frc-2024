@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public interface LayerBehavior {
-    public int initialize(int column, int row, String[] enumValues);
+    public int initialize(int column, int row, String layerName, String[] enumValues);
 
     public Command evaluate();
 
@@ -16,13 +16,13 @@ public interface LayerBehavior {
         private SendableChooser<String> optionChooser;
 
         @Override
-        public int initialize(int column, int row, String[] enumValues) {
+        public int initialize(int column, int row, String layerName, String[] enumValues) {
 
             optionChooser = new SendableChooser<String>();
             for (var name : enumValues) {
                 optionChooser.addOption(name, name);
             }
-            AutoBuilder.SHUFFLEBOARD_TAB.add("Choose Option", optionChooser).withPosition(column, 1);
+            AutoBuilder.SHUFFLEBOARD_TAB.add("Choose " + layerName, optionChooser).withPosition(column, row);
 
             return 1;
         }

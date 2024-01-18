@@ -290,15 +290,16 @@ public final class Constants {
     }
 
     /** Details for auto such as timings and speeds. All times in seconds. */
-    public static class AutoConfig {
+    public final static class AutoConfig {
         public final static double INTAKE_MOVE_TIME = 3;
         public final static double INTAKE_FEED_TIME = 1;
         public final static double SHOOTER_SPINUP_TIME = 3;
         public final static double CLIMB_DRIVE_TIME = 1;
         public final static double CLIMB_DRIVE_SPEED = 0.5;
 
-        public static class Locations {
-            // TODO
+        // Important field locations for semi auto
+        public final static class SemiAutoLocations {
+            // TODO: make actual locations
             public final static Pose2d HUMAN_PLAYER_PICKUP = new Pose2d(0, 0, new Rotation2d());
             public final static Pose2d AMP_SCORING = new Pose2d(0, 0, new Rotation2d());
             public final static Pose2d SPEAKER_SCORING = new Pose2d(0, 0, new Rotation2d());
@@ -306,5 +307,31 @@ public final class Constants {
             public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(0, 0, new Rotation2d());
         }
 
+        // Important field locations for full auto
+        public final static class AutoLocations {
+
+        }
+
+        public final static class AutoBuilderOptions {
+            // In terms of close / far to the AMP
+            public static enum StartPosition {
+                SpeakerClose,
+                SpeakerCenter,
+                SpeakerFar,
+                GroundClose,
+                GroundFar
+            }
+
+            public static enum AutoType {
+                None,
+                Score,
+                Leave,
+                ScoreAndLeave,
+                TwoNote,
+                ThreeNote,
+                FourNote,
+                FiveNote
+            }
+        }
     }
 }

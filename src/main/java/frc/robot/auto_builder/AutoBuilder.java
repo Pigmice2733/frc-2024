@@ -12,6 +12,10 @@ public class AutoBuilder {
     public static final ShuffleboardTab SHUFFLEBOARD_TAB = Shuffleboard.getTab("Auto Builder");
     private final ArrayList<AutoLayer> layers = new ArrayList<AutoLayer>();
 
+    public AutoBuilder() {
+
+    }
+
     public AutoBuilder addLayer(AutoLayer layer, LayerBehavior behavior) {
         layer.setBehavior(behavior);
         layer.createHeader(layers.size());
@@ -37,9 +41,5 @@ public class AutoBuilder {
             return Commands.sequence(commands);
         else
             return new InstantCommand();
-    }
-
-    public void buildAndRun() {
-        buildFullRoutine().schedule();
     }
 }

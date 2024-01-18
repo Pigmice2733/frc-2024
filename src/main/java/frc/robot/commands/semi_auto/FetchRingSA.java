@@ -9,7 +9,7 @@ import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPoint
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.AutoConfig.Locations;
+import frc.robot.Constants.AutoConfig.SemiAutoLocations;
 import frc.robot.commands.actions.intake.IntakeFromGround;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Indexer;
@@ -23,7 +23,7 @@ public class FetchRingSA extends SequentialCommandGroup {
             Wrist wrist, NoteSensor noteSensor) {
         addCommands(
                 // Pathfind to a point right in front of the human player
-                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.HUMAN_PLAYER_PICKUP),
+                new PathfindToPointSwerve(drivetrain, pathfinder, SemiAutoLocations.HUMAN_PLAYER_PICKUP),
                 // Pick up the ring
                 new IntakeFromGround(intake, indexer, arm, wrist, noteSensor));
 

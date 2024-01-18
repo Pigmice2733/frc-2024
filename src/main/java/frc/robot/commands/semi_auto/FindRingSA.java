@@ -10,7 +10,7 @@ import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.AutoConfig.Locations;
+import frc.robot.Constants.AutoConfig.SemiAutoLocations;
 import frc.robot.commands.actions.intake.IntakeFromGround;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Indexer;
@@ -20,20 +20,21 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.Wrist;
 
 public class FindRingSA extends SequentialCommandGroup {
-    /** Searches for a ring on the floor and picks it up */
-    public FindRingSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder, Intake intake, Indexer indexer, Arm arm,
-            Wrist wrist, NoteSensor noteSensor, Vision vision) {
+        /** Searches for a ring on the floor and picks it up */
+        public FindRingSA(SwerveDrivetrain drivetrain, Pathfinder pathfinder, Intake intake, Indexer indexer, Arm arm,
+                        Wrist wrist, NoteSensor noteSensor, Vision vision) {
 
-        addCommands(
-                // Search for a ring (maybe pathfind to a central location)
-                Commands.parallel(
-                        new PathfindToPointSwerve(drivetrain, pathfinder, Locations.CENTRAL_RING_SEARCH),
-                        vision.waitForRing()),
-                // Once a ring is spotted, drive in front of it
-                // TODO
-                // Pick the ring up
-                new IntakeFromGround(intake, indexer, arm, wrist, noteSensor));
+                addCommands(
+                                // Search for a ring (maybe pathfind to a central location)
+                                Commands.parallel(
+                                                new PathfindToPointSwerve(drivetrain, pathfinder,
+                                                                SemiAutoLocations.CENTRAL_RING_SEARCH),
+                                                vision.waitForRing()),
+                                // Once a ring is spotted, drive in front of it
+                                // TODO
+                                // Pick the ring up
+                                new IntakeFromGround(intake, indexer, arm, wrist, noteSensor));
 
-        addRequirements(drivetrain, intake, indexer, arm, wrist);
-    }
+                addRequirements(drivetrain, intake, indexer, arm, wrist);
+        }
 }

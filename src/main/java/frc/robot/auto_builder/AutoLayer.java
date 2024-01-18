@@ -17,7 +17,9 @@ public class AutoLayer {
     public AutoLayer(String name, Class<?> enumType) {
         this.name = name;
 
+        System.out.println(enumType.getName());
         var enumObjs = enumType.getEnumConstants();
+        System.out.println(enumObjs[0].toString());
         this.enumValues = new String[enumObjs.length];
 
         for (int i = 0; i < enumValues.length; i++) {
@@ -27,7 +29,7 @@ public class AutoLayer {
 
     public void createHeader(int column) {
         this.column = column;
-        AutoBuilder.SHUFFLEBOARD_TAB.add(name, false).withPosition(column, 0).getEntry();
+        AutoBuilder.SHUFFLEBOARD_TAB.add(name, "").withPosition(column, 0).getEntry();
     }
 
     public AutoLayer addRestriction(LayerRestriction restriction) {
@@ -39,7 +41,7 @@ public class AutoLayer {
 
     public void setBehavior(LayerBehavior behavior) {
         this.behavior = behavior;
-        currentRow += behavior.initialize(column, currentRow, enumValues);
+        currentRow += behavior.initialize(column, currentRow, name, enumValues);
     }
 
     public Command getCommand() {

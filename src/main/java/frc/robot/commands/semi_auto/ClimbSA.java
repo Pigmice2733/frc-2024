@@ -9,7 +9,7 @@ import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPoint
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.AutoConfig.Locations;
+import frc.robot.Constants.AutoConfig.SemiAutoLocations;
 import frc.robot.commands.actions.Climb;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
@@ -22,7 +22,7 @@ public class ClimbSA extends SequentialCommandGroup {
             Intake intake) {
         addCommands(
                 // Pathfind to the chain and stop in front of it
-                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.CLIMBING),
+                new PathfindToPointSwerve(drivetrain, pathfinder, SemiAutoLocations.CLIMBING),
                 // Climb
                 new Climb(drivetrain, arm, wrist, climber, intake));
 

@@ -14,10 +14,16 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.AutoConfig;
 import frc.robot.Constants.DrivetrainConfig;
 import frc.robot.Constants.ClimberConfig.ClimberState;
+import frc.robot.auto_builder.AutoBuilder;
+import frc.robot.auto_builder.AutoLayer;
+import frc.robot.auto_builder.LayerBehavior.MultiOptionLayer;
+import frc.robot.auto_builder.LayerRestriction.ToggleableLayer;
 import frc.robot.commands.actions.intake.IntakeFromGround;
 import frc.robot.commands.actions.shooter.FireIntoAmp;
 import frc.robot.commands.actions.shooter.FireIntoSpeaker;
@@ -59,10 +65,13 @@ public class RobotContainer {
     private final XboxController operator;
     private final Controls controls;
 
-    private final Pathfinder pathfinder = new Pathfinder(DrivetrainConfig.TRACK_WIDTH_METERS, "frc-2024");
+    // TODO: uncomment once field map is added
+    // private final Pathfinder pathfinder = new
+    // Pathfinder(DrivetrainConfig.TRACK_WIDTH_METERS, "frc-2024");
+
     private final SemiAutoManager semiAutoManager = new SemiAutoManager();
 
-    private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+    private final AutoBuilder autoBuilder = new AutoBuilder();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -81,7 +90,7 @@ public class RobotContainer {
                 () -> true));
 
         configureButtonBindings();
-        configureAutoChooser();
+        configureAutoBuilder();
         configureSemiAutoManager();
     }
 
@@ -98,27 +107,33 @@ public class RobotContainer {
 
     /** Initialize all semi auto tasks */
     private void configureSemiAutoManager() {
-        semiAutoManager.addTasksToShuffleboard(
-                new ClimbSA(drivetrain, pathfinder, arm, wrist, climberExtension, intake)
-                        .withName("Climb"),
-                new FetchRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist, noteSensor)
-                        .withName("Fetch Ring"),
-                new FindRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist, noteSensor, vision)
-                        .withName("Find Ring"),
-                new ScoreAmpSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
-                        .withName("Score AMP"),
-                new ScoreSpeakerSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
-                        .withName("Score Speaker"));
+        // TODO: figure out why this breaks sim and uncomment
+        // semiAutoManager.addTasksToShuffleboard(
+        // new ClimbSA(drivetrain, pathfinder, arm, wrist, climberExtension, intake)
+        // .withName("Climb"),
+        // new FetchRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist,
+        // noteSensor)
+        // .withName("Fetch Ring"),
+        // new FindRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist,
+        // noteSensor, vision)
+        // .withName("Find Ring"),
+        // new ScoreAmpSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
+        // .withName("Score AMP"),
+        // new ScoreSpeakerSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
+        // .withName("Score Speaker"));
     }
 
-    private void configureAutoChooser() {
-        autoChooser.addOption("Example",
-                new InstantCommand().withName("Example Option"));
+    private void configureAutoBuilder() {
+        // autoBuilder.addLayer(
+        // new AutoLayer("Start Position", AutoConfig.AutoLocations.class),
+        // new MultiOptionLayer());
 
-        // Default to doing nothing
-        autoChooser.setDefaultOption("None", new InstantCommand());
+        AutoLayer startPosLayer = new AutoLayer("Start Position", AutoConfig.AutoBuilderOptions.StartPosition.class);
 
-        Constants.DRIVER_TAB.add("Auto Command", autoChooser);
+        AutoLayer autoTypeLayer = new AutoLayer("Auto Type", AutoConfig.AutoBuilderOptions.AutoType.class);
+
+        autoBuilder.addLayer(startPosLayer, new MultiOptionLayer());
+        autoBuilder.addLayer(autoTypeLayer, new MultiOptionLayer());
     }
 
     /**
@@ -154,6 +169,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected().withTimeout(15);
+        // return autoChooser.getSelected().withTimeout(15);
+        return autoBuilder.buildFullRoutine();
     }
 }
