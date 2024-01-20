@@ -45,7 +45,7 @@ public final class Constants {
 
     public static final double AXIS_THRESHOLD = 0.25;
 
-    public static final class CANConfig {
+    public static final class PortConfig {
         public static final int FRONT_LEFT_DRIVE = 11; // done
         public static final int FRONT_LEFT_STEER = 10;// done
         public static final int FRONT_RIGHT_DRIVE = 13;// done
@@ -60,19 +60,23 @@ public final class Constants {
         public static final int BACK_LEFT_ABS_ENCODER = 22;// done
         public static final int BACK_RIGHT_ABS_ENCODER = 26;// done
 
-        public static final int ARM = 30;
+        public static final int ARM_ROTATION = 30;
+        public static final int ARM_ENCODER = 31;
+        public static final int ARM_LIMIT_SWITCH = 32;
 
         public static final int CLIMBER_EXTENSION = 40;
 
         public static final int INTAKE_WHEELS = 50;
         public static final int INTAKE_PIVOT = 51;
+        public static final int INTAKE_LIMIT_SWITCH = 52;
 
         public static final int SHOOTER_ROTATION = 60;
 
         public static final int WRIST_ROTATION = 70;
+        public static final int WRIST_ENCODER = 71;
+        public static final int WRIST_LIMIT_SWITCH = 72;
 
         public static final int INDEXER_ROTATION = 61;
-
     }
 
     public final static class DrivetrainConfig {
@@ -112,9 +116,9 @@ public final class Constants {
                         .withSize(1, 3)
                         .withPosition(0, 0))
                 .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, CANConfig.FRONT_LEFT_DRIVE)
-                .withSteerMotor(MotorType.NEO, CANConfig.FRONT_LEFT_STEER)
-                .withSteerEncoderPort(CANConfig.FRONT_LEFT_ABS_ENCODER)
+                .withDriveMotor(MotorType.NEO, PortConfig.FRONT_LEFT_DRIVE)
+                .withSteerMotor(MotorType.NEO, PortConfig.FRONT_LEFT_STEER)
+                .withSteerEncoderPort(PortConfig.FRONT_LEFT_ABS_ENCODER)
                 .withSteerOffset(Math.toRadians(73));
 
         private static final MkSwerveModuleBuilder FRONT_RIGHT_MODULE = new MkSwerveModuleBuilder()
@@ -123,9 +127,9 @@ public final class Constants {
                         .withSize(1, 3)
                         .withPosition(1, 0))
                 .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, CANConfig.FRONT_RIGHT_DRIVE)
-                .withSteerMotor(MotorType.NEO, CANConfig.FRONT_RIGHT_STEER)
-                .withSteerEncoderPort(CANConfig.FRONT_RIGHT_ABS_ENCODER)
+                .withDriveMotor(MotorType.NEO, PortConfig.FRONT_RIGHT_DRIVE)
+                .withSteerMotor(MotorType.NEO, PortConfig.FRONT_RIGHT_STEER)
+                .withSteerEncoderPort(PortConfig.FRONT_RIGHT_ABS_ENCODER)
                 .withSteerOffset(Math.toRadians(-99));
 
         private static final MkSwerveModuleBuilder BACK_LEFT_MODULE = new MkSwerveModuleBuilder()
@@ -134,9 +138,9 @@ public final class Constants {
                         .withSize(1, 3)
                         .withPosition(2, 0))
                 .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, CANConfig.BACK_LEFT_DRIVE)
-                .withSteerMotor(MotorType.NEO, CANConfig.BACK_LEFT_STEER)
-                .withSteerEncoderPort(CANConfig.BACK_LEFT_ABS_ENCODER)
+                .withDriveMotor(MotorType.NEO, PortConfig.BACK_LEFT_DRIVE)
+                .withSteerMotor(MotorType.NEO, PortConfig.BACK_LEFT_STEER)
+                .withSteerEncoderPort(PortConfig.BACK_LEFT_ABS_ENCODER)
                 .withSteerOffset(Math.toRadians(219));
 
         private static final MkSwerveModuleBuilder BACK_RIGHT_MODULE = new MkSwerveModuleBuilder()
@@ -145,9 +149,9 @@ public final class Constants {
                         .withSize(1, 3)
                         .withPosition(3, 0))
                 .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, CANConfig.BACK_RIGHT_DRIVE)
-                .withSteerMotor(MotorType.NEO, CANConfig.BACK_RIGHT_STEER)
-                .withSteerEncoderPort(CANConfig.BACK_RIGHT_ABS_ENCODER)
+                .withDriveMotor(MotorType.NEO, PortConfig.BACK_RIGHT_DRIVE)
+                .withSteerMotor(MotorType.NEO, PortConfig.BACK_RIGHT_STEER)
+                .withSteerEncoderPort(PortConfig.BACK_RIGHT_ABS_ENCODER)
                 .withSteerOffset(Math.toRadians(-285));
 
         public static final SwerveConfig SWERVE_CONFIG = new SwerveConfig(

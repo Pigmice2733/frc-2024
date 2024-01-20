@@ -13,19 +13,19 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
-import frc.robot.Constants.CANConfig;
+import frc.robot.Constants.PortConfig;
 import frc.robot.Constants.IntakeConfig;
 import frc.robot.Constants.IntakeConfig.IntakeState;
 
 public class Intake extends PIDSubsystemBase {
-    private final CANSparkMax wheelsMotor = new CANSparkMax(CANConfig.INTAKE_WHEELS, MotorType.kBrushless);
+    private final CANSparkMax wheelsMotor = new CANSparkMax(PortConfig.INTAKE_WHEELS, MotorType.kBrushless);
 
     /**
      * Spins notes up from the ground in front of the robot and carries them to the
      * shooter box.
      */
     public Intake() {
-        super(new CANSparkMax(CANConfig.INTAKE_PIVOT, MotorType.kBrushless), IntakeConfig.P, IntakeConfig.I,
+        super(new CANSparkMax(PortConfig.INTAKE_PIVOT, MotorType.kBrushless), IntakeConfig.P, IntakeConfig.I,
                 IntakeConfig.D, new Constraints(IntakeConfig.MAX_VELOCITY, IntakeConfig.MAX_ACCELERATION), false,
                 IntakeConfig.MOTOR_POSITION_CONVERSION, 50, Constants.INTAKE_TAB, true);
 
@@ -33,6 +33,8 @@ public class Intake extends PIDSubsystemBase {
         wheelsMotor.setInverted(false);
 
         ShuffleboardHelper.addOutput("Wheel Motor Output", Constants.INTAKE_TAB, () -> wheelsMotor.get());
+
+        addLimitSwitch(0, PortConfig.INTAKE_LIMIT_SWITCH, false, LimitSwitchSide.NEGATIVE);
     }
 
     /**

@@ -12,11 +12,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.CANConfig;
+import frc.robot.Constants.PortConfig;
 import frc.robot.Constants.IndexerConfig;
 
 public class Indexer extends SubsystemBase {
-    private final CANSparkMax motor = new CANSparkMax(CANConfig.INDEXER_ROTATION, MotorType.kBrushless);
+    private final CANSparkMax motor = new CANSparkMax(PortConfig.INDEXER_ROTATION, MotorType.kBrushless);
 
     /**
      * Shoots notes out of one end into the speaker and dumps them out of the other

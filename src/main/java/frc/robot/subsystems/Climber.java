@@ -12,14 +12,14 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
-import frc.robot.Constants.CANConfig;
+import frc.robot.Constants.PortConfig;
 import frc.robot.Constants.ClimberConfig;
 import frc.robot.Constants.ClimberConfig.ClimberState;
 
 public class Climber extends PIDSubsystemBase {
     /** Moves the chain hooks into position to raise the robot. */
     public Climber() {
-        super(new CANSparkMax(CANConfig.CLIMBER_EXTENSION, MotorType.kBrushless), ClimberConfig.P, ClimberConfig.I,
+        super(new CANSparkMax(PortConfig.CLIMBER_EXTENSION, MotorType.kBrushless), ClimberConfig.P, ClimberConfig.I,
                 ClimberConfig.D, new Constraints(ClimberConfig.MAX_VELOCITY, ClimberConfig.MAX_ACCELERATION), false,
                 ClimberConfig.MOTOR_POSITION_CONVERSION, 50, Constants.CLIMBER_TAB, true);
     }
