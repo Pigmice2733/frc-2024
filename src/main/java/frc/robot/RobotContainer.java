@@ -9,6 +9,7 @@ import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
 import com.pigmice.frc.lib.drivetrain.swerve.commands.DriveWithJoysticksSwerve;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.ControlBindings;
 import frc.robot.Constants.DrivetrainConfig;
 import frc.robot.Constants.ClimberConfig.ClimberState;
 import frc.robot.commands.actions.intake.IntakeFromGround;
@@ -52,7 +54,7 @@ public class RobotContainer {
         private final Shooter shooter = new Shooter();
         private final Indexer indexer = new Indexer();
         private final Wrist wrist = new Wrist();
-        private final Vision vision = new Vision();
+        // private final Vision vision = new Vision();
         private final NoteSensor noteSensor = new NoteSensor();
 
         private final XboxController driver;
@@ -61,6 +63,7 @@ public class RobotContainer {
 
         // private final Pathfinder pathfinder = new
         // Pathfinder(DrivetrainConfig.TRACK_WIDTH_METERS, "frc-2024");
+
         private final SemiAutoManager semiAutoManager = new SemiAutoManager();
 
         private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -72,6 +75,7 @@ public class RobotContainer {
                 driver = new XboxController(0);
                 operator = new XboxController(1);
                 controls = new Controls(driver, operator);
+                DriverStation.silenceJoystickConnectionWarning(true);
 
                 ControllerRumbler.setControllers(driver, operator);
 
@@ -136,19 +140,19 @@ public class RobotContainer {
          */
         private void configureButtonBindings() {
                 // Operator X (hold) - fire shooter into speaker
-                new JoystickButton(operator, Button.kX.value)
+                new JoystickButton(operator, ControlBindings.SCORE_SPEAKER_BUTTON)
                                 .whileTrue(new FireIntoSpeaker(arm, wrist, shooter, indexer));
 
                 // Operator B (hold) - fire shooter into amp
-                new JoystickButton(operator, Button.kB.value)
+                new JoystickButton(operator, ControlBindings.SCORE_AMP_BUTTON)
                                 .whileTrue(new FireIntoAmp(arm, wrist, shooter, indexer));
 
                 // Operator A (hold) - intake a note from the ground
-                new JoystickButton(operator, Button.kA.value)
+                new JoystickButton(operator, ControlBindings.INTAKE_GROUND_BUTTON)
                                 .whileTrue(new IntakeFromGround(intake, indexer, arm, wrist, noteSensor));
 
                 // Operator Y (hold) - climber up on press then down on release
-                new JoystickButton(operator, Button.kX.value)
+                new JoystickButton(operator, ControlBindings.CLIMB_BUTTON)
                                 .onTrue(climberExtension.setTargetState(ClimberState.UP))
                                 .onFalse(climberExtension.setTargetState(ClimberState.DOWN));
         }

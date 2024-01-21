@@ -318,5 +318,9 @@ public final class Constants {
 
     public static class ControlBindings {
         public final static int SCORE_AMP_BUTTON = Button.kX.value;
+        public final static int SCORE_SPEAKER_BUTTON = Button.kY.value;
+        public final static int INTAKE_GROUND_BUTTON = Button.kB.value;
+        public final static int CLIMB_BUTTON = Button.kA.value;
+
     }
 }
