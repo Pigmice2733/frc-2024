@@ -50,10 +50,7 @@ public class Intake extends PIDSubsystemBase {
      * carried, and stops it otherwise.
      */
     public void outputToMotor(double percent) {
-        if (!NoteSensor.getNoteState())
-            wheelsMotor.set(percent);
-        else
-            wheelsMotor.set(0);
+        wheelsMotor.set(percent);
     }
 
     /**
@@ -61,10 +58,7 @@ public class Intake extends PIDSubsystemBase {
      * otherwise.
      */
     public Command runWheelsForward() {
-        if (!NoteSensor.getNoteState())
-            return Commands.runOnce(() -> outputToMotor(IntakeConfig.WHEELS_SPEED));
-        else
-            return Commands.none();
+        return Commands.runOnce(() -> outputToMotor(IntakeConfig.WHEELS_SPEED));
     }
 
     /** Spins intake wheels to eject balls. */

@@ -16,7 +16,7 @@ public class IntakeFromGround extends SequentialCommandGroup {
                 intake.goToState(IntakeState.DOWN) // Intake is down
         ),
                 intake.runWheelsForward(), indexer.indexForward(), // Start intake and indexer wheels
-                noteSensor.waitForNote()); // Wait for a note to be detected
+                noteSensor.waitForNoteInIndexer()); // Wait for a note to be detected
 
         andThen(intake.stopWheels(), indexer.stopIndexer(), intake.stow());
 

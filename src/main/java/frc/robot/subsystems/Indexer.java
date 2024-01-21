@@ -40,10 +40,7 @@ public class Indexer extends SubsystemBase {
 
     /** Intake into the shooter box, as long as no note is being carried. */
     public Command indexBackward() {
-        if (!NoteSensor.getNoteState())
-            return Commands.runOnce(() -> outputToMotor(IndexerConfig.BACKWARD_SPEED));
-        else
-            return Commands.none();
+        return Commands.runOnce(() -> outputToMotor(IndexerConfig.BACKWARD_SPEED));
     }
 
     public Command stopIndexer() {
