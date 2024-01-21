@@ -45,115 +45,120 @@ import frc.robot.subsystems.Wrist;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    private final SwerveDrivetrain drivetrain = new SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
-    private final Arm arm = new Arm();
-    private final Climber climberExtension = new Climber();
-    private final Intake intake = new Intake();
-    private final Shooter shooter = new Shooter();
-    private final Indexer indexer = new Indexer();
-    private final Wrist wrist = new Wrist();
-    private final Vision vision = new Vision();
-    private final NoteSensor noteSensor = new NoteSensor();
+        private final SwerveDrivetrain drivetrain = new SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
+        private final Arm arm = new Arm();
+        private final Climber climberExtension = new Climber();
+        private final Intake intake = new Intake();
+        private final Shooter shooter = new Shooter();
+        private final Indexer indexer = new Indexer();
+        private final Wrist wrist = new Wrist();
+        private final Vision vision = new Vision();
+        private final NoteSensor noteSensor = new NoteSensor();
 
-    private final XboxController driver;
-    private final XboxController operator;
-    private final Controls controls;
+        private final XboxController driver;
+        private final XboxController operator;
+        private final Controls controls;
 
-    private final Pathfinder pathfinder = new Pathfinder(DrivetrainConfig.TRACK_WIDTH_METERS, "frc-2024");
-    private final SemiAutoManager semiAutoManager = new SemiAutoManager();
+        // private final Pathfinder pathfinder = new
+        // Pathfinder(DrivetrainConfig.TRACK_WIDTH_METERS, "frc-2024");
+        private final SemiAutoManager semiAutoManager = new SemiAutoManager();
 
-    private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+        private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
-    /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
-     */
-    public RobotContainer() {
-        driver = new XboxController(0);
-        operator = new XboxController(1);
-        controls = new Controls(driver, operator);
+        /**
+         * The container for the robot. Contains subsystems, OI devices, and commands.
+         */
+        public RobotContainer() {
+                driver = new XboxController(0);
+                operator = new XboxController(1);
+                controls = new Controls(driver, operator);
 
-        ControllerRumbler.setControllers(driver, operator);
+                ControllerRumbler.setControllers(driver, operator);
 
-        drivetrain.setDefaultCommand(new DriveWithJoysticksSwerve(drivetrain,
-                controls::getDriveSpeedX,
-                controls::getDriveSpeedY,
-                controls::getTurnSpeed,
-                () -> true));
+                drivetrain.setDefaultCommand(new DriveWithJoysticksSwerve(drivetrain,
+                                controls::getDriveSpeedX,
+                                controls::getDriveSpeedY,
+                                controls::getTurnSpeed,
+                                () -> true));
 
-        configureButtonBindings();
-        configureAutoChooser();
-        configureSemiAutoManager();
-    }
+                configureButtonBindings();
+                configureAutoChooser();
+                configureSemiAutoManager();
+        }
 
-    public void onEnable() {
-        arm.resetPID();
-        climberExtension.resetPID();
-        intake.resetPID();
-        wrist.resetPID();
-    }
+        public void onEnable() {
+                arm.resetPID();
+                climberExtension.resetPID();
+                intake.resetPID();
+                wrist.resetPID();
+        }
 
-    public void onDisable() {
-        ControllerRumbler.stopBothControllers();
-    }
+        public void onDisable() {
+                ControllerRumbler.stopBothControllers();
+        }
 
-    /** Initialize all semi auto tasks */
-    private void configureSemiAutoManager() {
-        semiAutoManager.addTasksToShuffleboard(
-                new ClimbSA(drivetrain, pathfinder, arm, wrist, climberExtension, intake)
-                        .withName("Climb"),
-                new FetchRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist, noteSensor)
-                        .withName("Fetch Ring"),
-                new FindRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist, noteSensor, vision)
-                        .withName("Find Ring"),
-                new ScoreAmpSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
-                        .withName("Score AMP"),
-                new ScoreSpeakerSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
-                        .withName("Score Speaker"));
-    }
+        /** Initialize all semi auto tasks */
+        private void configureSemiAutoManager() {
+                /*
+                 * semiAutoManager.addTasksToShuffleboard(
+                 * new ClimbSA(drivetrain, pathfinder, arm, wrist, climberExtension, intake)
+                 * .withName("Climb"),
+                 * new FetchRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist,
+                 * noteSensor)
+                 * .withName("Fetch Ring"),
+                 * new FindRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist,
+                 * noteSensor, vision)
+                 * .withName("Find Ring"),
+                 * new ScoreAmpSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
+                 * .withName("Score AMP"),
+                 * new ScoreSpeakerSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
+                 * .withName("Score Speaker"));
+                 */
+        }
 
-    private void configureAutoChooser() {
-        autoChooser.addOption("Example",
-                new InstantCommand().withName("Example Option"));
+        private void configureAutoChooser() {
+                autoChooser.addOption("Example",
+                                new InstantCommand().withName("Example Option"));
 
-        // Default to doing nothing
-        autoChooser.setDefaultOption("None", new InstantCommand());
+                // Default to doing nothing
+                autoChooser.setDefaultOption("None", new InstantCommand());
 
-        Constants.DRIVER_TAB.add("Auto Command", autoChooser);
-    }
+                Constants.DRIVER_TAB.add("Auto Command", autoChooser);
+        }
 
-    /**
-     * Use this method to define your button->command mappings. Buttons can be
-     * created by
-     * instantiating a {@link GenericHID} or one of its subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-     * it to a {@link
-     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-     */
-    private void configureButtonBindings() {
-        // Operator X (hold) - fire shooter into speaker
-        new JoystickButton(operator, Button.kX.value)
-                .whileTrue(new FireIntoSpeaker(arm, wrist, shooter, indexer));
+        /**
+         * Use this method to define your button->command mappings. Buttons can be
+         * created by
+         * instantiating a {@link GenericHID} or one of its subclasses ({@link
+         * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+         * it to a {@link
+         * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+         */
+        private void configureButtonBindings() {
+                // Operator X (hold) - fire shooter into speaker
+                new JoystickButton(operator, Button.kX.value)
+                                .whileTrue(new FireIntoSpeaker(arm, wrist, shooter, indexer));
 
-        // Operator B (hold) - fire shooter into amp
-        new JoystickButton(operator, Button.kB.value)
-                .whileTrue(new FireIntoAmp(arm, wrist, shooter, indexer));
+                // Operator B (hold) - fire shooter into amp
+                new JoystickButton(operator, Button.kB.value)
+                                .whileTrue(new FireIntoAmp(arm, wrist, shooter, indexer));
 
-        // Operator A (hold) - intake a note from the ground
-        new JoystickButton(operator, Button.kA.value)
-                .whileTrue(new IntakeFromGround(intake, indexer, arm, wrist, noteSensor));
+                // Operator A (hold) - intake a note from the ground
+                new JoystickButton(operator, Button.kA.value)
+                                .whileTrue(new IntakeFromGround(intake, indexer, arm, wrist, noteSensor));
 
-        // Operator Y (hold) - climber up on press then down on release
-        new JoystickButton(operator, Button.kX.value)
-                .onTrue(climberExtension.setTargetState(ClimberState.UP))
-                .onFalse(climberExtension.setTargetState(ClimberState.DOWN));
-    }
+                // Operator Y (hold) - climber up on press then down on release
+                new JoystickButton(operator, Button.kX.value)
+                                .onTrue(climberExtension.setTargetState(ClimberState.UP))
+                                .onFalse(climberExtension.setTargetState(ClimberState.DOWN));
+        }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     * 
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommand() {
-        return autoChooser.getSelected().withTimeout(15);
-    }
+        /**
+         * Use this to pass the autonomous command to the main {@link Robot} class.
+         * 
+         * @return the command to run in autonomous
+         */
+        public Command getAutonomousCommand() {
+                return autoChooser.getSelected().withTimeout(15);
+        }
 }
