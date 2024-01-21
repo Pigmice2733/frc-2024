@@ -21,5 +21,4 @@ public class ArmAtTargetPos extends Transition<RobotState, RobotData> {
     public RobotState execute(RobotData robotData) {
         return to;
     }
-
 }

@@ -13,5 +13,4 @@ public class RunIdle extends RunningLoop<RobotState, RobotData> {
     @Override
     protected void run(RobotData robotData) {
     }
-
 }

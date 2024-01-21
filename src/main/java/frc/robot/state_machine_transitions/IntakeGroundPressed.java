@@ -22,5 +22,4 @@ public class IntakeGroundPressed extends Transition<RobotState, RobotData> {
         // TODO: start intake flywheels
         return to;
     }
-
 }

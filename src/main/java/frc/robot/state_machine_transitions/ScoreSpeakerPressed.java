@@ -22,5 +22,4 @@ public class ScoreSpeakerPressed extends Transition<RobotState, RobotData> {
         // TODO: set wrist, arm, and intake target positions
         return to;
     }
-
 }

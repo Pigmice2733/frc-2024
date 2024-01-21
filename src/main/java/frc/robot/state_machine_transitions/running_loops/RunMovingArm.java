@@ -15,5 +15,4 @@ public class RunMovingArm extends RunningLoop<RobotState, RobotData> {
         // TODO: move the arm and wrist
         throw new UnsupportedOperationException();
     }
-
 }

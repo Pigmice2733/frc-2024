@@ -15,5 +15,4 @@ public class RunIntaking extends RunningLoop<RobotState, RobotData> {
         // TODO: keep running the intake
         throw new UnsupportedOperationException();
     }
-
 }

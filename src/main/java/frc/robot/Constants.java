@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -309,6 +310,9 @@ public final class Constants {
             public final static Pose2d CLIMBING = new Pose2d(0, 0, new Rotation2d());
             public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(0, 0, new Rotation2d());
         }
+    }
 
+    public static class ControlBindings {
+        public final static int SCORE_AMP_BUTTON = Button.kX.value;
     }
 }

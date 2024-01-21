@@ -15,5 +15,4 @@ public class RunScoring extends RunningLoop<RobotState, RobotData> {
         // TODO: run and feed the flywheels
         throw new UnsupportedOperationException();
     }
-
 }

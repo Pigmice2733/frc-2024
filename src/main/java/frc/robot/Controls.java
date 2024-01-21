@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Constants.ControlBindings;
 import frc.robot.Constants.DrivetrainConfig;
 
 public class Controls {
@@ -58,5 +59,19 @@ public class Controls {
         joystickTurn = turnSpeedFilter.calculate(joystickTurn); // input smoothing
 
         return joystickTurn * DrivetrainConfig.MAX_TURN_SPEED;
+    }
+
+    public ControlsState getCurrentControlsState() {
+        return new ControlsState();
+    }
+
+    public class ControlsState {
+        public boolean scoreAmpPressed;
+        public boolean scoreAmpReleased;
+
+        public ControlsState() {
+            this.scoreAmpPressed = driver.getRawButtonPressed(ControlBindings.SCORE_AMP_BUTTON);
+            this.scoreAmpPressed = driver.getRawButtonReleased(ControlBindings.SCORE_AMP_BUTTON);
+        }
     }
 }

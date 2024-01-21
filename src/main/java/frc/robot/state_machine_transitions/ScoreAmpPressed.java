@@ -22,5 +22,4 @@ public class ScoreAmpPressed extends Transition<RobotState, RobotData> {
         // TODO: set wrist, arm, and intake target positions
         return to;
     }
-
 }
