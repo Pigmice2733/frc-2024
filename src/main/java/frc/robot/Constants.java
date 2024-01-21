@@ -82,6 +82,8 @@ public final class Constants {
         public static final int ARM_LIMIT_SWITCH = 0;
         public static final int INTAKE_LIMIT_SWITCH = 1;
         public static final int WRIST_LIMIT_SWITCH = 2;
+        public static final int INTAKE_BEAM_BREAK = 3;
+        public static final int INDEXER_BEAM_BREAK = 4;
     }
 
     public final static class DrivetrainConfig {
