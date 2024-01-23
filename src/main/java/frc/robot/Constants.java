@@ -47,19 +47,19 @@ public final class Constants {
     public static final double AXIS_THRESHOLD = 0.25;
 
     public static final class CANConfig {
-        public static final int FRONT_LEFT_DRIVE = 11; // done
-        public static final int FRONT_LEFT_STEER = 10;// done
-        public static final int FRONT_RIGHT_DRIVE = 13;// done
-        public static final int FRONT_RIGHT_STEER = 12;// done
-        public static final int BACK_LEFT_DRIVE = 16;// done
-        public static final int BACK_LEFT_STEER = 17;// done
-        public static final int BACK_RIGHT_DRIVE = 14;// done
-        public static final int BACK_RIGHT_STEER = 15;// done
+        public static final int FRONT_LEFT_DRIVE = 11;
+        public static final int FRONT_LEFT_STEER = 10;
+        public static final int FRONT_RIGHT_DRIVE = 13;
+        public static final int FRONT_RIGHT_STEER = 12;
+        public static final int BACK_LEFT_DRIVE = 16;
+        public static final int BACK_LEFT_STEER = 17;
+        public static final int BACK_RIGHT_DRIVE = 14;
+        public static final int BACK_RIGHT_STEER = 15;
 
-        public static final int FRONT_LEFT_ABS_ENCODER = 20;// done
-        public static final int FRONT_RIGHT_ABS_ENCODER = 24;// done
-        public static final int BACK_LEFT_ABS_ENCODER = 22;// done
-        public static final int BACK_RIGHT_ABS_ENCODER = 26;// done
+        public static final int FRONT_LEFT_ABS_ENCODER = 20;
+        public static final int FRONT_RIGHT_ABS_ENCODER = 24;
+        public static final int BACK_LEFT_ABS_ENCODER = 22;
+        public static final int BACK_RIGHT_ABS_ENCODER = 26;
 
         public static final int ARM_ROTATION = 30;
         public static final int ARM_ENCODER = 31;
