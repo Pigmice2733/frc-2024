@@ -46,6 +46,8 @@ public final class Constants {
 
     public static final double AXIS_THRESHOLD = 0.25;
 
+    public static final double ROBOT_WIDTH = 1; // in centimeters
+
     public static final class CANConfig {
         public static final int FRONT_LEFT_DRIVE = 11;
         public static final int FRONT_LEFT_STEER = 10;
@@ -185,7 +187,8 @@ public final class Constants {
         public static enum ArmState {
             STOW(90),
             AMP(45),
-            SPEAKER(0);
+            SPEAKER(0),
+            SOURCE(30);
 
             private double position;
 
@@ -242,7 +245,8 @@ public final class Constants {
         public static enum WristState {
             STOW(0),
             AMP(30),
-            SPEAKER(60);
+            SPEAKER(60),
+            SOURCE(45);
 
             private double position;
 
@@ -272,7 +276,8 @@ public final class Constants {
 
         public static enum IntakeState {
             STOW(0),
-            DOWN(30);
+            DOWN(30),
+            UP(10);
 
             private double position;
 
@@ -313,16 +318,20 @@ public final class Constants {
             public final static Pose2d HUMAN_PLAYER_PICKUP = new Pose2d(0, 0, new Rotation2d());
             public final static Pose2d AMP_SCORING = new Pose2d(0, 0, new Rotation2d());
             public final static Pose2d SPEAKER_SCORING = new Pose2d(0, 0, new Rotation2d());
-            public final static Pose2d CLIMBING = new Pose2d(0, 0, new Rotation2d());
+            public final static Pose2d CLIMBING_LEFT = new Pose2d(0, 0, new Rotation2d());
+            public final static Pose2d CLIMBING_RIGHT = new Pose2d(0, 0, new Rotation2d());
+            public final static Pose2d CLIMBING_BACK = new Pose2d(0, 0, new Rotation2d());
             public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(0, 0, new Rotation2d());
         }
     }
 
     public static class ControlBindings {
+        // TODO decide these with strategy / drive team
         public final static int SCORE_AMP_BUTTON = Button.kX.value;
         public final static int SCORE_SPEAKER_BUTTON = Button.kY.value;
         public final static int INTAKE_GROUND_BUTTON = Button.kB.value;
+        public final static int INTAKE_SOURCE_BUTTON = Button.kB.value;
         public final static int CLIMB_BUTTON = Button.kA.value;
-
+        public final static int STOW_BUTTON = Button.kB.value;
     }
 }

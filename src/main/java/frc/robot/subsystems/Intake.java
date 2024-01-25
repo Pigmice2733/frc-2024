@@ -54,14 +54,14 @@ public class Intake extends PIDSubsystemBase {
     }
 
     /**
-     * Spins intake wheels to intake balls if no note is being carried, and stops it
+     * Spins intake wheels to intake notes if no note is being carried, and stops it
      * otherwise.
      */
     public Command runWheelsForward() {
         return Commands.runOnce(() -> outputToMotor(IntakeConfig.WHEELS_SPEED));
     }
 
-    /** Spins intake wheels to eject balls. */
+    /** Spins intake wheels to eject notes. */
     public Command runWheelsBackward() {
         return Commands.runOnce(() -> outputToMotor(-IntakeConfig.WHEELS_SPEED));
     }
