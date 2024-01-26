@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -35,6 +36,8 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -74,6 +77,8 @@ public class RobotContainer {
             e.printStackTrace();
         }
 
+        swerveDrive.setModuleStateOptimization(false);
+
         driver = new XboxController(0);
         operator = new XboxController(1);
 
@@ -90,6 +95,28 @@ public class RobotContainer {
 
         configureButtonBindings();
         configureAutoChooser();
+    }
+
+    public void periodic() {
+        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+        SmartDashboard.putNumber("FL Angle", swerveDrive.getStates()[0].angle.getDegrees());
+        SmartDashboard.putNumber("FR Angle", swerveDrive.getStates()[1].angle.getDegrees());
+        SmartDashboard.putNumber("BL Angle", swerveDrive.getStates()[2].angle.getDegrees());
+        SmartDashboard.putNumber("BR Angle", swerveDrive.getStates()[3].angle.getDegrees());
+
+        SmartDashboard.putNumber("FL Target", swerveDrive.getModules()[0].lastState.angle.getDegrees());
+
+        SmartDashboard.putNumber("Heading Target", SwerveDriveTelemetry.desiredChassisSpeeds[0]);
+
+        // swerveDrive.driveFieldOriented(new ChassisSpeeds(1, 0, 0));
+        // swerveDrive.drive();
+
+        // swerveDrive.getModules()[0].setAngle(0);
+        // swerveDrive.getModules()[1].setAngle(0);
+        // swerveDrive.getModules()[2].setAngle(0);
+        // swerveDrive.getModules()[3].setAngle(0);
+
+        // swerveDrive.drive(new ChassisSpeeds(1, 0, 0));
     }
 
     private void configureAutoChooser() {
