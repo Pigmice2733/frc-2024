@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
@@ -104,6 +106,12 @@ public class RobotContainer {
 
         // Default to doing nothing
         autoChooser.setDefaultOption("None", new InstantCommand());
+
+        autoChooser.addOption("Straight Path", new FollowPathHolonomic(PathPlannerPath.fromPathFile("straightLineTest"),
+                null, null, null, null, null));
+
+        autoChooser.addOption("Straight Path", new FollowPathHolonomic(PathPlannerPath.fromPathFile("curveTest"),
+                null, null, null, null, null));
 
         Constants.DRIVER_TAB.add("Auto Command", autoChooser);
     }

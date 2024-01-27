@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 import com.pigmice.frc.lib.pid_subsystem.PIDSubsystemBase;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
