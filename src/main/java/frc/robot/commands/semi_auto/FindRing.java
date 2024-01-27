@@ -4,8 +4,8 @@
 
 package frc.robot.commands.semi_auto;
 
-import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
-import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
+// import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
+// import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,23 +17,24 @@ import frc.robot.subsystems.NoteSensor;
 import frc.robot.subsystems.vision.Vision;
 
 public class FindRing extends SequentialCommandGroup {
-        /**
-         * Searches for a ring on the floor and picks it up.
-         */
-        public FindRing(SwerveDrivetrain drivetrain, Pathfinder pathfinder, Intake intake, Indexer indexer,
-                        NoteSensor noteSensor, Vision vision) {
+    /**
+     * Searches for a ring on the floor and picks it up.
+     */
+    public FindRing(/* SwerveDrivetrain drivetrain, */Pathfinder pathfinder, Intake intake, Indexer indexer,
+            NoteSensor noteSensor, Vision vision) {
 
-                addCommands(
-                                // Search for a ring (maybe pathfind to a central location)
-                                Commands.parallel(
-                                                new PathfindToPointSwerve(drivetrain, pathfinder,
-                                                                Locations.CENTRAL_RING_SEARCH),
-                                                vision.waitForRing()),
-                                // Once a ring is spotted, drive in front of it
-                                // TODO
-                                // Pick the ring up
-                                new IntakeFromGround(intake, indexer, noteSensor));
+        addCommands(
+                // Search for a ring (maybe pathfind to a central location)
+                // TODO: fix once the fixed drivetrain is merged in
+                // Commands.parallel(
+                // new PathfindToPointSwerve(drivetrain, pathfinder,
+                // Locations.CENTRAL_RING_SEARCH),
+                // vision.waitForRing()),
+                // Once a ring is spotted, drive in front of it
+                // TODO
+                // Pick the ring up
+                new IntakeFromGround(intake, indexer, noteSensor));
 
-                addRequirements(drivetrain, intake, indexer, noteSensor);
-        }
+        addRequirements(/* TODO drivetrain, */intake, indexer, noteSensor);
+    }
 }

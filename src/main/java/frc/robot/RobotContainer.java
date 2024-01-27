@@ -5,8 +5,6 @@
 package frc.robot;
 
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
-import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
-import com.pigmice.frc.lib.drivetrain.swerve.commands.DriveWithJoysticksSwerve;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -46,7 +44,8 @@ import frc.robot.subsystems.Wrist;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    private final SwerveDrivetrain drivetrain = new SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
+    // private final SwerveDrivetrain drivetrain = new
+    // SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
     private final Arm arm = new Arm();
     private final Climber climberExtension = new Climber();
     private final Intake intake = new Intake();
@@ -55,6 +54,8 @@ public class RobotContainer {
     private final Wrist wrist = new Wrist();
     private final Vision vision = new Vision();
     private final NoteSensor noteSensor = new NoteSensor();
+    // public final SwerveDrivetrain drivetrain = new
+    // SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
 
     private final XboxController driver;
     private final XboxController operator;
@@ -76,11 +77,11 @@ public class RobotContainer {
 
         ControllerRumbler.setControllers(driver, operator);
 
-        drivetrain.setDefaultCommand(new DriveWithJoysticksSwerve(drivetrain,
-                controls::getDriveSpeedX,
-                controls::getDriveSpeedY,
-                controls::getTurnSpeed,
-                () -> true));
+        // drivetrain.setDefaultCommand(new DriveWithJoysticksSwerve(drivetrain,
+        // controls::getDriveSpeedX,
+        // controls::getDriveSpeedY,
+        // controls::getTurnSpeed,
+        // () -> true));
 
         configureButtonBindings();
         configureAutoChooser();
@@ -116,37 +117,43 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        // Hold to fire into speaker
-        new JoystickButton(operator, ControlBindings.SCORE_SPEAKER_BUTTON)
-                .onTrue(new ScoreSpeaker(drivetrain, pathfinder, arm, wrist, shooter, indexer,
-                        intake, noteSensor))
-                .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
-
-        // Hold to fire into amp
-        new JoystickButton(operator, ControlBindings.SCORE_AMP_BUTTON)
-                .onTrue(new ScoreAmp(drivetrain, pathfinder, arm, wrist, shooter, indexer,
-                        noteSensor, intake))
-                .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
-
-        // Hold to intake a note from the ground
-        new JoystickButton(operator, ControlBindings.INTAKE_GROUND_BUTTON)
-                .onTrue(new IntakeFromGround(intake, indexer, noteSensor))
-                .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
-
-        // Hold to intake a note from the source
-        new JoystickButton(operator, ControlBindings.INTAKE_SOURCE_BUTTON)
-                .onTrue(new IntakeFromSource(drivetrain, pathfinder, intake, arm, wrist, noteSensor, shooter))
-                .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
-
-        // Hold to climb
-        new JoystickButton(operator, ControlBindings.CLIMB_BUTTON)
-                .onTrue(new Climb(drivetrain, pathfinder, arm, wrist, climberExtension, intake))
-                .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
-
-        // Hold to stow subsystems
-        new JoystickButton(operator, ControlBindings.STOW_BUTTON)
-                .onTrue(new Stow(intake, arm, wrist))
-                .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+        // TODO: uncomment once the fixed drivetrain is merged in
+        /*
+         * // Hold to fire into speaker
+         * new JoystickButton(operator, ControlBindings.SCORE_SPEAKER_BUTTON)
+         * .onTrue(new ScoreSpeaker(drivetrain, pathfinder, arm, wrist, shooter,
+         * indexer,
+         * intake, noteSensor))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to fire into amp
+         * new JoystickButton(operator, ControlBindings.SCORE_AMP_BUTTON)
+         * .onTrue(new ScoreAmp(drivetrain, pathfinder, arm, wrist, shooter, indexer,
+         * noteSensor, intake))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to intake a note from the ground
+         * new JoystickButton(operator, ControlBindings.INTAKE_GROUND_BUTTON)
+         * .onTrue(new IntakeFromGround(intake, indexer, noteSensor))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to intake a note from the source
+         * new JoystickButton(operator, ControlBindings.INTAKE_SOURCE_BUTTON)
+         * .onTrue(new IntakeFromSource(drivetrain, pathfinder, intake, arm, wrist,
+         * noteSensor, shooter))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to climb
+         * new JoystickButton(operator, ControlBindings.CLIMB_BUTTON)
+         * .onTrue(new Climb(drivetrain, pathfinder, arm, wrist, climberExtension,
+         * intake))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to stow subsystems
+         * new JoystickButton(operator, ControlBindings.STOW_BUTTON)
+         * .onTrue(new Stow(intake, arm, wrist))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         */
     }
 
     /**

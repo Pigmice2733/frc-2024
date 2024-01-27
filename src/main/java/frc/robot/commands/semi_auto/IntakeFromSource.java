@@ -4,8 +4,8 @@
 
 package frc.robot.commands.semi_auto;
 
-import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
-import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
+// import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
+// import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -23,11 +23,13 @@ import frc.robot.subsystems.Wrist;
 
 public class IntakeFromSource extends SequentialCommandGroup {
     /** Drives to the human player and obtains a ring. */
-    public IntakeFromSource(SwerveDrivetrain drivetrain, Pathfinder pathfinder, Intake intake, Arm arm,
+    public IntakeFromSource(/* SwerveDrivetrain drivetrain, */ Pathfinder pathfinder, Intake intake, Arm arm,
             Wrist wrist, NoteSensor noteSensor, Shooter shooter) {
         addCommands(
                 // Pathfind to a point right in front of the human player
-                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.HUMAN_PLAYER_PICKUP),
+                // TODO: fix once the fixed drivetrain is merged in
+                // new PathfindToPointSwerve(drivetrain, pathfinder,
+                // Locations.HUMAN_PLAYER_PICKUP),
                 // Start spinning the flywheels
                 shooter.spinFlywheelsBackward(),
                 // Wait until the wheels are spinning and the subsystems are in place
@@ -44,6 +46,6 @@ public class IntakeFromSource extends SequentialCommandGroup {
                 // Stop spinning the flywheels
                 shooter.stopFlywheels());
 
-        addRequirements(drivetrain, intake, arm, wrist);
+        addRequirements(/* TODO drivetrain, */ intake, arm, wrist);
     }
 }

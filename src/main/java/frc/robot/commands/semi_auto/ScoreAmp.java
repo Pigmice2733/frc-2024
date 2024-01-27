@@ -4,8 +4,8 @@
 
 package frc.robot.commands.semi_auto;
 
-import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
-import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
+// import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
+// import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -23,12 +23,13 @@ import frc.robot.subsystems.Wrist;
 
 public class ScoreAmp extends SequentialCommandGroup {
     /** Drives to the amp then scores */
-    public ScoreAmp(SwerveDrivetrain drivetrain, Pathfinder pathfinder, Arm arm, Wrist wrist, Shooter shooter,
+    public ScoreAmp(/* SwerveDrivetrain drivetrain, */ Pathfinder pathfinder, Arm arm, Wrist wrist, Shooter shooter,
             Indexer indexer, NoteSensor noteSensor, Intake intake) {
 
         addCommands(
                 // Pathfind to a point right in front of the amp
-                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.AMP_SCORING),
+                // TODO: fix once the fixed drivetrain is merged in
+                // new PathfindToPointSwerve(drivetrain, pathfinder, Locations.AMP_SCORING),
                 // Move intake out of the way
                 intake.goToState(IntakeState.UP),
                 // Move arm and wrist to states
@@ -40,6 +41,6 @@ public class ScoreAmp extends SequentialCommandGroup {
                 // Stop running the indexer
                 indexer.stopIndexer());
 
-        addRequirements(drivetrain, arm, wrist, shooter, indexer, noteSensor, intake);
+        addRequirements(/* TODOdrivetrain, */ arm, wrist, shooter, indexer, noteSensor, intake);
     }
 }

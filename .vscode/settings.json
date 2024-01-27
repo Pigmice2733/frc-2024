@@ -1,7 +1,6 @@
 {
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.server.launchMode": "Standard",
-  "java.settings.url": ".vscode/settings.prefs",
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,

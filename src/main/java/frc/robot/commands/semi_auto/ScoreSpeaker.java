@@ -4,8 +4,8 @@
 
 package frc.robot.commands.semi_auto;
 
-import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
-import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
+// import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
+// import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -24,12 +24,13 @@ import frc.robot.subsystems.Wrist;
 
 public class ScoreSpeaker extends SequentialCommandGroup {
     /** Drives to the speaker then scores */
-    public ScoreSpeaker(SwerveDrivetrain drivetrain, Pathfinder pathfinder, Arm arm, Wrist wrist, Shooter shooter,
+    public ScoreSpeaker(/* SwerveDrivetrain drivetrain, */ Pathfinder pathfinder, Arm arm, Wrist wrist, Shooter shooter,
             Indexer indexer, Intake intake, NoteSensor noteSensor) {
 
         addCommands(
                 // Pathfind to a point right in front of the amp
-                new PathfindToPointSwerve(drivetrain, pathfinder, Locations.AMP_SCORING),
+                // TODO: fix once the fixed drivetrain is merged in
+                // new PathfindToPointSwerve(drivetrain, pathfinder, Locations.AMP_SCORING),
                 // Start spinning the flywheels
                 shooter.spinFlywheelsForward(),
                 // Wait until the wheels are spinning and the subsystems are in place
@@ -48,6 +49,6 @@ public class ScoreSpeaker extends SequentialCommandGroup {
                 // Stop spinning the indexer and shooter wheels
                 Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
 
-        addRequirements(drivetrain, arm, wrist, shooter, indexer, intake, noteSensor);
+        addRequirements(/* drivetrain, */ arm, wrist, shooter, indexer, intake, noteSensor);
     }
 }
