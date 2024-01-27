@@ -4,11 +4,7 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pigmice.frc.lib.drivetrain.swerve.SwerveConfig;
-import com.swervedrivespecialties.swervelib.MkSwerveModuleBuilder;
-import com.swervedrivespecialties.swervelib.MotorType;
-import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -16,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -46,35 +43,53 @@ public final class Constants {
     public static final ShuffleboardTab ARM_TAB = Shuffleboard.getTab("Arm");
     public static final ShuffleboardTab CLIMBER_TAB = Shuffleboard.getTab("Climber");
     public static final ShuffleboardTab INTAKE_TAB = Shuffleboard.getTab("Intake");
+    public static final ShuffleboardTab INDEXER_TAB = Shuffleboard.getTab("Indexer");
     public static final ShuffleboardTab SHOOTER_TAB = Shuffleboard.getTab("Shooter");
+    public static final ShuffleboardTab WRIST_TAB = Shuffleboard.getTab("Wrist");
     public static final ShuffleboardTab VISION_TAB = Shuffleboard.getTab("Vision");
 
     public static final double AXIS_THRESHOLD = 0.25;
 
+    public static final double ROBOT_WIDTH = 1; // in centimeters
+
     public static final class CANConfig {
-        public static final int FRONT_LEFT_DRIVE = 11; // done
-        public static final int FRONT_LEFT_STEER = 10;// done
-        public static final int FRONT_RIGHT_DRIVE = 13;// done
-        public static final int FRONT_RIGHT_STEER = 12;// done
-        public static final int BACK_LEFT_DRIVE = 16;// done
-        public static final int BACK_LEFT_STEER = 17;// done
-        public static final int BACK_RIGHT_DRIVE = 14;// done
-        public static final int BACK_RIGHT_STEER = 15;// done
+        public static final int FRONT_LEFT_DRIVE = 11;
+        public static final int FRONT_LEFT_STEER = 10;
+        public static final int FRONT_RIGHT_DRIVE = 13;
+        public static final int FRONT_RIGHT_STEER = 12;
+        public static final int BACK_LEFT_DRIVE = 16;
+        public static final int BACK_LEFT_STEER = 17;
+        public static final int BACK_RIGHT_DRIVE = 14;
+        public static final int BACK_RIGHT_STEER = 15;
 
-        public static final int FRONT_LEFT_ABS_ENCODER = 20;// done
-        public static final int FRONT_RIGHT_ABS_ENCODER = 24;// done
-        public static final int BACK_LEFT_ABS_ENCODER = 22;// done
-        public static final int BACK_RIGHT_ABS_ENCODER = 26;// done
+        public static final int FRONT_LEFT_ABS_ENCODER = 20;
+        public static final int FRONT_RIGHT_ABS_ENCODER = 24;
+        public static final int BACK_LEFT_ABS_ENCODER = 22;
+        public static final int BACK_RIGHT_ABS_ENCODER = 26;
 
-        public static final int ARM = 30;
+        public static final int ARM_ROTATION = 30;
+        public static final int ARM_ENCODER = 31;
 
         public static final int CLIMBER_EXTENSION = 40;
 
         public static final int INTAKE_WHEELS = 50;
         public static final int INTAKE_PIVOT = 51;
+        public static final int INTAKE_ENCODER = 52;
 
-        public static final int SHOOTER_MOTOR = 60;
-        public static final int FEEDER_MOTOR = 61;
+        public static final int SHOOTER_ROTATION = 60;
+
+        public static final int WRIST_ROTATION = 70;
+        public static final int WRIST_ENCODER = 71;
+
+        public static final int INDEXER_ROTATION = 80;
+    }
+
+    public static final class DIOConfig {
+        public static final int ARM_LIMIT_SWITCH = 0;
+        public static final int INTAKE_LIMIT_SWITCH = 1;
+        public static final int WRIST_LIMIT_SWITCH = 2;
+        public static final int INTAKE_BEAM_BREAK = 3;
+        public static final int INDEXER_BEAM_BREAK = 4;
     }
 
     public final static class DrivetrainConfig {
@@ -101,7 +116,9 @@ public final class Constants {
                 0.35493, 2.3014, 0.12872);
 
         // From what I have seen, it is common to only use a P value in path following
-        private static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2, 2); // 3, 2.5
+        private static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
+                2, 2, 2, 2);
+
         private static final PIDController PATH_DRIVE_PID = new PIDController(0.3, 0, 0);
         private static final PIDController PATH_TURN_PID = new PIDController(0.31, 0, 0);
 
@@ -156,19 +173,6 @@ public final class Constants {
         // .withSteerEncoderPort(CANConfig.BACK_RIGHT_ABS_ENCODER)
         // .withSteerOffset(Math.toRadians(-285));
 
-        public static final SwerveModuleConfiguration FRONT_LEFT_MODULE = new SwerveModuleConfiguration(
-                new SparkMaxSwerve(CANConfig.FRONT_LEFT_DRIVE, true),
-                new SparkMaxSwerve(CANConfig.FRONT_LEFT_DRIVE, false), new MotorConfigDouble(1, 1),
-                new CANCoderSwerve(0), 0.0, 0.0, 0.0, new PIDFConfig(0, 0, 0), new PIDFConfig(0, 0, 0),
-                new SwerveModulePhysicalCharacteristics(new MotorConfigDouble(0, 0), 1, 0.1), false, false, false,
-                "Front Left");
-
-        // private static final SwerveDriveConfiguration SWERVE_LIB_CONFIG = new
-        // SwerveDriveConfiguration(new SwerveModuleConfiguration[] {new
-        // SwerveModuleConfiguration(new SparkMaxSwerve(0, true)) }, null, null, null,
-        // AXIS_THRESHOLD, TRACK_WIDTH_METERS, TRACK_WIDTH_METERS, null, null, null,
-        // null)}, null, false, DRIVE_FEED_FORWARD, null);
-
         // public static final SwerveConfig SWERVE_CONFIG = new SwerveConfig(
         // FRONT_LEFT_MODULE, FRONT_RIGHT_MODULE, BACK_LEFT_MODULE,
         // BACK_RIGHT_MODULE,
@@ -188,10 +192,13 @@ public final class Constants {
 
         public static final double MOTOR_POSITION_CONVERSION = 1;
 
+        public static final double POSITION_TOLERANCE = 1;
+
         public static enum ArmState {
-            SPEAKER(90),
+            STOW(90),
             AMP(45),
-            DOWN(0);
+            SPEAKER(0),
+            SOURCE(30);
 
             private double position;
 
@@ -215,6 +222,8 @@ public final class Constants {
 
         public static final double MOTOR_POSITION_CONVERSION = 1;
 
+        public static final double POSITION_TOLERANCE = 1;
+
         public static enum ClimberState {
             UP(45),
             DOWN(0);
@@ -222,6 +231,36 @@ public final class Constants {
             private double position;
 
             ClimberState(double position) {
+                this.position = position;
+            }
+
+            public double getPosition() {
+                return position;
+            }
+        }
+    }
+
+    public final static class WristConfig {
+        public static final double P = 0;
+        public static final double I = 0;
+        public static final double D = 0;
+
+        public static final double MAX_ACCELERATION = 0;
+        public static final double MAX_VELOCITY = 0;
+
+        public static final double MOTOR_POSITION_CONVERSION = 1;
+
+        public static final double POSITION_TOLERANCE = 1;
+
+        public static enum WristState {
+            STOW(0),
+            AMP(30),
+            SPEAKER(60),
+            SOURCE(45);
+
+            private double position;
+
+            WristState(double position) {
                 this.position = position;
             }
 
@@ -241,11 +280,14 @@ public final class Constants {
 
         public static final double MOTOR_POSITION_CONVERSION = 1;
 
+        public static final double POSITION_TOLERANCE = 1;
+
         public static final double WHEELS_SPEED = 0.3;
 
         public static enum IntakeState {
-            UP(45),
-            DOWN(0);
+            STOW(0),
+            DOWN(30),
+            UP(10);
 
             private double position;
 
@@ -260,27 +302,46 @@ public final class Constants {
     }
 
     public final static class ShooterConfig {
-        public static final double DEFAULT_FLYWHEEL_SPEED = 0.3;
+        public static final double DEFAULT_SPEED = 0.3;
+        public static final double BACKWARD_SPEED = -0.3;
+    }
+
+    public final static class IndexerConfig {
+        public static final double DEFAULT_SPEED = 0.3;
+        public static final double BACKWARD_SPEED = -0.3;
     }
 
     public final static class VisionConfig {
         public final static String CAM_NAME = "";
     }
 
-    /** Details for auto such as timings and speeds */
+    /** Details for auto such as timings and speeds. All times in seconds. */
     public static class AutoConfig {
         public final static double INTAKE_MOVE_TIME = 3;
         public final static double INTAKE_FEED_TIME = 1;
-        public final static double FLYWHEEL_SPINUP_TIME = 3;
+        public final static double SHOOTER_SPINUP_TIME = 3;
+        public final static double CLIMB_DRIVE_TIME = 1;
+        public final static double CLIMB_DRIVE_SPEED = 0.5;
 
         public static class Locations {
             // TODO
             public final static Pose2d HUMAN_PLAYER_PICKUP = new Pose2d(0, 0, new Rotation2d());
             public final static Pose2d AMP_SCORING = new Pose2d(0, 0, new Rotation2d());
             public final static Pose2d SPEAKER_SCORING = new Pose2d(0, 0, new Rotation2d());
-            public final static Pose2d CLIMBING = new Pose2d(0, 0, new Rotation2d());
+            public final static Pose2d CLIMBING_LEFT = new Pose2d(0, 0, new Rotation2d());
+            public final static Pose2d CLIMBING_RIGHT = new Pose2d(0, 0, new Rotation2d());
+            public final static Pose2d CLIMBING_BACK = new Pose2d(0, 0, new Rotation2d());
             public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(0, 0, new Rotation2d());
         }
+    }
 
+    public static class ControlBindings {
+        // TODO decide these with strategy / drive team
+        public final static int SCORE_AMP_BUTTON = Button.kX.value;
+        public final static int SCORE_SPEAKER_BUTTON = Button.kY.value;
+        public final static int INTAKE_GROUND_BUTTON = Button.kB.value;
+        public final static int INTAKE_SOURCE_BUTTON = Button.kB.value;
+        public final static int CLIMB_BUTTON = Button.kA.value;
+        public final static int STOW_BUTTON = Button.kB.value;
     }
 }

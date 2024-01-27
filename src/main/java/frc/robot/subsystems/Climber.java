@@ -16,8 +16,9 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ClimberConfig;
 import frc.robot.Constants.ClimberConfig.ClimberState;
 
-public class ClimberExtension extends PIDSubsystemBase {
-    public ClimberExtension() {
+public class Climber extends PIDSubsystemBase {
+    /** Moves the chain hooks into position to raise the robot. */
+    public Climber() {
         super(new CANSparkMax(CANConfig.CLIMBER_EXTENSION, MotorType.kBrushless), ClimberConfig.P, ClimberConfig.I,
                 ClimberConfig.D, new Constraints(ClimberConfig.MAX_VELOCITY, ClimberConfig.MAX_ACCELERATION), false,
                 ClimberConfig.MOTOR_POSITION_CONVERSION, 50, Constants.CLIMBER_TAB, true);
@@ -30,5 +31,11 @@ public class ClimberExtension extends PIDSubsystemBase {
     /** Sets the height state of the climber */
     public Command setTargetState(ClimberState state) {
         return Commands.runOnce(() -> setTargetRotation(state.getPosition()));
+    }
+
+    /** Sets the target rotation, then waits until it gets to that rotation */
+    public Command goToState(ClimberState state) {
+        return Commands.parallel(setTargetState(state), Commands.waitUntil(
+                () -> Math.abs(getCurrentRotation() - state.getPosition()) < ClimberConfig.POSITION_TOLERANCE));
     }
 }

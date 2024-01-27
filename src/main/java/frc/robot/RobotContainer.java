@@ -8,36 +8,42 @@ import java.io.File;
 import java.io.IOException;
 
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
-import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
-import com.pigmice.frc.lib.drivetrain.swerve.commands.DriveWithJoysticksSwerve;
+import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.ControlBindings;
 import frc.robot.Constants.DrivetrainConfig;
-import frc.robot.Constants.ArmConfig.ArmState;
-import frc.robot.Constants.ClimberConfig.ClimberState;
-import frc.robot.Constants.IntakeConfig.IntakeState;
-import frc.robot.commands.actions.DepositRing;
-import frc.robot.commands.actions.HandoffToShooter;
+import frc.robot.commands.semi_auto.Climb;
+import frc.robot.commands.semi_auto.IntakeFromSource;
+import frc.robot.commands.semi_auto.FindRing;
+import frc.robot.commands.semi_auto.IntakeFromGround;
+import frc.robot.commands.semi_auto.ScoreAmp;
+import frc.robot.commands.semi_auto.ScoreSpeaker;
+import frc.robot.commands.semi_auto.Stow;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.ClimberExtension;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.NoteSensor;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Vision;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.Wrist;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -52,14 +58,22 @@ public class RobotContainer {
     // private final SwerveDrivetrain drivetrain = new
     // SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
     // private final Arm arm = new Arm();
-    // private final ClimberExtension climberExtension = new ClimberExtension();
+    // private final Climber climberExtension = new Climber();
     // private final Intake intake = new Intake();
     // private final Shooter shooter = new Shooter();
+    // private final Indexer indexer = new Indexer();
+    // private final Wrist wrist = new Wrist();
     // private final Vision vision = new Vision();
+    // private final NoteSensor noteSensor = new NoteSensor();
+    // public final SwerveDrivetrain drivetrain = new
+    // SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
 
     private final XboxController driver;
     private final XboxController operator;
     public final Controls controls;
+
+    private final Pathfinder pathfinder = new Pathfinder(Constants.ROBOT_WIDTH * 100, "");
+    // Pathfinder(DrivetrainConfig.TRACK_WIDTH_METERS, "frc-2024");
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
@@ -69,7 +83,6 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-
         try {
             swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
                     .createSwerveDrive(Units.feetToMeters(14.5));
@@ -77,12 +90,13 @@ public class RobotContainer {
             e.printStackTrace();
         }
 
-        swerveDrive.setModuleStateOptimization(false);
+        // swerveDrive.setModuleStateOptimization(false);
 
         driver = new XboxController(0);
         operator = new XboxController(1);
-
         controls = new Controls(driver, operator);
+        DriverStation.silenceJoystickConnectionWarning(true);
+
         ControllerRumbler.setControllers(driver, operator);
 
         // swerveDrive.driveFieldOriented(new ChassisSpeeds(1, 0, 0));
@@ -104,7 +118,8 @@ public class RobotContainer {
         SmartDashboard.putNumber("BL Angle", swerveDrive.getStates()[2].angle.getDegrees());
         SmartDashboard.putNumber("BR Angle", swerveDrive.getStates()[3].angle.getDegrees());
 
-        SmartDashboard.putNumber("FL Target", swerveDrive.getModules()[0].lastState.angle.getDegrees());
+        // SmartDashboard.putNumber("FL Target",
+        // swerveDrive.getModules()[0]..getDegrees());
 
         SmartDashboard.putNumber("Heading Target", SwerveDriveTelemetry.desiredChassisSpeeds[0]);
 
@@ -119,6 +134,18 @@ public class RobotContainer {
         // swerveDrive.drive(new ChassisSpeeds(1, 0, 0));
     }
 
+    public void onEnable() {
+        // TODO: uncomment after drivetrain only testing
+        // arm.resetPID();
+        // climberExtension.resetPID();
+        // intake.resetPID();
+        // wrist.resetPID();
+    }
+
+    public void onDisable() {
+        ControllerRumbler.stopBothControllers();
+    }
+
     private void configureAutoChooser() {
         autoChooser.addOption("Example",
                 new InstantCommand().withName("Example Option"));
@@ -127,14 +154,6 @@ public class RobotContainer {
         autoChooser.setDefaultOption("None", new InstantCommand());
 
         Constants.DRIVER_TAB.add("Auto Command", autoChooser);
-    }
-
-    public void onEnable() {
-        // arm.resetPID();
-    }
-
-    public void onDisable() {
-        ControllerRumbler.stopBothControllers();
     }
 
     /**
@@ -146,32 +165,43 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-
-        // // Operator B (hold) - Handoff to Shooter
-        // new JoystickButton(operator, Button.kB.value)
-        // .whileTrue(new HandoffToShooter(intake, shooter))
-        // .onFalse(Commands.sequence(intake.stopWheels(), shooter.stopFeeder(),
-        // intake.setTargetState(IntakeState.DOWN)));
-
-        // // Operator X (hold) - fire shooter high
-        // new JoystickButton(operator, Button.kX.value)
-        // .whileTrue(new DepositRing(arm, shooter, ArmState.SPEAKER))
-        // .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN),
-        // shooter.stopFlywheels(),
-        // shooter.stopFeeder()));
-
-        // // Operator B (hold) - fire shooter mid
-        // new JoystickButton(operator, Button.kB.value)
-        // .whileTrue(new DepositRing(arm, shooter, ArmState.AMP))
-        // .onFalse(Commands.sequence(arm.setTargetState(ArmState.DOWN),
-        // shooter.stopFlywheels(),
-        // shooter.stopFeeder()));
-
-        // // Operator Y (hold) - climber up on press down on release
-        // new JoystickButton(operator, Button.kX.value)
-        // .onTrue(climberExtension.setTargetState(ClimberState.UP))
-        // .onFalse(climberExtension.setTargetState(ClimberState.DOWN));
-
+        // TODO: uncomment once the fixed drivetrain is merged in
+        /*
+         * // Hold to fire into speaker
+         * new JoystickButton(operator, ControlBindings.SCORE_SPEAKER_BUTTON)
+         * .onTrue(new ScoreSpeaker(drivetrain, pathfinder, arm, wrist, shooter,
+         * indexer,
+         * intake, noteSensor))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to fire into amp
+         * new JoystickButton(operator, ControlBindings.SCORE_AMP_BUTTON)
+         * .onTrue(new ScoreAmp(drivetrain, pathfinder, arm, wrist, shooter, indexer,
+         * noteSensor, intake))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to intake a note from the ground
+         * new JoystickButton(operator, ControlBindings.INTAKE_GROUND_BUTTON)
+         * .onTrue(new IntakeFromGround(intake, indexer, noteSensor))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to intake a note from the source
+         * new JoystickButton(operator, ControlBindings.INTAKE_SOURCE_BUTTON)
+         * .onTrue(new IntakeFromSource(drivetrain, pathfinder, intake, arm, wrist,
+         * noteSensor, shooter))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to climb
+         * new JoystickButton(operator, ControlBindings.CLIMB_BUTTON)
+         * .onTrue(new Climb(drivetrain, pathfinder, arm, wrist, climberExtension,
+         * intake))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to stow subsystems
+         * new JoystickButton(operator, ControlBindings.STOW_BUTTON)
+         * .onTrue(new Stow(intake, arm, wrist))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         */
     }
 
     /**
