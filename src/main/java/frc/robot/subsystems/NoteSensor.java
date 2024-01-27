@@ -46,6 +46,10 @@ public class NoteSensor extends SubsystemBase {
         return Commands.waitUntil(() -> noteState == NoteState.INDEXER);
     }
 
+    public Command waitForNoNote() {
+        return Commands.waitUntil(() -> noteState == NoteState.NONE);
+    }
+
     public enum NoteState {
         NONE,
         INTAKE,

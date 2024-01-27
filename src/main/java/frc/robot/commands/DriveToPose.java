@@ -1,4 +1,4 @@
-package frc.robot.commands.actions;
+package frc.robot.commands;
 
 import java.util.List;
 
