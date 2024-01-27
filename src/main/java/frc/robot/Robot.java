@@ -7,6 +7,7 @@ package frc.robot;
 import com.pigmice.frc.lib.motor_tester.MotorTester;
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -58,6 +59,7 @@ public class Robot extends TimedRobot {
         // block in order for anything in the Command-based framework to work.
         ShuffleboardHelper.update(true);
         CommandScheduler.getInstance().run();
+        m_robotContainer.periodic();
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
@@ -109,6 +111,8 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
+        m_robotContainer.swerveDrive.driveFieldOriented(new ChassisSpeeds(m_robotContainer.controls.getDriveSpeedX(),
+                m_robotContainer.controls.getDriveSpeedY(), m_robotContainer.controls.getTurnSpeed()));
     }
 
     @Override

@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -16,6 +18,14 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import swervelib.encoders.CANCoderSwerve;
+import swervelib.motors.SparkMaxSwerve;
+import swervelib.motors.SwerveMotor;
+import swervelib.parser.PIDFConfig;
+import swervelib.parser.SwerveDriveConfiguration;
+import swervelib.parser.SwerveModuleConfiguration;
+import swervelib.parser.SwerveModulePhysicalCharacteristics;
+import swervelib.parser.json.MotorConfigDouble;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -107,15 +117,19 @@ public final class Constants {
         private static final SimpleMotorFeedforward DRIVE_FEED_FORWARD = new SimpleMotorFeedforward(
                 0.35493, 2.3014, 0.12872);
 
-        // From what I have seen, it is common to only use a P value in path following
-        private static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
                 2, 2, 2, 2);
 
+        // From what I have seen, it is common to only use a P value in path following
         private static final PIDController PATH_DRIVE_PID = new PIDController(0.3, 0, 0);
         private static final PIDController PATH_TURN_PID = new PIDController(0.31, 0, 0);
 
         // Offset from chassis center that the robot will rotate about
         private static final Translation2d ROTATION_CENTER_OFFSET = new Translation2d(0, 0);
+
+        // TODO: at some point during testing, try out dynamic replanning
+        public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(2, AXIS_THRESHOLD,
+                new ReplanningConfig(true, false));
 
         // private static final MkSwerveModuleBuilder FRONT_LEFT_MODULE = new
         // MkSwerveModuleBuilder()

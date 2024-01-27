@@ -3,7 +3,7 @@ package frc.robot.commands;
 import com.pigmice.frc.lib.finite_state_machine.FiniteStateMachine;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Indexer;
@@ -13,7 +13,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.vision.Vision;
 
-public class RunRobotStateMachine extends CommandBase {
+public class RunRobotStateMachine extends Command {
 
     private final FiniteStateMachine<RobotState, RobotData> stateMachine;
     private final RobotData robotData;
