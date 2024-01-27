@@ -5,8 +5,6 @@
 package frc.robot;
 
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
-import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
-import com.pigmice.frc.lib.drivetrain.swerve.commands.DriveWithJoysticksSwerve;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -25,7 +23,8 @@ import frc.robot.Constants.DrivetrainConfig;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    public final SwerveDrivetrain drivetrain = new SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
+    // public final SwerveDrivetrain drivetrain = new
+    // SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
 
     private final XboxController driver;
     private final XboxController operator;
@@ -44,11 +43,11 @@ public class RobotContainer {
         controls = new Controls(driver, operator);
         ControllerRumbler.setControllers(driver, operator);
 
-        drivetrain.setDefaultCommand(new DriveWithJoysticksSwerve(drivetrain,
-                controls::getDriveSpeedX,
-                controls::getDriveSpeedY,
-                controls::getTurnSpeed,
-                () -> true));
+        // drivetrain.setDefaultCommand(new DriveWithJoysticksSwerve(drivetrain,
+        // controls::getDriveSpeedX,
+        // controls::getDriveSpeedY,
+        // controls::getTurnSpeed,
+        // () -> true));
 
         configureButtonBindings();
         configureAutoChoosers();
