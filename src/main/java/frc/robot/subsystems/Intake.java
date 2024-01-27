@@ -8,17 +8,21 @@ import com.pigmice.frc.lib.pid_subsystem.PIDSubsystemBase;
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.Constants.CANConfig;
+import frc.robot.Constants.DIOConfig;
 import frc.robot.Constants.IntakeConfig;
 import frc.robot.Constants.IntakeConfig.IntakeState;
 
 public class Intake extends PIDSubsystemBase {
     private final CANSparkMax wheelsMotor = new CANSparkMax(CANConfig.INTAKE_WHEELS, MotorType.kBrushless);
+    private final CANSparkMax encoderController;
 
     /**
      * Spins notes up from the ground in front of the robot and carries them to the
@@ -33,6 +37,12 @@ public class Intake extends PIDSubsystemBase {
         wheelsMotor.setInverted(false);
 
         ShuffleboardHelper.addOutput("Wheel Motor Output", Constants.INTAKE_TAB, () -> wheelsMotor.get());
+
+        encoderController = new CANSparkMax(CANConfig.INTAKE_ENCODER, MotorType.kBrushed);
+        RelativeEncoder encoder = encoderController.getEncoder(Type.kQuadrature, 8192);
+        addCustomEncoder(() -> encoder.getPosition());
+
+        addLimitSwitch(0, DIOConfig.INTAKE_LIMIT_SWITCH, false, LimitSwitchSide.NEGATIVE);
     }
 
     /**
@@ -40,24 +50,18 @@ public class Intake extends PIDSubsystemBase {
      * carried, and stops it otherwise.
      */
     public void outputToMotor(double percent) {
-        if (!NoteSensor.getNoteState())
-            wheelsMotor.set(percent);
-        else
-            wheelsMotor.set(0);
+        wheelsMotor.set(percent);
     }
 
     /**
-     * Spins intake wheels to intake balls if no note is being carried, and stops it
+     * Spins intake wheels to intake notes if no note is being carried, and stops it
      * otherwise.
      */
     public Command runWheelsForward() {
-        if (!NoteSensor.getNoteState())
-            return Commands.runOnce(() -> outputToMotor(IntakeConfig.WHEELS_SPEED));
-        else
-            return Commands.none();
+        return Commands.runOnce(() -> outputToMotor(IntakeConfig.WHEELS_SPEED));
     }
 
-    /** Spins intake wheels to eject balls. */
+    /** Spins intake wheels to eject notes. */
     public Command runWheelsBackward() {
         return Commands.runOnce(() -> outputToMotor(-IntakeConfig.WHEELS_SPEED));
     }

@@ -7,39 +7,24 @@ package frc.robot;
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
 import com.pigmice.frc.lib.drivetrain.swerve.commands.DriveWithJoysticksSwerve;
-import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConfig;
 import frc.robot.Constants.DrivetrainConfig;
-import frc.robot.Constants.ClimberConfig.ClimberState;
 import frc.robot.auto_builder.AutoBuilder;
 import frc.robot.auto_builder.AutoLayer;
 import frc.robot.auto_builder.LayerBehavior.MultiOptionLayer;
-import frc.robot.auto_builder.LayerRestriction.ToggleableLayer;
-import frc.robot.commands.actions.intake.IntakeFromGround;
-import frc.robot.commands.actions.shooter.FireIntoAmp;
-import frc.robot.commands.actions.shooter.FireIntoSpeaker;
-import frc.robot.commands.semi_auto.ClimbSA;
-import frc.robot.commands.semi_auto.FetchRingSA;
-import frc.robot.commands.semi_auto.FindRingSA;
-import frc.robot.commands.semi_auto.ScoreAmpSA;
-import frc.robot.commands.semi_auto.ScoreSpeakerSA;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NoteSensor;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.vision.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -69,8 +54,6 @@ public class RobotContainer {
     // private final Pathfinder pathfinder = new
     // Pathfinder(DrivetrainConfig.TRACK_WIDTH_METERS, "frc-2024");
 
-    private final SemiAutoManager semiAutoManager = new SemiAutoManager();
-
     private final AutoBuilder autoBuilder = new AutoBuilder();
 
     /**
@@ -80,6 +63,7 @@ public class RobotContainer {
         driver = new XboxController(0);
         operator = new XboxController(1);
         controls = new Controls(driver, operator);
+        DriverStation.silenceJoystickConnectionWarning(true);
 
         ControllerRumbler.setControllers(driver, operator);
 
@@ -91,7 +75,6 @@ public class RobotContainer {
 
         configureButtonBindings();
         configureAutoBuilder();
-        configureSemiAutoManager();
     }
 
     public void onEnable() {
@@ -105,29 +88,7 @@ public class RobotContainer {
         ControllerRumbler.stopBothControllers();
     }
 
-    /** Initialize all semi auto tasks */
-    private void configureSemiAutoManager() {
-        // TODO: figure out why this breaks sim and uncomment
-        // semiAutoManager.addTasksToShuffleboard(
-        // new ClimbSA(drivetrain, pathfinder, arm, wrist, climberExtension, intake)
-        // .withName("Climb"),
-        // new FetchRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist,
-        // noteSensor)
-        // .withName("Fetch Ring"),
-        // new FindRingSA(drivetrain, pathfinder, intake, indexer, arm, wrist,
-        // noteSensor, vision)
-        // .withName("Find Ring"),
-        // new ScoreAmpSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
-        // .withName("Score AMP"),
-        // new ScoreSpeakerSA(drivetrain, pathfinder, arm, wrist, shooter, indexer)
-        // .withName("Score Speaker"));
-    }
-
     private void configureAutoBuilder() {
-        // autoBuilder.addLayer(
-        // new AutoLayer("Start Position", AutoConfig.AutoLocations.class),
-        // new MultiOptionLayer());
-
         AutoLayer startPosLayer = new AutoLayer("Start Position", AutoConfig.AutoBuilderOptions.StartPosition.class);
 
         AutoLayer autoTypeLayer = new AutoLayer("Auto Type", AutoConfig.AutoBuilderOptions.AutoType.class);
@@ -145,22 +106,43 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        // Operator X (hold) - fire shooter into speaker
-        new JoystickButton(operator, Button.kX.value)
-                .whileTrue(new FireIntoSpeaker(arm, wrist, shooter, indexer));
-
-        // Operator B (hold) - fire shooter into amp
-        new JoystickButton(operator, Button.kB.value)
-                .whileTrue(new FireIntoAmp(arm, wrist, shooter, indexer));
-
-        // Operator A (hold) - intake a note from the ground
-        new JoystickButton(operator, Button.kA.value)
-                .whileTrue(new IntakeFromGround(intake, indexer, arm, wrist, noteSensor));
-
-        // Operator Y (hold) - climber up on press then down on release
-        new JoystickButton(operator, Button.kX.value)
-                .onTrue(climberExtension.setTargetState(ClimberState.UP))
-                .onFalse(climberExtension.setTargetState(ClimberState.DOWN));
+        // TODO: uncomment when pathfinder is set up
+        /*
+         * // Hold to fire into speaker
+         * new JoystickButton(operator, ControlBindings.SCORE_SPEAKER_BUTTON)
+         * .onTrue(new ScoreSpeaker(drivetrain, pathfinder, arm, wrist, shooter,
+         * indexer,
+         * intake, noteSensor))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to fire into amp
+         * new JoystickButton(operator, ControlBindings.SCORE_AMP_BUTTON)
+         * .onTrue(new ScoreAmp(drivetrain, pathfinder, arm, wrist, shooter, indexer,
+         * noteSensor, intake))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to intake a note from the ground
+         * new JoystickButton(operator, ControlBindings.INTAKE_GROUND_BUTTON)
+         * .onTrue(new IntakeFromGround(intake, indexer, noteSensor))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to intake a note from the source
+         * new JoystickButton(operator, ControlBindings.INTAKE_SOURCE_BUTTON)
+         * .onTrue(new IntakeFromSource(drivetrain, pathfinder, intake, arm, wrist,
+         * noteSensor, shooter))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to climb
+         * new JoystickButton(operator, ControlBindings.CLIMB_BUTTON)
+         * .onTrue(new Climb(drivetrain, pathfinder, arm, wrist, climberExtension,
+         * intake))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         * 
+         * // Hold to stow subsystems
+         * new JoystickButton(operator, ControlBindings.STOW_BUTTON)
+         * .onTrue(new Stow(intake, arm, wrist))
+         * .onFalse(Commands.runOnce(() -> CommandScheduler.getInstance().cancel()));
+         */
     }
 
     /**
