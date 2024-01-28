@@ -325,14 +325,19 @@ public final class Constants {
         public final static double CLIMB_DRIVE_SPEED = 0.5;
 
         public static class Locations {
-            // TODO
-            public final static Pose2d HUMAN_PLAYER_PICKUP = new Pose2d(0, 0, new Rotation2d());
-            public final static Pose2d AMP_SCORING = new Pose2d(0, 0, new Rotation2d());
-            public final static Pose2d SPEAKER_SCORING = new Pose2d(0, 0, new Rotation2d());
-            public final static Pose2d CLIMBING_LEFT = new Pose2d(0, 0, new Rotation2d());
-            public final static Pose2d CLIMBING_RIGHT = new Pose2d(0, 0, new Rotation2d());
-            public final static Pose2d CLIMBING_BACK = new Pose2d(0, 0, new Rotation2d());
-            public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(0, 0, new Rotation2d());
+            // Start of the "lineup" path for these positions
+            public final static Pose2d AMP_LINEUP = new Pose2d(1.82, 6.29, Rotation2d.fromDegrees(90));
+            public final static Pose2d SPEAKER_LINEUP = new Pose2d(2.36, 5.56, Rotation2d.fromDegrees(180));
+            public final static Pose2d SOURCE_LINEUP = new Pose2d(1.64, 1.83, Rotation2d.fromDegrees(-120));
+            public final static Pose2d CLIMBING_LINEUP = new Pose2d(7.37, 4.03, Rotation2d.fromDegrees(180));
+
+            // TODO: do we want lineup commands for all 3 climbing spots?
+            // public final static Pose2d CLIMBING_RIGHT = new Pose2d(0, 0, new
+            // Rotation2d());
+            // public final static Pose2d CLIMBING_BACK = new Pose2d(0, 0, new
+            // Rotation2d());
+
+            public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(10.2, 4, new Rotation2d(0));
         }
     }
 
