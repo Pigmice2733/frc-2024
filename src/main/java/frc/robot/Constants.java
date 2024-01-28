@@ -14,18 +14,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import swervelib.encoders.CANCoderSwerve;
-import swervelib.motors.SparkMaxSwerve;
-import swervelib.motors.SwerveMotor;
-import swervelib.parser.PIDFConfig;
-import swervelib.parser.SwerveDriveConfiguration;
-import swervelib.parser.SwerveModuleConfiguration;
-import swervelib.parser.SwerveModulePhysicalCharacteristics;
-import swervelib.parser.json.MotorConfigDouble;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -52,7 +44,7 @@ public final class Constants {
 
     public static final double AXIS_THRESHOLD = 0.25;
 
-    public static final double ROBOT_WIDTH = 1; // in centimeters
+    public static final double ROBOT_WIDTH = Units.inchesToMeters(22.953); // in meters (TODO)
 
     public static final class CANConfig {
         public static final int FRONT_LEFT_DRIVE = 11;
@@ -69,16 +61,19 @@ public final class Constants {
         public static final int BACK_LEFT_ABS_ENCODER = 22;
         public static final int BACK_RIGHT_ABS_ENCODER = 26;
 
-        public static final int ARM_ROTATION = 30;
-        public static final int ARM_ENCODER = 31;
+        public static final int LEFT_ARM = 30;
+        public static final int RIGHT_ARM = 31;
+        public static final int ARM_ENCODER = 32;
 
-        public static final int CLIMBER_EXTENSION = 40;
+        public static final int LEFT_CLIMB = 40;
+        public static final int RIGHT_CLIMB = 41;
 
         public static final int INTAKE_WHEELS = 50;
         public static final int INTAKE_PIVOT = 51;
         public static final int INTAKE_ENCODER = 52;
 
-        public static final int SHOOTER_ROTATION = 60;
+        public static final int LEFT_SHOOTER = 60;
+        public static final int RIGHT_SHOOTER = 61;
 
         public static final int WRIST_ROTATION = 70;
         public static final int WRIST_ENCODER = 71;

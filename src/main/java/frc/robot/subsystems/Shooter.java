@@ -16,7 +16,8 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ShooterConfig;
 
 public class Shooter extends SubsystemBase {
-    private final CANSparkMax motor = new CANSparkMax(CANConfig.SHOOTER_ROTATION, MotorType.kBrushless);
+    private final CANSparkMax leftMotor = new CANSparkMax(CANConfig.LEFT_SHOOTER, MotorType.kBrushless);
+    private final CANSparkMax rightMotor = new CANSparkMax(CANConfig.RIGHT_SHOOTER, MotorType.kBrushless);
 
     /**
      * Shoots notes out of one end into the speaker and dumps them out of the other
@@ -24,25 +25,31 @@ public class Shooter extends SubsystemBase {
      * Intakes from the source into the speaker-shooting end.
      */
     public Shooter() {
-        motor.restoreFactoryDefaults();
-        motor.setInverted(false);
+        leftMotor.restoreFactoryDefaults();
+        leftMotor.setInverted(false);
 
-        ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> motor.get());
+        rightMotor.restoreFactoryDefaults();
+        rightMotor.follow(leftMotor, true);
+
+        ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> leftMotor.get());
     }
 
+    /* Output a percent to both flywheels */
     private void outputToFlywheels(double output) {
-        motor.set(output);
+        leftMotor.set(output);
     }
 
+    /* Spin the flywheels in the shooting direction */
     public Command spinFlywheelsForward() {
         return Commands.runOnce(() -> outputToFlywheels(ShooterConfig.DEFAULT_SPEED));
     }
 
-    /** Intake into the shooter box, as long as no note is being carried. */
+    /** Spin the flywheels in the intaking direction */
     public Command spinFlywheelsBackward() {
         return Commands.runOnce(() -> outputToFlywheels(ShooterConfig.BACKWARD_SPEED));
     }
 
+    /** Stop the flywheels */
     public Command stopFlywheels() {
         return Commands.runOnce(() -> outputToFlywheels(0));
     }

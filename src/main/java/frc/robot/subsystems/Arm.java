@@ -21,17 +21,25 @@ import frc.robot.Constants.ArmConfig.ArmState;
 
 public class Arm extends PIDSubsystemBase {
     private final CANSparkMax encoderController;
+    private final CANSparkMax rightMotor;
 
     /** Moves the shooter box up, down, and around the space above the robot. */
     public Arm() {
-        super(new CANSparkMax(CANConfig.ARM_ROTATION, MotorType.kBrushless), ArmConfig.P, ArmConfig.i, ArmConfig.D,
+        super(new CANSparkMax(CANConfig.LEFT_ARM, MotorType.kBrushless), ArmConfig.P, ArmConfig.i, ArmConfig.D,
                 new Constraints(ArmConfig.MAX_VELOCITY, ArmConfig.MAX_ACCELERATION), false,
                 ArmConfig.MOTOR_POSITION_CONVERSION, 50, Constants.ARM_TAB, true);
 
+        // Right motor
+        rightMotor = new CANSparkMax(CANConfig.RIGHT_ARM, MotorType.kBrushless);
+        rightMotor.restoreFactoryDefaults();
+        rightMotor.follow(getMotor(), false);
+
+        // Encoder
         encoderController = new CANSparkMax(CANConfig.ARM_ENCODER, MotorType.kBrushed);
         RelativeEncoder encoder = encoderController.getEncoder(Type.kQuadrature, 8192);
         addCustomEncoder(() -> encoder.getPosition());
 
+        // Limit switch
         addLimitSwitch(0, DIOConfig.ARM_LIMIT_SWITCH, false, LimitSwitchSide.NEGATIVE);
     }
 

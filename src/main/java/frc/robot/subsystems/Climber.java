@@ -17,11 +17,18 @@ import frc.robot.Constants.ClimberConfig;
 import frc.robot.Constants.ClimberConfig.ClimberState;
 
 public class Climber extends PIDSubsystemBase {
+    private final CANSparkMax rightMotor;
+
     /** Moves the chain hooks into position to raise the robot. */
     public Climber() {
-        super(new CANSparkMax(CANConfig.CLIMBER_EXTENSION, MotorType.kBrushless), ClimberConfig.P, ClimberConfig.I,
+        super(new CANSparkMax(CANConfig.LEFT_CLIMB, MotorType.kBrushless), ClimberConfig.P, ClimberConfig.I,
                 ClimberConfig.D, new Constraints(ClimberConfig.MAX_VELOCITY, ClimberConfig.MAX_ACCELERATION), false,
                 ClimberConfig.MOTOR_POSITION_CONVERSION, 50, Constants.CLIMBER_TAB, true);
+
+        // Right motor
+        rightMotor = new CANSparkMax(CANConfig.RIGHT_CLIMB, MotorType.kBrushless);
+        rightMotor.restoreFactoryDefaults();
+        rightMotor.follow(getMotor(), false);
     }
 
     @Override
