@@ -1,20 +1,12 @@
-// package frc.robot.commands;
-// TODO: fix once the drivetrain is updated
+// package frc.robot.commands.drivetrain;
 
 // import java.util.List;
-
-// import com.pathplanner.lib.PathPlanner;
-// import com.pathplanner.lib.PathPlannerTrajectory;
-// import com.pathplanner.lib.PathPoint;
-// import com.pigmice.frc.lib.drivetrain.swerve.SwerveDrivetrain;
-// import
-// com.pigmice.frc.lib.drivetrain.swerve.commands.path_following.FollowPathSwerve;
 
 // import edu.wpi.first.math.geometry.Pose2d;
 // import edu.wpi.first.math.geometry.Rotation2d;
 // import frc.robot.Constants.DrivetrainConfig;
 
-// public class DriveToPose extends FollowPathSwerve {
+// public class DriveToPose extends FollowPath {
 
 // public DriveToPose(SwerveDrivetrain drivetrain, Pose2d targetPose) {
 // super(drivetrain, generateTrajectory(drivetrain, targetPose));

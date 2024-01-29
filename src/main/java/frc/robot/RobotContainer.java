@@ -4,20 +4,15 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.commands.PathfindHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
-import java.io.File;
-import java.io.IOException;
 
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -30,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ControlBindings;
 import frc.robot.Constants.DrivetrainConfig;
+import frc.robot.commands.drivetrain.DriveWithJoysticks;
 import frc.robot.commands.semi_auto.Climb;
 import frc.robot.commands.semi_auto.IntakeFromSource;
 import frc.robot.commands.semi_auto.FindRing;
@@ -39,6 +35,7 @@ import frc.robot.commands.semi_auto.ScoreSpeaker;
 import frc.robot.commands.semi_auto.Stow;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NoteSensor;
@@ -60,7 +57,7 @@ import frc.robot.subsystems.Wrist;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    // private final SwerveDrivetrain drivetrain = new
+    private final Drivetrain drivetrain = new Drivetrain();
     // SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
     // private final Arm arm = new Arm();
     // private final Climber climberExtension = new Climber();
@@ -82,21 +79,10 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
-    public SwerveDrive swerveDrive;
-
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        try {
-            swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
-                    .createSwerveDrive(Units.feetToMeters(14.5));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // swerveDrive.setModuleStateOptimization(false);
-
         driver = new XboxController(0);
         operator = new XboxController(1);
         controls = new Controls(driver, operator);
@@ -104,37 +90,37 @@ public class RobotContainer {
 
         ControllerRumbler.setControllers(driver, operator);
 
-        // swerveDrive.driveFieldOriented(new ChassisSpeeds(1, 0, 0));
-
-        // new DriveWithJoysticksSwerve(swerveDrive,
-        // () -> 0,
-        // () -> 0,
-        // () -> 0,
-        // () -> true).schedule();
+        drivetrain.setDefaultCommand(new DriveWithJoysticks(drivetrain, controls::getDriveSpeedX,
+                controls::getDriveSpeedY, controls::getTurnSpeed));
 
         configureButtonBindings();
         configureAutoChooser();
     }
 
     public void periodic() {
-        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
-        SmartDashboard.putNumber("FL Angle", swerveDrive.getStates()[0].angle.getDegrees());
-        SmartDashboard.putNumber("FR Angle", swerveDrive.getStates()[1].angle.getDegrees());
-        SmartDashboard.putNumber("BL Angle", swerveDrive.getStates()[2].angle.getDegrees());
-        SmartDashboard.putNumber("BR Angle", swerveDrive.getStates()[3].angle.getDegrees());
+        // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+        // SmartDashboard.putNumber("FL Angle",
+        // swerveDrive.getStates()[0].angle.getDegrees());
+        // SmartDashboard.putNumber("FR Angle",
+        // swerveDrive.getStates()[1].angle.getDegrees());
+        // SmartDashboard.putNumber("BL Angle",
+        // swerveDrive.getStates()[2].angle.getDegrees());
+        // SmartDashboard.putNumber("BR Angle",
+        // swerveDrive.getStates()[3].angle.getDegrees());
 
-        // SmartDashboard.putNumber("FL Target",
-        // swerveDrive.getModules()[0]..getDegrees());
+        // // SmartDashboard.putNumber("FL Target",
+        // // swerveDrive.getModules()[0]..getDegrees());
 
-        SmartDashboard.putNumber("Heading Target", SwerveDriveTelemetry.desiredChassisSpeeds[0]);
+        // SmartDashboard.putNumber("Heading Target",
+        // SwerveDriveTelemetry.desiredChassisSpeeds[0]);
 
-        // swerveDrive.driveFieldOriented(new ChassisSpeeds(1, 0, 0));
-        // swerveDrive.drive();
+        // // swerveDrive.driveFieldOriented(new ChassisSpeeds(1, 0, 0));
+        // // swerveDrive.drive();
 
-        // swerveDrive.getModules()[0].setAngle(0);
-        // swerveDrive.getModules()[1].setAngle(0);
-        // swerveDrive.getModules()[2].setAngle(0);
-        // swerveDrive.getModules()[3].setAngle(0);
+        // // swerveDrive.getModules()[0].setAngle(0);
+        // // swerveDrive.getModules()[1].setAngle(0);
+        // // swerveDrive.getModules()[2].setAngle(0);
+        // // swerveDrive.getModules()[3].setAngle(0);
 
         // swerveDrive.drive(new ChassisSpeeds(1, 0, 0));
     }
@@ -158,18 +144,17 @@ public class RobotContainer {
         // Default to doing nothing
         autoChooser.setDefaultOption("None", new InstantCommand());
 
-        autoChooser.addOption("Straight Path", new FollowPathHolonomic(PathPlannerPath.fromPathFile("straightLineTest"),
-                () -> swerveDrive.getPose(), () -> swerveDrive.getRobotVelocity(),
-                (chassisSpeeds) -> swerveDrive.drive(chassisSpeeds), DrivetrainConfig.PATH_CONFIG, () -> false));
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
 
-        autoChooser.addOption("Straight Path", new FollowPathHolonomic(PathPlannerPath.fromPathFile("curveTest"),
-                () -> swerveDrive.getPose(), () -> swerveDrive.getRobotVelocity(),
-                (chassisSpeeds) -> swerveDrive.drive(chassisSpeeds), DrivetrainConfig.PATH_CONFIG, () -> false));
+        autoChooser.addOption("Straight Path",
+                AutoBuilder.followPath(PathPlannerPath.fromPathFile("straightLineTest")));
 
-        autoChooser.addOption("Pathfinding Test",
-                new PathfindHolonomic(new Pose2d(1, 1, swerveDrive.getYaw()), DrivetrainConfig.PATH_CONSTRAINTS,
-                        () -> swerveDrive.getPose(), () -> swerveDrive.getRobotVelocity(),
-                        (chassisSpeeds) -> swerveDrive.drive(chassisSpeeds), DrivetrainConfig.PATH_CONFIG));
+        autoChooser.addOption("Curve Test",
+                AutoBuilder.followPath(PathPlannerPath.fromPathFile("curveTest")));
+
+        autoChooser.addOption("Pathfinding Test", AutoBuilder.pathfindToPose(
+                new Pose2d(1, 1, drivetrain.getSwerveDrive().getYaw()), DrivetrainConfig.PATH_CONSTRAINTS));
 
         Constants.DRIVER_TAB.add("Auto Command", autoChooser);
     }
