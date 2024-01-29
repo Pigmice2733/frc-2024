@@ -11,12 +11,15 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConfig;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
 
 public class Drivetrain extends SubsystemBase {
     private SwerveDrive swerveDrive;
@@ -54,6 +57,29 @@ public class Drivetrain extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
+        ShuffleboardHelper.addOutput("FL angle", Constants.SWERVE_TAB,
+                () -> swerveDrive.getModulePositions()[0].angle.getDegrees());
+
+        ShuffleboardHelper.addOutput("FR angle", Constants.SWERVE_TAB,
+                () -> swerveDrive.getModulePositions()[1].angle.getDegrees());
+
+        ShuffleboardHelper.addOutput("BL angle", Constants.SWERVE_TAB,
+                () -> swerveDrive.getModulePositions()[2].angle.getDegrees());
+
+        ShuffleboardHelper.addOutput("BR angle", Constants.SWERVE_TAB,
+                () -> swerveDrive.getModulePositions()[3].angle.getDegrees());
+
+        ShuffleboardHelper.addOutput("FL target", Constants.SWERVE_TAB,
+                () -> SwerveDriveTelemetry.desiredStates[0]);
+
+        ShuffleboardHelper.addOutput("FR target", Constants.SWERVE_TAB,
+                () -> SwerveDriveTelemetry.desiredStates[2]);
+
+        ShuffleboardHelper.addOutput("BL target", Constants.SWERVE_TAB,
+                () -> SwerveDriveTelemetry.desiredStates[4]);
+
+        ShuffleboardHelper.addOutput("BR target", Constants.SWERVE_TAB,
+                () -> SwerveDriveTelemetry.desiredStates[6]);
     }
 
     public SwerveDrive getSwerveDrive() {

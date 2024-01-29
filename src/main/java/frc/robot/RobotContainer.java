@@ -11,6 +11,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -74,9 +76,6 @@ public class RobotContainer {
     private final XboxController operator;
     public final Controls controls;
 
-    private final Pathfinder pathfinder = new Pathfinder(Constants.ROBOT_WIDTH * 100, "");
-    // Pathfinder(DrivetrainConfig.TRACK_WIDTH_METERS, "frc-2024");
-
     private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
     /**
@@ -90,14 +89,20 @@ public class RobotContainer {
 
         ControllerRumbler.setControllers(driver, operator);
 
-        drivetrain.setDefaultCommand(new DriveWithJoysticks(drivetrain, controls::getDriveSpeedX,
+        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+
+        drivetrain.setDefaultCommand(new DriveWithJoysticks(drivetrain,
+                controls::getDriveSpeedX,
                 controls::getDriveSpeedY, controls::getTurnSpeed));
 
         configureButtonBindings();
         configureAutoChooser();
     }
 
+    // CANSparkMax test = new CANSparkMax(16, MotorType.kBrushless);
+
     public void periodic() {
+        // test.set(0.4);
         // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
         // SmartDashboard.putNumber("FL Angle",
         // swerveDrive.getStates()[0].angle.getDegrees());
@@ -138,23 +143,24 @@ public class RobotContainer {
     }
 
     private void configureAutoChooser() {
-        autoChooser.addOption("Example",
-                new InstantCommand().withName("Example Option"));
 
         // Default to doing nothing
         autoChooser.setDefaultOption("None", new InstantCommand());
 
         // Load the path you want to follow using its name in the GUI
-        PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
 
-        autoChooser.addOption("Straight Path",
-                AutoBuilder.followPath(PathPlannerPath.fromPathFile("straightLineTest")));
+        // autoChooser.addOption("Straight Path",
+        // AutoBuilder.followPath(PathPlannerPath.fromPathFile("straightLineTest")));
 
-        autoChooser.addOption("Curve Test",
-                AutoBuilder.followPath(PathPlannerPath.fromPathFile("curveTest")));
+        // autoChooser.addOption("Curve Test",
+        // AutoBuilder.followPath(PathPlannerPath.fromPathFile("curveTest")));
 
-        autoChooser.addOption("Pathfinding Test", AutoBuilder.pathfindToPose(
-                new Pose2d(1, 1, drivetrain.getSwerveDrive().getYaw()), DrivetrainConfig.PATH_CONSTRAINTS));
+        // autoChooser.addOption("Pathfinding Test", AutoBuilder.pathfindToPose(
+        // new Pose2d(1, 1, drivetrain.getSwerveDrive().getYaw()),
+        // DrivetrainConfig.PATH_CONSTRAINTS));
+
+        autoChooser.addOption("None",
+                new InstantCommand().withName("None"));
 
         Constants.DRIVER_TAB.add("Auto Command", autoChooser);
     }
