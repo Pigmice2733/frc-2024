@@ -22,67 +22,81 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 
 public class Drivetrain extends SubsystemBase {
-    private SwerveDrive swerveDrive;
+        private SwerveDrive swerveDrive;
 
-    public Drivetrain() {
-        try {
-            swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
-                    .createSwerveDrive(DrivetrainConfig.MAX_DRIVE_SPEED);
-        } catch (IOException e) {
-            e.printStackTrace();
+        public Drivetrain() {
+                try {
+                        swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
+                                        .createSwerveDrive(DrivetrainConfig.MAX_DRIVE_SPEED);
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+
+                AutoBuilder.configureHolonomic(
+                                swerveDrive::getPose, // Robot pose supplier
+                                swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has
+                                                            // a starting
+                                                            // pose)
+                                swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                                swerveDrive::drive, // Method that will drive the robot given ROBOT RELATIVE
+                                                    // ChassisSpeeds
+                                DrivetrainConfig.PATH_CONFIG,
+                                () -> {
+                                        // Boolean supplier that controls when the path will be mirrored for the red
+                                        // alliance
+                                        // This will flip the path being followed to the red side of the field.
+                                        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                                        // TODO: test this at some point (very important for actual matches)
+
+                                        // var alliance = DriverStation.getAlliance();
+                                        // if (alliance.isPresent()) {
+                                        // return alliance.get() == DriverStation.Alliance.Red;
+                                        // }
+                                        // return false;
+
+                                        return false;
+                                },
+                                this // Reference to this subsystem to set requirements
+                );
+                ShuffleboardHelper.addOutput("FL angle", Constants.SWERVE_TAB,
+                                () -> swerveDrive.getModulePositions()[0].angle.getDegrees());
+
+                ShuffleboardHelper.addOutput("FR angle", Constants.SWERVE_TAB,
+                                () -> swerveDrive.getModulePositions()[1].angle.getDegrees());
+
+                ShuffleboardHelper.addOutput("BL angle", Constants.SWERVE_TAB,
+                                () -> swerveDrive.getModulePositions()[2].angle.getDegrees());
+
+                ShuffleboardHelper.addOutput("BR angle", Constants.SWERVE_TAB,
+                                () -> swerveDrive.getModulePositions()[3].angle.getDegrees());
+
+                ShuffleboardHelper.addOutput("FL target", Constants.SWERVE_TAB,
+                                () -> SwerveDriveTelemetry.desiredStates[0]);
+
+                ShuffleboardHelper.addOutput("FR target", Constants.SWERVE_TAB,
+                                () -> SwerveDriveTelemetry.desiredStates[2]);
+
+                ShuffleboardHelper.addOutput("BL target", Constants.SWERVE_TAB,
+                                () -> SwerveDriveTelemetry.desiredStates[4]);
+
+                ShuffleboardHelper.addOutput("BR target", Constants.SWERVE_TAB,
+                                () -> SwerveDriveTelemetry.desiredStates[6]);
+
+                ShuffleboardHelper.addOutput("FL angle", Constants.SWERVE_TAB,
+                                () -> swerveDrive.getModulePositions()[0].angle.getDegrees());
+
+                ShuffleboardHelper.addOutput("FR angle", Constants.SWERVE_TAB,
+                                () -> swerveDrive.getModulePositions()[1].angle.getDegrees());
+
+                ShuffleboardHelper.addOutput("BL angle", Constants.SWERVE_TAB,
+                                () -> swerveDrive.getModulePositions()[2].angle.getDegrees());
+
+                ShuffleboardHelper.addOutput("BR angle", Constants.SWERVE_TAB,
+                                () -> swerveDrive.getModulePositions()[3].angle.getDegrees());
         }
 
-        AutoBuilder.configureHolonomic(
-                swerveDrive::getPose, // Robot pose supplier
-                swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting
-                                            // pose)
-                swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                swerveDrive::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                DrivetrainConfig.PATH_CONFIG,
-                () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red
-                    // alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                    // TODO: test this at some point (very important for actual matches)
-
-                    // var alliance = DriverStation.getAlliance();
-                    // if (alliance.isPresent()) {
-                    // return alliance.get() == DriverStation.Alliance.Red;
-                    // }
-                    // return false;
-
-                    return false;
-                },
-                this // Reference to this subsystem to set requirements
-        );
-        ShuffleboardHelper.addOutput("FL angle", Constants.SWERVE_TAB,
-                () -> swerveDrive.getModulePositions()[0].angle.getDegrees());
-
-        ShuffleboardHelper.addOutput("FR angle", Constants.SWERVE_TAB,
-                () -> swerveDrive.getModulePositions()[1].angle.getDegrees());
-
-        ShuffleboardHelper.addOutput("BL angle", Constants.SWERVE_TAB,
-                () -> swerveDrive.getModulePositions()[2].angle.getDegrees());
-
-        ShuffleboardHelper.addOutput("BR angle", Constants.SWERVE_TAB,
-                () -> swerveDrive.getModulePositions()[3].angle.getDegrees());
-
-        ShuffleboardHelper.addOutput("FL target", Constants.SWERVE_TAB,
-                () -> SwerveDriveTelemetry.desiredStates[0]);
-
-        ShuffleboardHelper.addOutput("FR target", Constants.SWERVE_TAB,
-                () -> SwerveDriveTelemetry.desiredStates[2]);
-
-        ShuffleboardHelper.addOutput("BL target", Constants.SWERVE_TAB,
-                () -> SwerveDriveTelemetry.desiredStates[4]);
-
-        ShuffleboardHelper.addOutput("BR target", Constants.SWERVE_TAB,
-                () -> SwerveDriveTelemetry.desiredStates[6]);
-    }
-
-    public SwerveDrive getSwerveDrive() {
-        return swerveDrive;
-    }
+        public SwerveDrive getSwerveDrive() {
+                return swerveDrive;
+        }
 }
