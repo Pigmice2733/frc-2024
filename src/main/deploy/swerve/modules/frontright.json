@@ -14,10 +14,6 @@
     "id": 12,
     "canbus": null
   },
-  "conversionFactor": {
-    "angle": 1,
-    "drive": 1
-  },
   "encoder": {
     "type": "cancoder",
     "id": 26,
