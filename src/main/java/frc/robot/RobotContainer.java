@@ -21,6 +21,9 @@ import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 import frc.robot.Constants.DrivetrainConfig;
 import frc.robot.commands.drivetrain.DriveWithJoysticks;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.vision.Vision;
+import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -184,12 +187,12 @@ public class RobotContainer {
                                 .fromPathFile("curveTest")));
             case PATHFINDING_TEST:
                 return Commands.sequence(
-                    Commands.runOnce(
-                        () -> drivetrain.getSwerveDrive()
-                            .resetOdometry(new Pose2d(1, 1, new Rotation2d()))),
-                    AutoBuilder.pathfindToPose(
-                        new Pose2d(9.3, 7.2,
-                            drivetrain.getSwerveDrive().getYaw()),
+                        Commands.runOnce(
+                                () -> drivetrain.getSwerveDrive()
+                                        .resetOdometry(new Pose2d(1, 1, new Rotation2d()))),
+                        AutoBuilder.pathfindToPose(
+                                new Pose2d(9.3, 7.2,
+                                        drivetrain.getSwerveDrive().getYaw()),
                                 DrivetrainConfig.PATH_CONSTRAINTS));
             case NONE:
             default:
