@@ -8,21 +8,14 @@ import java.io.File;
 import java.io.IOException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.util.ReplanningConfig;
-import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
-
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConfig;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
-import swervelib.telemetry.SwerveDriveTelemetry;
 
 public class Drivetrain extends SubsystemBase {
     private SwerveDrive swerveDrive;

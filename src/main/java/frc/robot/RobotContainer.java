@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.commands.PathfindHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -61,7 +62,6 @@ import frc.robot.subsystems.Wrist;
  */
 public class RobotContainer {
     private final Drivetrain drivetrain = new Drivetrain();
-    // SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
     // private final Arm arm = new Arm();
     // private final Climber climberExtension = new Climber();
     // private final Intake intake = new Intake();
@@ -70,8 +70,6 @@ public class RobotContainer {
     // private final Wrist wrist = new Wrist();
     // private final Vision vision = new Vision();
     // private final NoteSensor noteSensor = new NoteSensor();
-    // public final SwerveDrivetrain drivetrain = new
-    // SwerveDrivetrain(DrivetrainConfig.SWERVE_CONFIG);
 
     private final XboxController driver;
     private final XboxController operator;
@@ -90,7 +88,7 @@ public class RobotContainer {
 
         ControllerRumbler.setControllers(driver, operator);
 
-        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+        // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
         drivetrain.setDefaultCommand(new DriveWithJoysticks(drivetrain,
                 controls::getDriveSpeedX,
@@ -98,37 +96,6 @@ public class RobotContainer {
 
         configureButtonBindings();
         configureAutoChooser();
-    }
-
-    // CANSparkMax test = new CANSparkMax(16, MotorType.kBrushless);
-
-    public void periodic() {
-        // test.set(0.4);
-        // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
-        // SmartDashboard.putNumber("FL Angle",
-        // swerveDrive.getStates()[0].angle.getDegrees());
-        // SmartDashboard.putNumber("FR Angle",
-        // swerveDrive.getStates()[1].angle.getDegrees());
-        // SmartDashboard.putNumber("BL Angle",
-        // swerveDrive.getStates()[2].angle.getDegrees());
-        // SmartDashboard.putNumber("BR Angle",
-        // swerveDrive.getStates()[3].angle.getDegrees());
-
-        // // SmartDashboard.putNumber("FL Target",
-        // // swerveDrive.getModules()[0]..getDegrees());
-
-        // SmartDashboard.putNumber("Heading Target",
-        // SwerveDriveTelemetry.desiredChassisSpeeds[0]);
-
-        // // swerveDrive.driveFieldOriented(new ChassisSpeeds(1, 0, 0));
-        // // swerveDrive.drive();
-
-        // // swerveDrive.getModules()[0].setAngle(0);
-        // // swerveDrive.getModules()[1].setAngle(0);
-        // // swerveDrive.getModules()[2].setAngle(0);
-        // // swerveDrive.getModules()[3].setAngle(0);
-
-        // swerveDrive.drive(new ChassisSpeeds(1, 0, 0));
     }
 
     public void onEnable() {
