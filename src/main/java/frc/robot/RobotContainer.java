@@ -61,15 +61,15 @@ import frc.robot.subsystems.Wrist;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    private final Drivetrain drivetrain = new Drivetrain();
+    private final Drivetrain drivetrain;
     // private final Arm arm = new Arm();
     // private final Climber climberExtension = new Climber();
     // private final Intake intake = new Intake();
     // private final Shooter shooter = new Shooter();
     // private final Indexer indexer = new Indexer();
     // private final Wrist wrist = new Wrist();
-    // private final Vision vision = new Vision();
     // private final NoteSensor noteSensor = new NoteSensor();
+    private final Vision vision = new Vision();
 
     private final XboxController driver;
     private final XboxController operator;
@@ -81,6 +81,8 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        drivetrain = new Drivetrain(vision);
+
         driver = new XboxController(0);
         operator = new XboxController(1);
         controls = new Controls(driver, operator);
@@ -88,12 +90,10 @@ public class RobotContainer {
 
         ControllerRumbler.setControllers(driver, operator);
 
-        // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+        // Change to HIGH for debug info about swerve modules
+        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
 
-        drivetrain.setDefaultCommand(new DriveWithJoysticks(drivetrain,
-                controls::getDriveSpeedX,
-                controls::getDriveSpeedY, controls::getTurnSpeed));
-
+        configureDefaultCommands();
         configureButtonBindings();
         configureAutoChooser();
     }
@@ -108,6 +108,12 @@ public class RobotContainer {
 
     public void onDisable() {
         ControllerRumbler.stopBothControllers();
+    }
+
+    private void configureDefaultCommands() {
+        drivetrain.setDefaultCommand(new DriveWithJoysticks(drivetrain,
+                controls::getDriveSpeedX,
+                controls::getDriveSpeedY, controls::getTurnSpeed));
     }
 
     private void configureAutoChooser() {

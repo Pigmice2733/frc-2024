@@ -9,18 +9,26 @@ import java.io.IOException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.PathPlannerLogging;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConfig;
+import frc.robot.subsystems.vision.Vision;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 
 public class Drivetrain extends SubsystemBase {
     private SwerveDrive swerveDrive;
+    private final Field2d fieldWidget;
+    private final Vision vision;
 
-    public Drivetrain() {
+    public Drivetrain(Vision vision) {
+        this.vision = vision;
+
         try {
             swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
                     .createSwerveDrive(DrivetrainConfig.MAX_DRIVE_SPEED);
@@ -56,20 +64,39 @@ public class Drivetrain extends SubsystemBase {
                 this // Reference to this subsystem to set requirements
         );
 
-        Field2d field = new Field2d();
-        Constants.SWERVE_TAB.add("Field", field);
+        // Initialize the field that shows on
+        fieldWidget = new Field2d();
+        Constants.SWERVE_TAB.add("Field", fieldWidget);
 
         PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
-            field.setRobotPose(pose);
+            fieldWidget.setRobotPose(pose);
         });
 
         PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-            field.getObject("target pose").setPose(pose);
+            fieldWidget.getObject("target pose").setPose(pose);
         });
 
         PathPlannerLogging.setLogActivePathCallback((poses) -> {
-            field.getObject("path").setPoses(poses);
+            fieldWidget.getObject("path").setPoses(poses);
         });
+    }
+
+    @Override
+    public void periodic() {
+        addVisionMeasurements();
+    }
+
+    /** Adds vision measurements to correct the odometry */
+    private void addVisionMeasurements() {
+        if (vision == null)
+            return;
+
+        Pose2d estimatedPose = vision.getEstimatedRobotPose();
+
+        if (estimatedPose == null)
+            return;
+
+        swerveDrive.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp());
     }
 
     public SwerveDrive getSwerveDrive() {

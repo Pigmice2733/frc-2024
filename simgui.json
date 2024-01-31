@@ -3,6 +3,7 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/Driver/Auto Command": "String Chooser",
+      "/Shuffleboard/Vision/Field": "Field2d",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     }
