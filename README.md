@@ -17,10 +17,6 @@ Make sure you have [Git](https://git-scm.com/downloads) installed, as well as so
 
 And you're done! The project will have been downloaded into a new folder called `frc-2024`.
 
-4. Optional: open the project and, if not already present, add a line to the top `.vscode/settings.json` that says `"java.settings.url": ".vscode/settings.prefs",`, and add a corresponding file `.vscode/settings.prefs` with two lines:
-    org.eclipse.jdt.core.formatter.lineSplit = 80
-    org.eclipse.jdt.core.formatter.comment.line_length = 80
-
 ## Building and Running
 
 1. Open a terminal and [`cd`](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/cd) into the project directory (`frc-2024`).
