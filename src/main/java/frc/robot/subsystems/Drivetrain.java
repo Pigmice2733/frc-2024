@@ -64,7 +64,7 @@ public class Drivetrain extends SubsystemBase {
         );
 
         Field2d field = new Field2d();
-        SmartDashboard.putData("Field", field);
+        Constants.SWERVE_TAB.add("Field", field);
 
         PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
             field.setRobotPose(pose);

@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -149,15 +150,21 @@ public class RobotContainer {
 
         // Load the path you want to follow using its name in the GUI
 
-        // autoChooser.addOption("Straight Path",
-        // AutoBuilder.followPath(PathPlannerPath.fromPathFile("straightLineTest")));
+        autoChooser.addOption("Straight Path",
+                Commands.sequence(Commands.runOnce(() -> drivetrain.getSwerveDrive().resetOdometry(new Pose2d())),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("straightLineTest"))));
 
-        // autoChooser.addOption("Curve Test",
-        // AutoBuilder.followPath(PathPlannerPath.fromPathFile("curveTest")));
+        autoChooser.addOption("Curve Test",
+                Commands.sequence(Commands.runOnce(() -> drivetrain.getSwerveDrive().resetOdometry(new Pose2d())),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("curveTest"))));
 
-        // autoChooser.addOption("Pathfinding Test", AutoBuilder.pathfindToPose(
-        // new Pose2d(1, 1, drivetrain.getSwerveDrive().getYaw()),
-        // DrivetrainConfig.PATH_CONSTRAINTS));
+        autoChooser.addOption("Pathfinding Test",
+                Commands.sequence(
+                        Commands.runOnce(
+                                () -> drivetrain.getSwerveDrive().resetOdometry(new Pose2d(1, 1, new Rotation2d()))),
+                        AutoBuilder.pathfindToPose(
+                                new Pose2d(9.3, 7.2, drivetrain.getSwerveDrive().getYaw()),
+                                DrivetrainConfig.PATH_CONSTRAINTS)));
 
         autoChooser.addOption("None",
                 new InstantCommand().withName("None"));
