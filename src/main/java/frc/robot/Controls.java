@@ -57,6 +57,6 @@ public class Controls {
 
         // joystickTurn = turnSpeedFilter.calculate(joystickTurn); // input smoothing
 
-        return joystickTurn * DrivetrainConfig.MAX_TURN_SPEED;
+        return -joystickTurn * DrivetrainConfig.MAX_TURN_SPEED;
     }
 }
