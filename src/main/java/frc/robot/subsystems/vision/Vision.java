@@ -26,7 +26,7 @@ public class Vision extends SubsystemBase {
     public Vision() {
         fieldWidget = new Field2d();
 
-        Constants.VISION_TAB.add(fieldWidget).withPosition(2, 0).withSize(7, 5);
+        Constants.VISION_TAB.add(fieldWidget).withPosition(2, 0).withSize(7, 4);
 
         ShuffleboardHelper.addOutput("Target X", Constants.VISION_TAB,
                 () -> hasTarget() ? bestTarget.tx : 0).withPosition(0, 0);
@@ -79,8 +79,7 @@ public class Vision extends SubsystemBase {
 
     /** @return the robot's estimated 2d pose or null if no target is seen */
     public Pose2d getEstimatedRobotPose() {
-        System.out.println(hasTarget());
-        return !hasTarget() ? null : targetingResults.getBotPose2d();
+        return !hasTarget() ? null : targetingResults.getBotPose2d_wpiBlue();
     }
 
     /** @returns the estimated 2d translation to the best target */

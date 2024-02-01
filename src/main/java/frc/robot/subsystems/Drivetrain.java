@@ -66,11 +66,7 @@ public class Drivetrain extends SubsystemBase {
 
         // Initialize the field that shows on
         fieldWidget = new Field2d();
-        Constants.SWERVE_TAB.add("Field", fieldWidget);
-
-        PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
-            fieldWidget.setRobotPose(pose);
-        });
+        Constants.SWERVE_TAB.add("Field", fieldWidget).withSize(7, 4);
 
         PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
             fieldWidget.getObject("target pose").setPose(pose);
@@ -83,6 +79,7 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        fieldWidget.setRobotPose(swerveDrive.getPose());
         addVisionMeasurements();
     }
 

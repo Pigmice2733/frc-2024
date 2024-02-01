@@ -12,9 +12,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 
@@ -118,6 +120,9 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        new JoystickButton(driver, Button.kX.value)
+                .onTrue(Commands.runOnce(() -> drivetrain.getSwerveDrive().resetOdometry(new Pose2d())));
+
         // TODO: uncomment once the fixed drivetrain is merged in
         /*
          * // Hold to fire into speaker
