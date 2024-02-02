@@ -69,7 +69,7 @@ public class RobotContainer {
         ControllerRumbler.setControllers(driver, operator);
 
         // Change to HIGH for debug info about swerve modules
-        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
+        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
         configureDefaultCommands();
         configureButtonBindings();
@@ -122,6 +122,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         new JoystickButton(driver, Button.kX.value)
                 .onTrue(Commands.runOnce(() -> drivetrain.getSwerveDrive().resetOdometry(new Pose2d())));
+
+        new JoystickButton(driver, Button.kA.value).whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath
+                .fromPathFile("lineupAmp").flipPath(), DrivetrainConfig.PATH_CONSTRAINTS));
 
         // TODO: uncomment once the fixed drivetrain is merged in
         /*

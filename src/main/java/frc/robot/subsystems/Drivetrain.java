@@ -9,8 +9,10 @@ import java.io.IOException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.PathPlannerLogging;
+import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -68,6 +70,11 @@ public class Drivetrain extends SubsystemBase {
         fieldWidget = new Field2d();
         Constants.SWERVE_TAB.add("Field", fieldWidget).withSize(7, 4);
 
+        ShuffleboardHelper.addOutput("X Position", Constants.SWERVE_TAB, () -> swerveDrive.getPose().getX());
+        ShuffleboardHelper.addOutput("Y Position", Constants.SWERVE_TAB, () -> swerveDrive.getPose().getY());
+        ShuffleboardHelper.addOutput("Rotation", Constants.SWERVE_TAB,
+                () -> swerveDrive.getPose().getRotation().getDegrees());
+
         PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
             fieldWidget.getObject("target pose").setPose(pose);
         });
@@ -93,7 +100,7 @@ public class Drivetrain extends SubsystemBase {
         if (estimatedPose == null)
             return;
 
-        swerveDrive.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp());
+        // swerveDrive.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp());
     }
 
     public SwerveDrive getSwerveDrive() {

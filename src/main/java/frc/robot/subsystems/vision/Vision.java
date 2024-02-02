@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision;
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -79,7 +80,16 @@ public class Vision extends SubsystemBase {
 
     /** @return the robot's estimated 2d pose or null if no target is seen */
     public Pose2d getEstimatedRobotPose() {
-        return !hasTarget() ? null : targetingResults.getBotPose2d_wpiBlue();
+        if (!hasTarget)
+            return null;
+
+        var estimatedPose = targetingResults.getBotPose2d_wpiBlue();
+
+        // Rotate 180
+        // estimatedPose = new Pose2d(estimatedPose.getX(), estimatedPose.getY(),
+        // Rotation2d.fromDegrees(estimatedPose.getRotation().getDegrees() - 180));
+
+        return estimatedPose;
     }
 
     /** @returns the estimated 2d translation to the best target */

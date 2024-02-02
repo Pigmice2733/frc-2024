@@ -90,8 +90,8 @@ public final class Constants {
     }
 
     public final static class DrivetrainConfig {
-        public static final double MAX_DRIVE_SPEED = 4.5; // max meters / second
-        public static final double MAX_TURN_SPEED = 5; // max radians / second
+        public static final double MAX_DRIVE_SPEED = 2; // max meters / second
+        public static final double MAX_TURN_SPEED = 2; // max radians / second
         public static final double SLOWMODE_MULTIPLIER = 0.5;
 
         // distance from the center of one wheel to another
@@ -112,21 +112,27 @@ public final class Constants {
         );
 
         // Constants found in Sysid (volts)
-        private static final SimpleMotorFeedforward DRIVE_FEED_FORWARD = new SimpleMotorFeedforward(
-                0.35493, 2.3014, 0.12872);
+        // private static final SimpleMotorFeedforward DRIVE_FEED_FORWARD = new
+        // SimpleMotorFeedforward(
+        // 0.35493, 2.3014, 0.12872);
 
+        // TODO: Sync speeds with path config
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
-                2, 2, 2, 2);
+                1, 1, 1, 1);
 
         // From what I have seen, it is common to only use a P value in path following
         private static final PIDConstants PATH_DRIVE_PID = new PIDConstants(5.0, 0, 0);
         private static final PIDConstants PATH_TURN_PID = new PIDConstants(5.0, 0, 0);
 
+        public static final double MAX_PATH_DRIVE_SPEED = 1;
+        // public static final double MAX_PATH_TURN_SPEED = 1;
+
         // Offset from chassis center that the robot will rotate about
-        private static final Translation2d ROTATION_CENTER_OFFSET = new Translation2d(0, 0);
+        // private static final Translation2d ROTATION_CENTER_OFFSET = new
+        // Translation2d(0, 0);
 
         public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
-                PATH_DRIVE_PID, PATH_TURN_PID, MAX_DRIVE_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig());
+                PATH_DRIVE_PID, PATH_TURN_PID, MAX_PATH_DRIVE_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig());
     }
 
     public final static class ArmConfig {
