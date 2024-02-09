@@ -9,11 +9,8 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -47,38 +44,25 @@ public final class Constants {
     public static final double ROBOT_WIDTH = Units.inchesToMeters(22.953); // in meters (TODO)
 
     public static final class CANConfig {
-        public static final int FRONT_LEFT_DRIVE = 11;
-        public static final int FRONT_LEFT_STEER = 10;
-        public static final int FRONT_RIGHT_DRIVE = 13;
-        public static final int FRONT_RIGHT_STEER = 12;
-        public static final int BACK_LEFT_DRIVE = 16;
-        public static final int BACK_LEFT_STEER = 17;
-        public static final int BACK_RIGHT_DRIVE = 14;
-        public static final int BACK_RIGHT_STEER = 15;
+        public static final int LEFT_ARM = 31;
+        public static final int RIGHT_ARM = 30;
+        public static final int ARM_ENCODER = 50;
 
-        public static final int FRONT_LEFT_ABS_ENCODER = 20;
-        public static final int FRONT_RIGHT_ABS_ENCODER = 24;
-        public static final int BACK_LEFT_ABS_ENCODER = 22;
-        public static final int BACK_RIGHT_ABS_ENCODER = 26;
+        public static final int LEFT_CLIMB = 38;
+        public static final int RIGHT_CLIMB = 39;
 
-        public static final int LEFT_ARM = 30;
-        public static final int RIGHT_ARM = 31;
-        public static final int ARM_ENCODER = 32;
+        public static final int INTAKE_WHEELS = 37;
+        public static final int INTAKE_PIVOT = 36;
+        public static final int INTAKE_ENCODER = 51;
 
-        public static final int LEFT_CLIMB = 40;
-        public static final int RIGHT_CLIMB = 41;
+        public static final int LEFT_SHOOTER = 34;
+        public static final int RIGHT_SHOOTER = 35;
 
-        public static final int INTAKE_WHEELS = 50;
-        public static final int INTAKE_PIVOT = 51;
-        public static final int INTAKE_ENCODER = 52;
+        public static final int WRIST_ROTATION = 32;
+        public static final int WRIST_ENCODER = 52;
 
-        public static final int LEFT_SHOOTER = 60;
-        public static final int RIGHT_SHOOTER = 61;
-
-        public static final int WRIST_ROTATION = 70;
-        public static final int WRIST_ENCODER = 71;
-
-        public static final int INDEXER_ROTATION = 80;
+        public static final int LEFT_INDEXER = 33;
+        public static final int RIGHT_INDEXER = 40;
     }
 
     public static final class DIOConfig {
@@ -100,23 +84,7 @@ public final class Constants {
         public static final double DRIVE_BASE_RADIUS = 0.41;// Drive base radius in meters. Distance from robot center
                                                             // to furthest module.
 
-        private final static SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
-                new Translation2d(TRACK_WIDTH_METERS / 2,
-                        TRACK_WIDTH_METERS / 2), // Front left
-                new Translation2d(TRACK_WIDTH_METERS / 2,
-                        -TRACK_WIDTH_METERS / 2), // Front right
-                new Translation2d(-TRACK_WIDTH_METERS / 2,
-                        TRACK_WIDTH_METERS / 2), // Back left
-                new Translation2d(-TRACK_WIDTH_METERS / 2,
-                        -TRACK_WIDTH_METERS / 2) // Back right
-        );
-
-        // Constants found in Sysid (volts)
-        // private static final SimpleMotorFeedforward DRIVE_FEED_FORWARD = new
-        // SimpleMotorFeedforward(
-        // 0.35493, 2.3014, 0.12872);
-
-        // TODO: Sync speeds with path config
+        // TODO: sort out speeds and sync with path config
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
                 1, 1, 1, 1);
 

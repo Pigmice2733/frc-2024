@@ -4,10 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,8 +14,8 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ShooterConfig;
 
 public class Shooter extends SubsystemBase {
-    private final CANSparkMax leftMotor = new CANSparkMax(CANConfig.LEFT_SHOOTER, MotorType.kBrushless);
-    private final CANSparkMax rightMotor = new CANSparkMax(CANConfig.RIGHT_SHOOTER, MotorType.kBrushless);
+    private final TalonFX leftMotor = new TalonFX(CANConfig.LEFT_SHOOTER);
+    private final TalonFX rightMotor = new TalonFX(CANConfig.RIGHT_SHOOTER);
 
     /**
      * Shoots notes out of one end into the speaker and dumps them out of the other
@@ -25,18 +23,19 @@ public class Shooter extends SubsystemBase {
      * Intakes from the source into the speaker-shooting end.
      */
     public Shooter() {
-        leftMotor.restoreFactoryDefaults();
         leftMotor.setInverted(false);
-
-        rightMotor.restoreFactoryDefaults();
-        rightMotor.follow(leftMotor, true);
+        rightMotor.setInverted(true);
 
         ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> leftMotor.get());
+
+        ShuffleboardHelper.addInput("Set Speed", Constants.SHOOTER_TAB,
+                (output) -> outputToFlywheels((double) output), 0);
     }
 
     /* Output a percent to both flywheels */
     private void outputToFlywheels(double output) {
         leftMotor.set(output);
+        rightMotor.set(output);
     }
 
     /* Spin the flywheels in the shooting direction */

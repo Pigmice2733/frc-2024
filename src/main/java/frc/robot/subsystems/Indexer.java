@@ -28,6 +28,9 @@ public class Indexer extends SubsystemBase {
         motor.setInverted(false);
 
         ShuffleboardHelper.addOutput("Motor Output", Constants.INDEXER_TAB, () -> motor.get());
+
+        ShuffleboardHelper.addInput("Set Speed", Constants.SHOOTER_TAB,
+                (output) -> outputToMotor((double) output), 0);
     }
 
     private void outputToMotor(double output) {
