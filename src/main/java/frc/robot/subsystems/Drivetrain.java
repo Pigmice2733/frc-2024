@@ -12,14 +12,14 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConfig;
 import frc.robot.subsystems.vision.Vision;
+
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 
@@ -32,7 +32,8 @@ public class Drivetrain extends SubsystemBase {
         this.vision = vision;
 
         try {
-            swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
+            swerveDrive = new SwerveParser(
+                    new File(Filesystem.getDeployDirectory(), "swerve"))
                     .createSwerveDrive(DrivetrainConfig.MAX_DRIVE_SPEED);
         } catch (IOException e) {
             e.printStackTrace();
@@ -40,20 +41,26 @@ public class Drivetrain extends SubsystemBase {
 
         AutoBuilder.configureHolonomic(
                 swerveDrive::getPose, // Robot pose supplier
-                swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has
+                swerveDrive::resetOdometry, // Method to reset odometry (will be
+                                            // called if your auto has
                                             // a starting
                                             // pose)
-                swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                swerveDrive::drive, // Method that will drive the robot given ROBOT RELATIVE
+                swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST
+                                               // BE ROBOT RELATIVE
+                swerveDrive::drive, // Method that will drive the robot given
+                                    // ROBOT RELATIVE
                                     // ChassisSpeeds
                 DrivetrainConfig.PATH_CONFIG,
                 () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red
+                    // Boolean supplier that controls when the path will be
+                    // mirrored for the red
                     // alliance
-                    // This will flip the path being followed to the red side of the field.
+                    // This will flip the path being followed to the red side of
+                    // the field.
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-                    // TODO: test this at some point (very important for actual matches)
+                    // TODO: test this at some point (very important for actual
+                    // matches)
 
                     // var alliance = DriverStation.getAlliance();
                     // if (alliance.isPresent()) {
@@ -70,8 +77,10 @@ public class Drivetrain extends SubsystemBase {
         fieldWidget = new Field2d();
         Constants.SWERVE_TAB.add("Field", fieldWidget).withSize(7, 4);
 
-        ShuffleboardHelper.addOutput("X Position", Constants.SWERVE_TAB, () -> swerveDrive.getPose().getX());
-        ShuffleboardHelper.addOutput("Y Position", Constants.SWERVE_TAB, () -> swerveDrive.getPose().getY());
+        ShuffleboardHelper.addOutput("X Position", Constants.SWERVE_TAB,
+                () -> swerveDrive.getPose().getX());
+        ShuffleboardHelper.addOutput("Y Position", Constants.SWERVE_TAB,
+                () -> swerveDrive.getPose().getY());
         ShuffleboardHelper.addOutput("Rotation", Constants.SWERVE_TAB,
                 () -> swerveDrive.getPose().getRotation().getDegrees());
 
@@ -100,7 +109,8 @@ public class Drivetrain extends SubsystemBase {
         if (estimatedPose == null)
             return;
 
-        // swerveDrive.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp());
+        // swerveDrive.addVisionMeasurement(estimatedPose,
+        // Timer.getFPGATimestamp());
     }
 
     public SwerveDrive getSwerveDrive() {

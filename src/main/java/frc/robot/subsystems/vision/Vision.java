@@ -3,11 +3,11 @@ package frc.robot.subsystems.vision;
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 import frc.robot.Constants.VisionConfig;
 import frc.robot.subsystems.vision.LimelightHelpers.LimelightTarget_Fiducial;
@@ -35,19 +35,24 @@ public class Vision extends SubsystemBase {
                 () -> hasTarget() ? bestTarget.ty : 0).withPosition(1, 0);
 
         ShuffleboardHelper.addOutput("Bot Pose X", Constants.VISION_TAB,
-                () -> hasTarget() ? getEstimatedRobotPose().getX() : 0).withPosition(0, 1);
+                () -> hasTarget() ? getEstimatedRobotPose().getX() : 0)
+                .withPosition(0, 1);
         ShuffleboardHelper.addOutput("Bot Pose Y", Constants.VISION_TAB,
-                () -> hasTarget() ? getEstimatedRobotPose().getY() : 0).withPosition(1, 1);
+                () -> hasTarget() ? getEstimatedRobotPose().getY() : 0)
+                .withPosition(1, 1);
 
         ShuffleboardHelper.addOutput("Pose to tag X", Constants.VISION_TAB,
-                () -> hasTarget() ? getTranslationToBestTarget().getX() : 0).withPosition(0, 2);
+                () -> hasTarget() ? getTranslationToBestTarget().getX() : 0)
+                .withPosition(0, 2);
         ShuffleboardHelper.addOutput("Pose to tag Y", Constants.VISION_TAB,
-                () -> hasTarget() ? getTranslationToBestTarget().getY() : 0).withPosition(1, 2);
+                () -> hasTarget() ? getTranslationToBestTarget().getY() : 0)
+                .withPosition(1, 2);
     }
 
     @Override
     public void periodic() {
-        targetingResults = LimelightHelpers.getLatestResults(camName).targetingResults;
+        targetingResults = LimelightHelpers
+                .getLatestResults(camName).targetingResults;
 
         var allTargets = targetingResults.targets_Fiducials;
 
@@ -86,8 +91,10 @@ public class Vision extends SubsystemBase {
         var estimatedPose = targetingResults.getBotPose2d_wpiBlue();
 
         // Rotate 180
-        // estimatedPose = new Pose2d(estimatedPose.getX(), estimatedPose.getY(),
-        // Rotation2d.fromDegrees(estimatedPose.getRotation().getDegrees() - 180));
+        // estimatedPose = new Pose2d(estimatedPose.getX(),
+        // estimatedPose.getY(),
+        // Rotation2d.fromDegrees(estimatedPose.getRotation().getDegrees() -
+        // 180));
 
         return estimatedPose;
     }
