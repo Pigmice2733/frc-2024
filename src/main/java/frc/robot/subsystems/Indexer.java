@@ -16,7 +16,8 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.IndexerConfig;
 
 public class Indexer extends SubsystemBase {
-    private final CANSparkMax motor = new CANSparkMax(CANConfig.INDEXER_ROTATION, MotorType.kBrushless);
+    private final CANSparkMax leftMotor = new CANSparkMax(CANConfig.LEFT_INDEXER, MotorType.kBrushless);
+    private final CANSparkMax rightMotor = new CANSparkMax(CANConfig.LEFT_INDEXER, MotorType.kBrushless);
 
     /**
      * Shoots notes out of one end into the speaker and dumps them out of the other
@@ -24,17 +25,22 @@ public class Indexer extends SubsystemBase {
      * Intakes from the source into the speaker-shooting end.
      */
     public Indexer() {
-        motor.restoreFactoryDefaults();
-        motor.setInverted(false);
+        leftMotor.restoreFactoryDefaults();
+        leftMotor.setInverted(false);
 
-        ShuffleboardHelper.addOutput("Motor Output", Constants.INDEXER_TAB, () -> motor.get());
+        rightMotor.restoreFactoryDefaults();
+        rightMotor.setInverted(false);
+
+        rightMotor.follow(leftMotor);
+
+        ShuffleboardHelper.addOutput("Motor Output", Constants.INDEXER_TAB, () -> leftMotor.get());
 
         ShuffleboardHelper.addInput("Set Speed", Constants.SHOOTER_TAB,
                 (output) -> outputToMotor((double) output), 0);
     }
 
     private void outputToMotor(double output) {
-        motor.set(output);
+        leftMotor.set(output);
     }
 
     public Command indexForward() {

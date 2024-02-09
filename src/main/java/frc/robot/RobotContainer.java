@@ -8,7 +8,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -99,8 +98,6 @@ public class RobotContainer {
         // Default to doing nothing
         autoChooser.setDefaultOption("None", AutoCommands.NONE);
 
-        // Load the path you want to follow using its name in the GUI
-
         autoChooser.addOption("None", AutoCommands.NONE);
         autoChooser.addOption("Straight Path", AutoCommands.STRAIGHT_TEST);
         autoChooser.addOption("Curve Test", AutoCommands.CURVED_TEST);
@@ -121,10 +118,13 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         new JoystickButton(driver, Button.kX.value)
-                .onTrue(Commands.runOnce(() -> drivetrain.getSwerveDrive().resetOdometry(new Pose2d())));
+                .onTrue(Commands.runOnce(() -> drivetrain.getSwerveDrive()
+                        .resetOdometry(new Pose2d())));
 
-        new JoystickButton(driver, Button.kA.value).whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath
-                .fromPathFile("lineupAmp").flipPath(), DrivetrainConfig.PATH_CONSTRAINTS));
+        new JoystickButton(driver, Button.kA.value)
+                .whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath
+                        .fromPathFile("lineupAmp").flipPath(),
+                        DrivetrainConfig.PATH_CONSTRAINTS));
 
         // TODO: uncomment once the fixed drivetrain is merged in
         /*
@@ -197,9 +197,9 @@ public class RobotContainer {
                 return Commands.sequence(
                         Commands.runOnce(
                                 () -> drivetrain.getSwerveDrive()
-                                        .resetOdometry(new Pose2d(1, 1, new Rotation2d()))),
+                                        .resetOdometry(new Pose2d())),
                         AutoBuilder.pathfindToPose(
-                                new Pose2d(9.3, 7.2,
+                                new Pose2d(8.3, 6.2,
                                         drivetrain.getSwerveDrive().getYaw()),
                                 DrivetrainConfig.PATH_CONSTRAINTS));
             case NONE:

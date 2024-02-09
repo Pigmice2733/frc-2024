@@ -29,19 +29,28 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final ShuffleboardTab DRIVER_TAB = Shuffleboard.getTab("Driver");
-    public static final ShuffleboardTab SWERVE_TAB = Shuffleboard.getTab("Drivetrain");
+    public static final ShuffleboardTab DRIVER_TAB = Shuffleboard
+            .getTab("Driver");
+    public static final ShuffleboardTab SWERVE_TAB = Shuffleboard
+            .getTab("Drivetrain");
     public static final ShuffleboardTab ARM_TAB = Shuffleboard.getTab("Arm");
-    public static final ShuffleboardTab CLIMBER_TAB = Shuffleboard.getTab("Climber");
-    public static final ShuffleboardTab INTAKE_TAB = Shuffleboard.getTab("Intake");
-    public static final ShuffleboardTab INDEXER_TAB = Shuffleboard.getTab("Indexer");
-    public static final ShuffleboardTab SHOOTER_TAB = Shuffleboard.getTab("Shooter");
-    public static final ShuffleboardTab WRIST_TAB = Shuffleboard.getTab("Wrist");
-    public static final ShuffleboardTab VISION_TAB = Shuffleboard.getTab("Vision");
+    public static final ShuffleboardTab CLIMBER_TAB = Shuffleboard
+            .getTab("Climber");
+    public static final ShuffleboardTab INTAKE_TAB = Shuffleboard
+            .getTab("Intake");
+    public static final ShuffleboardTab INDEXER_TAB = Shuffleboard
+            .getTab("Indexer");
+    public static final ShuffleboardTab SHOOTER_TAB = Shuffleboard
+            .getTab("Shooter");
+    public static final ShuffleboardTab WRIST_TAB = Shuffleboard
+            .getTab("Wrist");
+    public static final ShuffleboardTab VISION_TAB = Shuffleboard
+            .getTab("Vision");
 
     public static final double AXIS_THRESHOLD = 0.25;
 
-    public static final double ROBOT_WIDTH = Units.inchesToMeters(22.953); // in meters (TODO)
+    // in meters (TODO)
+    public static final double ROBOT_WIDTH = Units.inchesToMeters(22.953);
 
     public static final class CANConfig {
         public static final int LEFT_ARM = 31;
@@ -81,16 +90,19 @@ public final class Constants {
         // distance from the center of one wheel to another
         public static final double TRACK_WIDTH_METERS = 0.5842;
 
-        public static final double DRIVE_BASE_RADIUS = 0.41;// Drive base radius in meters. Distance from robot center
-                                                            // to furthest module.
+        // distance from robot center to furthest module, in meters
+        public static final double DRIVE_BASE_RADIUS = 0.41;
 
         // TODO: sort out speeds and sync with path config
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
                 1, 1, 1, 1);
 
-        // From what I have seen, it is common to only use a P value in path following
-        private static final PIDConstants PATH_DRIVE_PID = new PIDConstants(5.0, 0, 0);
-        private static final PIDConstants PATH_TURN_PID = new PIDConstants(5.0, 0, 0);
+        // From what I have seen, it is common to only use a P value in path
+        // following
+        private static final PIDConstants PATH_DRIVE_PID = new PIDConstants(5.0,
+                0, 0);
+        private static final PIDConstants PATH_TURN_PID = new PIDConstants(5.0,
+                0, 0);
 
         public static final double MAX_PATH_DRIVE_SPEED = 1;
         // public static final double MAX_PATH_TURN_SPEED = 1;
@@ -100,12 +112,13 @@ public final class Constants {
         // Translation2d(0, 0);
 
         public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
-                PATH_DRIVE_PID, PATH_TURN_PID, MAX_PATH_DRIVE_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig());
+                PATH_DRIVE_PID, PATH_TURN_PID, MAX_PATH_DRIVE_SPEED,
+                DRIVE_BASE_RADIUS, new ReplanningConfig());
     }
 
     public final static class ArmConfig {
         public static final double P = 0;
-        public static final double i = 0;
+        public static final double I = 0;
         public static final double D = 0;
 
         public static final double MAX_ACCELERATION = 0;
@@ -246,10 +259,14 @@ public final class Constants {
 
         public static class Locations {
             // Start of the "lineup" path for these positions
-            public final static Pose2d AMP_LINEUP = new Pose2d(1.82, 6.29, Rotation2d.fromDegrees(90));
-            public final static Pose2d SPEAKER_LINEUP = new Pose2d(2.36, 5.56, Rotation2d.fromDegrees(180));
-            public final static Pose2d SOURCE_LINEUP = new Pose2d(1.64, 1.83, Rotation2d.fromDegrees(-120));
-            public final static Pose2d CLIMBING_LINEUP = new Pose2d(7.37, 4.03, Rotation2d.fromDegrees(180));
+            public final static Pose2d AMP_LINEUP = new Pose2d(1.82, 6.29,
+                    Rotation2d.fromDegrees(90));
+            public final static Pose2d SPEAKER_LINEUP = new Pose2d(2.36, 5.56,
+                    Rotation2d.fromDegrees(180));
+            public final static Pose2d SOURCE_LINEUP = new Pose2d(1.64, 1.83,
+                    Rotation2d.fromDegrees(-120));
+            public final static Pose2d CLIMBING_LINEUP = new Pose2d(7.37, 4.03,
+                    Rotation2d.fromDegrees(180));
 
             // TODO: do we want lineup commands for all 3 climbing spots?
             // public final static Pose2d CLIMBING_RIGHT = new Pose2d(0, 0, new
@@ -257,7 +274,8 @@ public final class Constants {
             // public final static Pose2d CLIMBING_BACK = new Pose2d(0, 0, new
             // Rotation2d());
 
-            public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(10.2, 4, new Rotation2d(0));
+            public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(10.2, 4,
+                    new Rotation2d(0));
         }
     }
 
