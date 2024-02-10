@@ -80,6 +80,7 @@ public final class Constants {
         public static final int WRIST_LIMIT_SWITCH = 2;
         public static final int INTAKE_BEAM_BREAK = 3;
         public static final int INDEXER_BEAM_BREAK = 4;
+        public static final int SHOOTER_BEAM_BREAK = 5;
     }
 
     public final static class DrivetrainConfig {

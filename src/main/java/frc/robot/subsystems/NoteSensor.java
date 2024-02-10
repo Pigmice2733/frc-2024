@@ -9,6 +9,7 @@ import frc.robot.Constants.DIOConfig;
 public class NoteSensor extends SubsystemBase {
     private final DigitalInput intakeBeamBreak;
     private final DigitalInput indexerBeamBreak;
+    private final DigitalInput shooterBeamBreak;
 
     private NoteState noteState = NoteState.NONE;
 
@@ -19,33 +20,43 @@ public class NoteSensor extends SubsystemBase {
     public NoteSensor() {
         intakeBeamBreak = new DigitalInput(DIOConfig.INTAKE_BEAM_BREAK);
         indexerBeamBreak = new DigitalInput(DIOConfig.INDEXER_BEAM_BREAK);
+        shooterBeamBreak = new DigitalInput(DIOConfig.SHOOTER_BEAM_BREAK);
     }
 
     @Override
     public void periodic() {
-        // Check for a note in the intake and indexer
+        // Check for a note
         if (intakeBeamBreak.get())
             noteState = NoteState.INTAKE;
         else if (indexerBeamBreak.get())
             noteState = NoteState.INDEXER;
+        else if (shooterBeamBreak.get())
+            noteState = NoteState.SHOOTER;
         else
             noteState = NoteState.NONE;
     }
 
+    /** @return the current note state */
     public NoteState getNoteState() {
         return noteState;
     }
 
     /** Ends as soon as a note is detected in the intake */
     public Command waitForNoteInIntake() {
-        return Commands.waitUntil(() -> noteState == NoteState.INTAKE);
+        return Commands.waitUntil(() -> intakeBeamBreak.get());
     }
 
     /** Ends as soon as a note is detected in the indexer */
     public Command waitForNoteInIndexer() {
-        return Commands.waitUntil(() -> noteState == NoteState.INDEXER);
+        return Commands.waitUntil(() -> indexerBeamBreak.get());
     }
 
+    /** Ends as soon as a note is detected in the indexer */
+    public Command waitForNoteInShooter() {
+        return Commands.waitUntil(() -> shooterBeamBreak.get());
+    }
+
+    /** Ends as soon as any beam break sensor detects a note */
     public Command waitForNoNote() {
         return Commands.waitUntil(() -> noteState == NoteState.NONE);
     }
@@ -53,6 +64,7 @@ public class NoteSensor extends SubsystemBase {
     public enum NoteState {
         NONE,
         INTAKE,
-        INDEXER
+        INDEXER,
+        SHOOTER
     }
 }
