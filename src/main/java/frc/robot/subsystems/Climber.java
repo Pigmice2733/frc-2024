@@ -4,9 +4,12 @@
 
 package frc.robot.subsystems;
 
+import com.pigmice.frc.lib.utils.Utils;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ClimberConfig;
@@ -27,25 +30,34 @@ public class Climber extends SubsystemBase {
         rightMotor.follow(leftMotor, false);
     }
 
-    @Override
-    public void periodic() {
-    }
-
+    /** Spins both of the climber motors */
     private void outputToMotors(double percent) {
+        percent = Utils.applySoftwareStop(getPosition(), percent, ClimberConfig.downPosition, 0);
         leftMotor.set(percent);
     }
 
-    public void extendClimber() {
-        outputToMotors(ClimberConfig.extensionSpeed);
+    /** Lifts the climber up */
+    public Command extendClimber() {
+        return Commands.runOnce(() -> outputToMotors(ClimberConfig.extensionSpeed));
     }
 
     /** For stowing the climber at the start of a match */
-    public void retractClimberSlow() {
-        outputToMotors(-ClimberConfig.extensionSpeed);
+    public Command retractClimberSlow() {
+        return Commands.runOnce(() -> outputToMotors(-ClimberConfig.extensionSpeed));
     }
 
-    /** For actually climbing */
-    public void retractClimberFast() {
-        outputToMotors(ClimberConfig.climbingSpeed);
+    /** For actually climbing lifting the robot */
+    public Command retractClimberFast() {
+        return Commands.runOnce(() -> outputToMotors(ClimberConfig.climbingSpeed));
+    }
+
+    /** Stops the climber */
+    public Command stopClimber() {
+        return Commands.runOnce(() -> outputToMotors(0));
+    }
+
+    /** @return the current encoder position */
+    public double getPosition() {
+        return leftMotor.getEncoder().getPosition();
     }
 }

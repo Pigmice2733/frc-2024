@@ -106,7 +106,6 @@ public class RobotContainer {
     }
 
     private void configureAutoChooser() {
-
         // Default to doing nothing
         autoChooser.setDefaultOption("None", AutoCommands.NONE);
 
@@ -138,9 +137,12 @@ public class RobotContainer {
                         .fromPathFile("lineupAmp").flipPath(),
                         DrivetrainConfig.PATH_CONSTRAINTS));
 
+        // #region MANUAL
+
         // Speaker Position
         new POVButton(operator, 0) // up
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.SPEAKER, WristState.SPEAKER));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.SPEAKER,
+                        WristState.SPEAKER));
 
         // Amp Position
         new POVButton(operator, 90) // right
@@ -148,16 +150,31 @@ public class RobotContainer {
 
         // Source Position
         new POVButton(operator, 270) // left
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.SOURCE, WristState.SOURCE));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.SOURCE,
+                        WristState.SOURCE));
 
         // Stow Position
         new POVButton(operator, 180) // down
                 .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.STOW, WristState.STOW));
 
-        // Fire Shooter
+        // Fire Shooter (hold)
         new JoystickButton(operator, Button.kX.value)
                 .onTrue(new FireShooter(indexer, shooter, noteSensor))
                 .onFalse(Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
+
+        // Raise Climber (hold)
+        new JoystickButton(operator, Button.kY.value)
+                .onTrue(climber.extendClimber())
+                .onFalse(climber.stopClimber());
+
+        // Climber Up (hold)
+        new JoystickButton(operator, Button.kY.value)
+                .onTrue(climber.retractClimberFast())
+                .onFalse(climber.stopClimber());
+
+        // #endregion
+
+        // #region SEMI-AUTO
 
         // TODO: uncomment when we are ready to test semi auto
         /*
@@ -205,6 +222,8 @@ public class RobotContainer {
          * .onFalse(Commands.runOnce(() ->
          * CommandScheduler.getInstance().cancel()));
          */
+
+        // #endregion
     }
 
     /**
