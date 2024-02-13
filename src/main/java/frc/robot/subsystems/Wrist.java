@@ -25,7 +25,7 @@ public class Wrist extends PIDSubsystemBase {
     public Wrist() {
         super(new CANSparkMax(CANConfig.WRIST_ROTATION, MotorType.kBrushless), WristConfig.P, WristConfig.I,
                 WristConfig.D, new Constraints(WristConfig.MAX_VELOCITY, WristConfig.MAX_ACCELERATION), false,
-                WristConfig.MOTOR_POSITION_CONVERSION, 50, Constants.WRIST_TAB, true);
+                WristConfig.MOTOR_POSITION_CONVERSION, 50, Constants.WRIST_TAB, true, false);
 
         encoderController = new CANSparkMax(CANConfig.WRIST_ENCODER, MotorType.kBrushed);
         RelativeEncoder encoder = encoderController.getEncoder(Type.kQuadrature, 8192);

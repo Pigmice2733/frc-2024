@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConfig;
 import frc.robot.Constants.AutoConfig.Locations;
-import frc.robot.Constants.ClimberConfig.ClimberState;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
@@ -30,19 +29,20 @@ public class Climb extends SequentialCommandGroup {
                 // Pathfind to the chain and stop in front of it
                 // new PathfindToPointSwerve(drivetrain, pathfinder, Locations.CLIMBING_LEFT),
                 // Stow all other subsystems
-                new Stow(intake, arm, wrist),
-                // Raise climber
-                climber.goToState(ClimberState.UP),
-                // Drive to under the chain
-                // TODO: fix once the fixed drivetrain is merged in
-                // Commands.runOnce(
-                // () -> drivetrain.driveChassisSpeeds(new ChassisSpeeds(0,
-                // AutoConfig.CLIMB_DRIVE_SPEED, 0))),
-                // Commands.waitSeconds(AutoConfig.CLIMB_DRIVE_TIME),
-                // Commands.runOnce(
-                // () -> drivetrain.driveChassisSpeeds(new ChassisSpeeds(0, 0, 0))),
-                // Pull robot up using climber
-                climber.goToState(ClimberState.DOWN));
+                new Stow(intake, arm, wrist)
+        // Raise climber TODO
+        // climber.goToState(ClimberState.UP),
+        // Drive to under the chain
+        // TODO: fix once the fixed drivetrain is merged in
+        // Commands.runOnce(
+        // () -> drivetrain.driveChassisSpeeds(new ChassisSpeeds(0,
+        // AutoConfig.CLIMB_DRIVE_SPEED, 0))),
+        // Commands.waitSeconds(AutoConfig.CLIMB_DRIVE_TIME),
+        // Commands.runOnce(
+        // () -> drivetrain.driveChassisSpeeds(new ChassisSpeeds(0, 0, 0))),
+        // Pull robot up using climber TODO
+        // climber.goToState(ClimberState.DOWN)
+        );
         addRequirements(/* TODO drivetrain, */ arm, wrist, climber, intake);
     }
 }

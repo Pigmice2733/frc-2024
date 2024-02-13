@@ -31,7 +31,7 @@ public class Intake extends PIDSubsystemBase {
     public Intake() {
         super(new CANSparkMax(CANConfig.INTAKE_PIVOT, MotorType.kBrushless), IntakeConfig.P, IntakeConfig.I,
                 IntakeConfig.D, new Constraints(IntakeConfig.MAX_VELOCITY, IntakeConfig.MAX_ACCELERATION), false,
-                IntakeConfig.MOTOR_POSITION_CONVERSION, 50, Constants.INTAKE_TAB, true);
+                IntakeConfig.MOTOR_POSITION_CONVERSION, 50, Constants.INTAKE_TAB, true, false);
 
         wheelsMotor.restoreFactoryDefaults();
         wheelsMotor.setInverted(false);

@@ -148,31 +148,10 @@ public final class Constants {
     }
 
     public final static class ClimberConfig {
-        public static final double P = 0;
-        public static final double I = 0;
-        public static final double D = 0;
+        public static final double extensionSpeed = -0.1;
+        public static final double climbingSpeed = 0.1;
 
-        public static final double MAX_ACCELERATION = 0;
-        public static final double MAX_VELOCITY = 0;
-
-        public static final double MOTOR_POSITION_CONVERSION = 1;
-
-        public static final double POSITION_TOLERANCE = 1;
-
-        public static enum ClimberState {
-            UP(45),
-            DOWN(0);
-
-            private double position;
-
-            ClimberState(double position) {
-                this.position = position;
-            }
-
-            public double getPosition() {
-                return position;
-            }
-        }
+        public static final double downPosition = -100;
     }
 
     public final static class WristConfig {

@@ -4,45 +4,48 @@
 
 package frc.robot.subsystems;
 
-import com.pigmice.frc.lib.pid_subsystem.PIDSubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ClimberConfig;
-import frc.robot.Constants.ClimberConfig.ClimberState;
 
-public class Climber extends PIDSubsystemBase {
+public class Climber extends SubsystemBase {
     private final CANSparkMax rightMotor;
+    private final CANSparkMax leftMotor;
 
     /** Moves the chain hooks into position to raise the robot. */
     public Climber() {
-        super(new CANSparkMax(CANConfig.LEFT_CLIMB, MotorType.kBrushless), ClimberConfig.P, ClimberConfig.I,
-                ClimberConfig.D, new Constraints(ClimberConfig.MAX_VELOCITY, ClimberConfig.MAX_ACCELERATION), false,
-                ClimberConfig.MOTOR_POSITION_CONVERSION, 50, Constants.CLIMBER_TAB, true);
+        leftMotor = new CANSparkMax(CANConfig.LEFT_CLIMB, MotorType.kBrushless);
+        leftMotor.restoreFactoryDefaults();
+        leftMotor.setInverted(true);
 
-        // Right motor
         rightMotor = new CANSparkMax(CANConfig.RIGHT_CLIMB, MotorType.kBrushless);
         rightMotor.restoreFactoryDefaults();
-        rightMotor.follow(getMotor(), false);
+        rightMotor.setInverted(true);
+        rightMotor.follow(leftMotor, false);
     }
 
     @Override
     public void periodic() {
     }
 
-    /** Sets the height state of the climber */
-    public Command setTargetState(ClimberState state) {
-        return Commands.runOnce(() -> setTargetRotation(state.getPosition()));
+    private void outputToMotors(double percent) {
+        leftMotor.set(percent);
     }
 
-    /** Sets the target rotation, then waits until it gets to that rotation */
-    public Command goToState(ClimberState state) {
-        return Commands.parallel(setTargetState(state), Commands.waitUntil(
-                () -> Math.abs(getCurrentRotation() - state.getPosition()) < ClimberConfig.POSITION_TOLERANCE));
+    public void extendClimber() {
+        outputToMotors(ClimberConfig.extensionSpeed);
+    }
+
+    /** For stowing the climber at the start of a match */
+    public void retractClimberSlow() {
+        outputToMotors(-ClimberConfig.extensionSpeed);
+    }
+
+    /** For actually climbing */
+    public void retractClimberFast() {
+        outputToMotors(ClimberConfig.climbingSpeed);
     }
 }

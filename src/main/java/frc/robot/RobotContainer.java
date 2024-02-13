@@ -16,12 +16,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 
 import frc.robot.Constants.DrivetrainConfig;
+import frc.robot.Constants.ArmConfig.ArmState;
+import frc.robot.Constants.WristConfig.WristState;
 import frc.robot.commands.drivetrain.DriveWithJoysticks;
+import frc.robot.commands.manual.FireShooter;
+import frc.robot.commands.manual.MoveKobraToPosition;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.NoteSensor;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.vision.Vision;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
@@ -37,13 +49,13 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
  */
 public class RobotContainer {
     private final Drivetrain drivetrain;
-    // private final Arm arm = new Arm();
-    // private final Climber climberExtension = new Climber();
-    // private final Intake intake = new Intake();
-    // private final Shooter shooter = new Shooter();
-    // private final Indexer indexer = new Indexer();
-    // private final Wrist wrist = new Wrist();
-    // private final NoteSensor noteSensor = new NoteSensor();
+    private final Arm arm = new Arm();
+    private final Climber climber = new Climber();
+    private final Intake intake = new Intake();
+    private final Shooter shooter = new Shooter();
+    private final Indexer indexer = new Indexer();
+    private final Wrist wrist = new Wrist();
+    private final NoteSensor noteSensor = new NoteSensor();
     private final Vision vision = new Vision();
 
     private final XboxController driver;
@@ -77,10 +89,10 @@ public class RobotContainer {
 
     public void onEnable() {
         // TODO: uncomment after drivetrain only testing
-        // arm.resetPID();
+        arm.resetPID();
         // climberExtension.resetPID();
-        // intake.resetPID();
-        // wrist.resetPID();
+        intake.resetPID();
+        wrist.resetPID();
     }
 
     public void onDisable() {
@@ -126,7 +138,28 @@ public class RobotContainer {
                         .fromPathFile("lineupAmp").flipPath(),
                         DrivetrainConfig.PATH_CONSTRAINTS));
 
-        // TODO: uncomment once the fixed drivetrain is merged in
+        // Speaker Position
+        new POVButton(operator, 0) // up
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.SPEAKER, WristState.SPEAKER));
+
+        // Amp Position
+        new POVButton(operator, 90) // right
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.AMP, WristState.AMP));
+
+        // Source Position
+        new POVButton(operator, 270) // left
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.SOURCE, WristState.SOURCE));
+
+        // Stow Position
+        new POVButton(operator, 180) // down
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.STOW, WristState.STOW));
+
+        // Fire Shooter
+        new JoystickButton(operator, Button.kX.value)
+                .onTrue(new FireShooter(indexer, shooter, noteSensor))
+                .onFalse(Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
+
+        // TODO: uncomment when we are ready to test semi auto
         /*
          * // Hold to fire into speaker
          * new JoystickButton(operator, ControlBindings.SCORE_SPEAKER_BUTTON)

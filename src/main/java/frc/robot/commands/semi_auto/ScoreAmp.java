@@ -41,6 +41,6 @@ public class ScoreAmp extends SequentialCommandGroup {
                 // Stop running the indexer
                 indexer.stopIndexer());
 
-        addRequirements(/* TODOdrivetrain, */ arm, wrist, shooter, indexer, noteSensor, intake);
+        addRequirements(/* TODOdrivetrain, */ arm, wrist, shooter, indexer, intake);
     }
 }

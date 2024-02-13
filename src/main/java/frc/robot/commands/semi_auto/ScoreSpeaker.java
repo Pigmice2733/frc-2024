@@ -24,7 +24,8 @@ import frc.robot.subsystems.Wrist;
 
 public class ScoreSpeaker extends SequentialCommandGroup {
     /** Drives to the speaker then scores */
-    public ScoreSpeaker(/* SwerveDrivetrain drivetrain, */ Pathfinder pathfinder, Arm arm, Wrist wrist, Shooter shooter,
+    public ScoreSpeaker(/* SwerveDrivetrain drivetrain, */ Pathfinder pathfinder, Arm arm, Wrist wrist,
+            Shooter shooter,
             Indexer indexer, Intake intake, NoteSensor noteSensor) {
 
         addCommands(
@@ -49,6 +50,6 @@ public class ScoreSpeaker extends SequentialCommandGroup {
                 // Stop spinning the indexer and shooter wheels
                 Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
 
-        addRequirements(/* drivetrain, */ arm, wrist, shooter, indexer, intake, noteSensor);
+        addRequirements(/* drivetrain, */ arm, wrist, shooter, indexer, intake);
     }
 }
