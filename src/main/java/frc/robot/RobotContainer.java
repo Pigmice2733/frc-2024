@@ -26,6 +26,7 @@ import frc.robot.Constants.WristConfig.WristState;
 import frc.robot.commands.drivetrain.DriveWithJoysticks;
 import frc.robot.commands.manual.FireShooter;
 import frc.robot.commands.manual.MoveKobraToPosition;
+import frc.robot.commands.manual.RunIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
@@ -128,14 +129,20 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        // #region DRIVER
+
         new JoystickButton(driver, Button.kX.value)
                 .onTrue(Commands.runOnce(() -> drivetrain.getSwerveDrive()
                         .resetOdometry(new Pose2d())));
 
-        new JoystickButton(driver, Button.kA.value)
-                .whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath
-                        .fromPathFile("lineupAmp").flipPath(),
-                        DrivetrainConfig.PATH_CONSTRAINTS));
+        /*
+         * new JoystickButton(driver, Button.kA.value)
+         * .whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath
+         * .fromPathFile("lineupAmp").flipPath(),
+         * DrivetrainConfig.PATH_CONSTRAINTS));
+         */
+
+        // #endregion
 
         // #region MANUAL
 
@@ -167,10 +174,12 @@ public class RobotContainer {
                 .onTrue(climber.extendClimber())
                 .onFalse(climber.stopClimber());
 
-        // Climber Up (hold)
-        new JoystickButton(operator, Button.kY.value)
+        // Lower CLimber (hold)
+        new JoystickButton(operator, Button.kA.value)
                 .onTrue(climber.retractClimberFast())
                 .onFalse(climber.stopClimber());
+
+        new JoystickButton(operator, Button.kB.value).toggleOnTrue(new RunIntake(intake, indexer));
 
         // #endregion
 

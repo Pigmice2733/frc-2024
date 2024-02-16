@@ -39,7 +39,7 @@ public class Indexer extends SubsystemBase {
                 (output) -> outputToMotor((double) output), 0);
     }
 
-    private void outputToMotor(double output) {
+    public void outputToMotor(double output) {
         leftMotor.set(output);
     }
 
