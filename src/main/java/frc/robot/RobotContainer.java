@@ -35,6 +35,7 @@ import frc.robot.subsystems.NoteSensor;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.vision.Vision;
+
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
@@ -141,26 +142,31 @@ public class RobotContainer {
 
         // Speaker Position
         new POVButton(operator, 0) // up
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.SPEAKER,
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake,
+                        ArmState.SPEAKER,
                         WristState.SPEAKER));
 
         // Amp Position
         new POVButton(operator, 90) // right
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.AMP, WristState.AMP));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake,
+                        ArmState.AMP, WristState.AMP));
 
         // Source Position
         new POVButton(operator, 270) // left
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.SOURCE,
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake,
+                        ArmState.SOURCE,
                         WristState.SOURCE));
 
         // Stow Position
         new POVButton(operator, 180) // down
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, ArmState.STOW, WristState.STOW));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake,
+                        ArmState.STOW, WristState.STOW));
 
         // Fire Shooter (hold)
         new JoystickButton(operator, Button.kX.value)
                 .onTrue(new FireShooter(indexer, shooter, noteSensor))
-                .onFalse(Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
+                .onFalse(Commands.parallel(indexer.stopIndexer(),
+                        shooter.stopFlywheels()));
 
         // Raise Climber (hold)
         new JoystickButton(operator, Button.kY.value)
