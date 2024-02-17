@@ -14,17 +14,18 @@ import frc.robot.subsystems.vision.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.subsystems.vision.LimelightHelpers.Results;
 
 public class Vision extends SubsystemBase {
-    private static String camName = VisionConfig.CAM_NAME;
+    private String camName;
+    private Field2d fieldWidget;
 
     private Results targetingResults;
-    private LimelightTarget_Fiducial bestTarget;
+    private LimelightTarget_Fiducial[] allTargets;
 
     private boolean hasTarget;
-
-    private Field2d fieldWidget;
+    private LimelightTarget_Fiducial bestTarget;
 
     /** Finds and uses AprilTags and other vision targets. */
     public Vision() {
+        camName = VisionConfig.CAM_NAME;
         fieldWidget = new Field2d();
 
         Constants.VISION_TAB.add(fieldWidget).withPosition(2, 0).withSize(7, 4);
@@ -40,7 +41,6 @@ public class Vision extends SubsystemBase {
         ShuffleboardHelper.addOutput("Bot Pose Y", Constants.VISION_TAB,
                 () -> hasTarget() ? getEstimatedRobotPose().getY() : 0)
                 .withPosition(1, 1);
-
         ShuffleboardHelper.addOutput("Pose to tag X", Constants.VISION_TAB,
                 () -> hasTarget() ? getTranslationToBestTarget().getX() : 0)
                 .withPosition(0, 2);
@@ -54,64 +54,64 @@ public class Vision extends SubsystemBase {
         targetingResults = LimelightHelpers
                 .getLatestResults(camName).targetingResults;
 
-        var allTargets = targetingResults.targets_Fiducials;
+        allTargets = targetingResults.targets_Fiducials;
 
         if (allTargets.length == 0) {
             bestTarget = null;
             hasTarget = false;
             return;
+        } else {
+            hasTarget = true;
+            bestTarget = allTargets[0];
         }
 
-        hasTarget = true;
-
-        bestTarget = allTargets[0];
-
         // Update the field widget
-        var estimatedPose = getEstimatedRobotPose();
-
-        if (estimatedPose != null)
-            fieldWidget.setRobotPose(estimatedPose);
+        if (getEstimatedRobotPose() != null)
+            fieldWidget.setRobotPose(getEstimatedRobotPose());
     }
 
-    /** @return true when there is a current target */
+    /** Returns true when there is a current target. */
     public boolean hasTarget() {
         return hasTarget;
     }
 
-    /** @return the best target's id or -1 if no target is seen */
+    /** Returns the best target's ID or -1 if no target is found. */
     public int getBestTargetID() {
-        return (int) (!hasTarget() ? -1 : bestTarget.fiducialID);
+        return (int) (hasTarget() ? bestTarget.fiducialID : -1);
     }
 
-    /** @return the robot's estimated 2d pose or null if no target is seen */
+    /**
+     * Returns the robot's estimated 2D position or null if no target is found.
+     */
     public Pose2d getEstimatedRobotPose() {
         if (!hasTarget)
             return null;
 
-        var estimatedPose = targetingResults.getBotPose2d_wpiBlue();
+        return targetingResults.getBotPose2d_wpiBlue();
 
         // Rotate 180
         // estimatedPose = new Pose2d(estimatedPose.getX(),
         // estimatedPose.getY(),
         // Rotation2d.fromDegrees(estimatedPose.getRotation().getDegrees() -
         // 180));
-
-        return estimatedPose;
     }
 
-    /** @returns the estimated 2d translation to the best target */
+    /**
+     * Returns the 2D translation between the robot's estimated position and the
+     * target.
+     */
     public Pose2d getTranslationToBestTarget() {
-        return !hasTarget() ? null : bestTarget.getRobotPose_TargetSpace2D();
+        return hasTarget() ? bestTarget.getRobotPose_TargetSpace2D() : null;
     }
 
-    /** @returns true if the ring is visible */
-    public boolean ringVisible() {
+    /** Returns true if a Note is visible. */
+    public boolean noteVisible() {
         // TODO: implementation
         return false;
     }
 
-    /** @returns a command that ends when a ring is visible */
+    /** Returns a command that ends when a Note is visible. */
     public Command waitForRing() {
-        return Commands.waitUntil(() -> ringVisible());
+        return Commands.waitUntil(this::noteVisible);
     }
 }
