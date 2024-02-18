@@ -35,6 +35,7 @@ public class Intake extends PIDSubsystemBase {
 
         wheelsMotor.restoreFactoryDefaults();
         wheelsMotor.setInverted(false);
+        wheelsMotor.setSmartCurrentLimit(40);
 
         ShuffleboardHelper.addOutput("Wheel Motor Output", Constants.INTAKE_TAB, () -> wheelsMotor.get());
 

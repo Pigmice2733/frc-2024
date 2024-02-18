@@ -23,10 +23,12 @@ public class Climber extends SubsystemBase {
         leftMotor = new CANSparkMax(CANConfig.LEFT_CLIMB, MotorType.kBrushless);
         leftMotor.restoreFactoryDefaults();
         leftMotor.setInverted(true);
+        leftMotor.setSmartCurrentLimit(40);
 
         rightMotor = new CANSparkMax(CANConfig.RIGHT_CLIMB, MotorType.kBrushless);
         rightMotor.restoreFactoryDefaults();
         rightMotor.setInverted(true);
+        leftMotor.setSmartCurrentLimit(40);
         rightMotor.follow(leftMotor, false);
     }
 

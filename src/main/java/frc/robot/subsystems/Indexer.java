@@ -27,9 +27,11 @@ public class Indexer extends SubsystemBase {
     public Indexer() {
         leftMotor.restoreFactoryDefaults();
         leftMotor.setInverted(false);
+        leftMotor.setSmartCurrentLimit(40);
 
         rightMotor.restoreFactoryDefaults();
         rightMotor.setInverted(false);
+        rightMotor.setSmartCurrentLimit(40);
 
         rightMotor.follow(leftMotor);
 
@@ -55,5 +57,4 @@ public class Indexer extends SubsystemBase {
     public Command stopIndexer() {
         return Commands.runOnce(() -> outputToMotor(0));
     }
-
 }

@@ -27,12 +27,13 @@ public class Arm extends PIDSubsystemBase {
         super(new CANSparkMax(CANConfig.LEFT_ARM, MotorType.kBrushless),
                 ArmConfig.P, ArmConfig.I, ArmConfig.D, new Constraints(
                         ArmConfig.MAX_VELOCITY, ArmConfig.MAX_ACCELERATION),
-                false, ArmConfig.MOTOR_POSITION_CONVERSION, 50,
+                false, ArmConfig.MOTOR_POSITION_CONVERSION, 40,
                 Constants.ARM_TAB, true, true);
 
         // Right motor
         rightMotor = new CANSparkMax(CANConfig.RIGHT_ARM, MotorType.kBrushless);
         rightMotor.restoreFactoryDefaults();
+        rightMotor.setSmartCurrentLimit(40);
         rightMotor.follow(getMotor(), false);
 
         // Encoder
