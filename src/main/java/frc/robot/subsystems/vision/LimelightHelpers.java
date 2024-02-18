@@ -26,6 +26,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * 
+ * 
+ * This file is provided by Limelight - PLEASE DO NOT EDIT
+ *
+ * 
+ */
+
 public class LimelightHelpers {
 
     public static class LimelightTarget_Retro {
@@ -364,6 +372,13 @@ public class LimelightHelpers {
         }
     }
 
+    private static ObjectMapper mapper;
+
+    /**
+     * Print JSON Parse time to the console in milliseconds
+     */
+    static boolean profileJSON = false;
+
     static final String sanitizeName(String name) {
         if (name == "" || name == null) {
             return "limelight";
@@ -378,8 +393,7 @@ public class LimelightHelpers {
         }
         return new Pose3d(
                 new Translation3d(inData[0], inData[1], inData[2]),
-                new Rotation3d(Units.degreesToRadians(inData[3]),
-                        Units.degreesToRadians(inData[4]),
+                new Rotation3d(Units.degreesToRadians(inData[3]), Units.degreesToRadians(inData[4]),
                         Units.degreesToRadians(inData[5])));
     }
 
@@ -388,56 +402,52 @@ public class LimelightHelpers {
             System.err.println("Bad LL 2D Pose Data!");
             return new Pose2d();
         }
-        return new Pose2d(
-                new Translation2d(inData[0], inData[1]),
-                new Rotation2d(Units.degreesToRadians(inData[5])));
+        Translation2d tran2d = new Translation2d(inData[0], inData[1]);
+        Rotation2d r2d = new Rotation2d(Units.degreesToRadians(inData[5]));
+        return new Pose2d(tran2d, r2d);
     }
 
     public static NetworkTable getLimelightNTTable(String tableName) {
-        return NetworkTableInstance.getDefault()
-                .getTable(sanitizeName(tableName));
+        return NetworkTableInstance.getDefault().getTable(sanitizeName(tableName));
     }
 
-    public static NetworkTableEntry getLimelightNTTableEntry(String tableName,
-            String entryName) {
+    public static NetworkTableEntry getLimelightNTTableEntry(String tableName, String entryName) {
         return getLimelightNTTable(tableName).getEntry(entryName);
     }
 
-    public static double getLimelightNTDouble(String tableName,
-            String entryName) {
+    public static double getLimelightNTDouble(String tableName, String entryName) {
         return getLimelightNTTableEntry(tableName, entryName).getDouble(0.0);
     }
 
-    public static void setLimelightNTDouble(String tableName, String entryName,
-            double val) {
+    public static void setLimelightNTDouble(String tableName, String entryName, double val) {
         getLimelightNTTableEntry(tableName, entryName).setDouble(val);
     }
 
-    public static void setLimelightNTDoubleArray(String tableName,
-            String entryName, double[] val) {
+    public static void setLimelightNTDoubleArray(String tableName, String entryName, double[] val) {
         getLimelightNTTableEntry(tableName, entryName).setDoubleArray(val);
     }
 
-    public static double[] getLimelightNTDoubleArray(String tableName,
-            String entryName) {
-        return getLimelightNTTableEntry(tableName, entryName)
-                .getDoubleArray(new double[0]);
+    public static double[] getLimelightNTDoubleArray(String tableName, String entryName) {
+        return getLimelightNTTableEntry(tableName, entryName).getDoubleArray(new double[0]);
     }
 
-    public static String getLimelightNTString(String tableName,
-            String entryName) {
+    public static String getLimelightNTString(String tableName, String entryName) {
         return getLimelightNTTableEntry(tableName, entryName).getString("");
     }
 
     public static URL getLimelightURLString(String tableName, String request) {
+        String urlString = "http://" + sanitizeName(tableName) + ".local:5807/" + request;
+        URL url;
         try {
-            return new URL("http://" + sanitizeName(tableName) + ".local:5807/"
-                    + request);
+            url = new URL(urlString);
+            return url;
         } catch (MalformedURLException e) {
             System.err.println("bad LL URL");
-            return null;
         }
+        return null;
     }
+    /////
+    /////
 
     public static double getTX(String limelightName) {
         return getLimelightNTDouble(limelightName, "tx");
@@ -517,23 +527,15 @@ public class LimelightHelpers {
     }
 
     public static double[] getCameraPose_TargetSpace(String limelightName) {
-        return getLimelightNTDoubleArray(limelightName,
-                "camerapose_targetspace");
-    }
-
-    public static double[] getCameraPose_RobotSpace(String limelightName) {
-        return getLimelightNTDoubleArray(limelightName,
-                "camerapose_robotspace");
+        return getLimelightNTDoubleArray(limelightName, "camerapose_targetspace");
     }
 
     public static double[] getTargetPose_CameraSpace(String limelightName) {
-        return getLimelightNTDoubleArray(limelightName,
-                "targetpose_cameraspace");
+        return getLimelightNTDoubleArray(limelightName, "targetpose_cameraspace");
     }
 
     public static double[] getTargetPose_RobotSpace(String limelightName) {
-        return getLimelightNTDoubleArray(limelightName,
-                "targetpose_robotspace");
+        return getLimelightNTDoubleArray(limelightName, "targetpose_robotspace");
     }
 
     public static double[] getTargetColor(String limelightName) {
@@ -548,63 +550,104 @@ public class LimelightHelpers {
         return getLimelightNTDouble(limelightName, "tclass");
     }
 
+    /////
+    /////
+
     public static Pose3d getBotPose3d(String limelightName) {
-        return toPose3D(getBotPose(limelightName));
+        double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose");
+        return toPose3D(poseArray);
     }
 
     public static Pose3d getBotPose3d_wpiRed(String limelightName) {
-        return toPose3D(getBotPose_wpiRed(limelightName));
+        double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose_wpired");
+        return toPose3D(poseArray);
     }
 
     public static Pose3d getBotPose3d_wpiBlue(String limelightName) {
-        return toPose3D(getBotPose_wpiBlue(limelightName));
+        double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose_wpiblue");
+        return toPose3D(poseArray);
     }
 
     public static Pose3d getBotPose3d_TargetSpace(String limelightName) {
-        return toPose3D(getBotPose_TargetSpace(limelightName));
+        double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose_targetspace");
+        return toPose3D(poseArray);
     }
 
     public static Pose3d getCameraPose3d_TargetSpace(String limelightName) {
-        return toPose3D(getCameraPose_TargetSpace(limelightName));
-    }
-
-    public static Pose3d getCameraPose3d_RobotSpace(String limelightName) {
-        return toPose3D(getCameraPose_RobotSpace(limelightName));
+        double[] poseArray = getLimelightNTDoubleArray(limelightName, "camerapose_targetspace");
+        return toPose3D(poseArray);
     }
 
     public static Pose3d getTargetPose3d_CameraSpace(String limelightName) {
-        return toPose3D(getTargetPose_CameraSpace(limelightName));
+        double[] poseArray = getLimelightNTDoubleArray(limelightName, "targetpose_cameraspace");
+        return toPose3D(poseArray);
     }
 
     public static Pose3d getTargetPose3d_RobotSpace(String limelightName) {
-        return toPose3D(getTargetPose_RobotSpace(limelightName));
+        double[] poseArray = getLimelightNTDoubleArray(limelightName, "targetpose_robotspace");
+        return toPose3D(poseArray);
     }
 
+    public static Pose3d getCameraPose3d_RobotSpace(String limelightName) {
+        double[] poseArray = getLimelightNTDoubleArray(limelightName, "camerapose_robotspace");
+        return toPose3D(poseArray);
+    }
+
+    /**
+     * Gets the Pose2d for easy use with Odometry vision pose estimator
+     * (addVisionMeasurement)
+     * 
+     * @param limelightName
+     * @return
+     */
     public static Pose2d getBotPose2d_wpiBlue(String limelightName) {
-        return toPose2D(getBotPose_wpiBlue(limelightName));
+
+        double[] result = getBotPose_wpiBlue(limelightName);
+        return toPose2D(result);
     }
 
+    /**
+     * Gets the Pose2d for easy use with Odometry vision pose estimator
+     * (addVisionMeasurement)
+     * 
+     * @param limelightName
+     * @return
+     */
     public static Pose2d getBotPose2d_wpiRed(String limelightName) {
-        return toPose2D(getBotPose_wpiRed(limelightName));
+
+        double[] result = getBotPose_wpiRed(limelightName);
+        return toPose2D(result);
+
     }
 
+    /**
+     * Gets the Pose2d for easy use with Odometry vision pose estimator
+     * (addVisionMeasurement)
+     * 
+     * @param limelightName
+     * @return
+     */
     public static Pose2d getBotPose2d(String limelightName) {
-        return toPose2D(getBotPose(limelightName));
+
+        double[] result = getBotPose(limelightName);
+        return toPose2D(result);
+
     }
 
-    /** Returns true if the "tv" value is 1.0 and false otherwise. */
     public static boolean getTV(String limelightName) {
         return 1.0 == getLimelightNTDouble(limelightName, "tv");
     }
 
-    public static void setPipelineIndex(String limelightName,
-            int pipelineIndex) {
+    /////
+    /////
+
+    public static void setPipelineIndex(String limelightName, int pipelineIndex) {
         setLimelightNTDouble(limelightName, "pipeline", pipelineIndex);
     }
 
     /**
-     * The LEDs will be controlled by Limelight pipeline settings, and not by
-     * robot code.
+     * The LEDs will be controlled by Limelight pipeline settings, and not by robot
+     * code.
      */
     public static void setLEDMode_PipelineControl(String limelightName) {
         setLimelightNTDouble(limelightName, "ledMode", 0);
@@ -642,37 +685,36 @@ public class LimelightHelpers {
         setLimelightNTDouble(limelightName, "camMode", 1);
     }
 
-    private static double[] cropEntries = new double[4];
-    private static double[] cprsEntries = new double[6];
-
     /**
-     * Sets the crop window. The crop window in the UI must be completely open
-     * for dynamic cropping to work.
+     * Sets the crop window. The crop window in the UI must be completely open for
+     * dynamic cropping to work.
      */
-    public static void setCropWindow(String limelightName, double cropXMin,
-            double cropXMax, double cropYMin, double cropYMax) {
-        cropEntries[0] = cropXMin;
-        cropEntries[1] = cropXMax;
-        cropEntries[2] = cropYMin;
-        cropEntries[3] = cropYMax;
-        setLimelightNTDoubleArray(limelightName, "crop", cropEntries);
+    public static void setCropWindow(String limelightName, double cropXMin, double cropXMax, double cropYMin,
+            double cropYMax) {
+        double[] entries = new double[4];
+        entries[0] = cropXMin;
+        entries[1] = cropXMax;
+        entries[2] = cropYMin;
+        entries[3] = cropYMax;
+        setLimelightNTDoubleArray(limelightName, "crop", entries);
     }
 
-    public static void setCameraPose_RobotSpace(String limelightName,
-            double forward, double side, double up,
+    public static void setCameraPose_RobotSpace(String limelightName, double forward, double side, double up,
             double roll, double pitch, double yaw) {
-        cprsEntries[0] = forward;
-        cprsEntries[1] = side;
-        cprsEntries[2] = up;
-        cprsEntries[3] = roll;
-        cprsEntries[4] = pitch;
-        cprsEntries[5] = yaw;
-        setLimelightNTDoubleArray(limelightName, "camerapose_robotspace_set",
-                cprsEntries);
+        double[] entries = new double[6];
+        entries[0] = forward;
+        entries[1] = side;
+        entries[2] = up;
+        entries[3] = roll;
+        entries[4] = pitch;
+        entries[5] = yaw;
+        setLimelightNTDoubleArray(limelightName, "camerapose_robotspace_set", entries);
     }
 
-    public static void setPythonScriptData(String limelightName,
-            double[] outgoingPythonData) {
+    /////
+    /////
+
+    public static void setPythonScriptData(String limelightName, double[] outgoingPythonData) {
         setLimelightNTDoubleArray(limelightName, "llrobot", outgoingPythonData);
     }
 
@@ -680,28 +722,29 @@ public class LimelightHelpers {
         return getLimelightNTDoubleArray(limelightName, "llpython");
     }
 
+    /////
+    /////
+
     /**
      * Asynchronously take snapshot.
      */
-    public static CompletableFuture<Boolean> takeSnapshot(String tableName,
-            String snapshotName) {
+    public static CompletableFuture<Boolean> takeSnapshot(String tableName, String snapshotName) {
         return CompletableFuture.supplyAsync(() -> {
-            return synchTakeSnapshot(tableName, snapshotName);
+            return SYNCH_TAKESNAPSHOT(tableName, snapshotName);
         });
     }
 
-    private static HttpURLConnection connection;
-
-    private static boolean synchTakeSnapshot(String tableName,
-            String snapshotName) {
+    private static boolean SYNCH_TAKESNAPSHOT(String tableName, String snapshotName) {
+        URL url = getLimelightURLString(tableName, "capturesnapshot");
         try {
-            connection = (HttpURLConnection) getLimelightURLString(tableName,
-                    "capturesnapshot").openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             if (snapshotName != null && snapshotName != "") {
                 connection.setRequestProperty("snapname", snapshotName);
             }
-            if (connection.getResponseCode() == 200) {
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == 200) {
                 return true;
             } else {
                 System.err.println("Bad LL Request");
@@ -712,33 +755,28 @@ public class LimelightHelpers {
         return false;
     }
 
-    private static long start, end;
-    private static LimelightResults results;
-    private static ObjectMapper mapper;
-    private static boolean profileJSON = false;
-
     /**
-     * Parses Limelight's JSON results dump into a LimelightResults object.
+     * Parses Limelight's JSON results dump into a LimelightResults Object
      */
     public static LimelightResults getLatestResults(String limelightName) {
-        start = System.nanoTime();
-        results = new LimelightResults();
+
+        long start = System.nanoTime();
+        LimelightHelpers.LimelightResults results = new LimelightHelpers.LimelightResults();
         if (mapper == null) {
-            mapper = new ObjectMapper().configure(
-                    DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         }
 
         try {
-            results = mapper.readValue(getJSONDump(limelightName),
-                    LimelightResults.class);
+            results = mapper.readValue(getJSONDump(limelightName), LimelightResults.class);
         } catch (JsonProcessingException e) {
-            System.err.println("LLjson error: " + e.getMessage());
+            System.err.println("lljson error: " + e.getMessage());
         }
 
-        end = System.nanoTime();
-        results.targetingResults.latency_jsonParse = (end - start) * .000001; // milliseconds
+        long end = System.nanoTime();
+        double millis = (end - start) * .000001;
+        results.targetingResults.latency_jsonParse = millis;
         if (profileJSON) {
-            System.out.printf("lljson: %.2f\r\n", (end - start) * .000001);
+            System.out.printf("lljson: %.2f\r\n", millis);
         }
 
         return results;

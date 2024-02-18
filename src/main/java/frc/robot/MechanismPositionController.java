@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class MechanismPositionController extends SubsystemBase {
     private final Hashtable<PIDSubsystemBase, Mechanism> mechanisms = new Hashtable<PIDSubsystemBase, Mechanism>();
-    private Mechanism mechanismA, mechanismB, output;
-    private Restraint restraint;
 
     /**
      * The purpose of this class is to control the position of different
@@ -42,9 +40,9 @@ public class MechanismPositionController extends SubsystemBase {
      */
     public void addRestraint(PIDSubsystemBase subsystemA,
             PIDSubsystemBase subsystemB, Range rangeA, Range rangeB) {
-        mechanismA = findMechanism(subsystemA);
-        mechanismB = findMechanism(subsystemB);
-        restraint = new Restraint(mechanismA, mechanismB, rangeA, rangeB);
+        Mechanism mechanismA = findMechanism(subsystemA);
+        Mechanism mechanismB = findMechanism(subsystemB);
+        Restraint restraint = new Restraint(mechanismA, mechanismB, rangeA, rangeB);
 
         mechanismA.addRestraint(restraint);
         mechanismB.addRestraint(restraint);
@@ -62,7 +60,7 @@ public class MechanismPositionController extends SubsystemBase {
     }
 
     private Mechanism findMechanism(SubsystemBase subsystem) {
-        output = mechanisms.get(subsystem);
+        Mechanism output = mechanisms.get(subsystem);
         if (output == null)
             System.out.println(
                     "Mechanism \"" + subsystem.getName() + "\" not found!");
