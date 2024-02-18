@@ -51,14 +51,14 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
  */
 public class RobotContainer {
     private final Drivetrain drivetrain;
-    private final Arm arm = new Arm();
-    private final Climber climber = new Climber();
-    private final Intake intake = new Intake();
-    private final Shooter shooter = new Shooter();
-    private final Indexer indexer = new Indexer();
-    private final Wrist wrist = new Wrist();
-    private final NoteSensor noteSensor = new NoteSensor();
-    private final Vision vision = new Vision();
+    // private final Arm arm = new Arm();
+    // private final Climber climber = new Climber();
+    // private final Intake intake = new Intake();
+    // private final Shooter shooter = new Shooter();
+    // private final Indexer indexer = new Indexer();
+    // private final Wrist wrist = new Wrist();
+    // private final NoteSensor noteSensor = new NoteSensor();
+    // private final Vision vision = new Vision();
 
     private final XboxController driver;
     private final XboxController operator;
@@ -71,7 +71,7 @@ public class RobotContainer {
      * commands.
      */
     public RobotContainer() {
-        drivetrain = new Drivetrain(vision);
+        drivetrain = new Drivetrain(null);
 
         driver = new XboxController(0);
         operator = new XboxController(1);
@@ -91,10 +91,10 @@ public class RobotContainer {
 
     public void onEnable() {
         // TODO: uncomment after drivetrain only testing
-        arm.resetPID();
+        // arm.resetPID();
         // climberExtension.resetPID();
-        intake.resetPID();
-        wrist.resetPID();
+        // intake.resetPID();
+        // wrist.resetPID();
     }
 
     public void onDisable() {
@@ -147,45 +147,46 @@ public class RobotContainer {
 
         // #region MANUAL
 
-        // Speaker Position
-        new POVButton(operator, 0) // up
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake,
-                        ArmState.SPEAKER,
-                        WristState.SPEAKER));
+        // // Speaker Position
+        // new POVButton(operator, 0) // up
+        // .onTrue(new MoveKobraToPosition(arm, wrist, intake,
+        // ArmState.SPEAKER,
+        // WristState.SPEAKER));
 
-        // Amp Position
-        new POVButton(operator, 90) // right
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake,
-                        ArmState.AMP, WristState.AMP));
+        // // Amp Position
+        // new POVButton(operator, 90) // right
+        // .onTrue(new MoveKobraToPosition(arm, wrist, intake,
+        // ArmState.AMP, WristState.AMP));
 
-        // Source Position
-        new POVButton(operator, 270) // left
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake,
-                        ArmState.SOURCE,
-                        WristState.SOURCE));
+        // // Source Position
+        // new POVButton(operator, 270) // left
+        // .onTrue(new MoveKobraToPosition(arm, wrist, intake,
+        // ArmState.SOURCE,
+        // WristState.SOURCE));
 
-        // Stow Position
-        new POVButton(operator, 180) // down
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake,
-                        ArmState.STOW, WristState.STOW));
+        // // Stow Position
+        // new POVButton(operator, 180) // down
+        // .onTrue(new MoveKobraToPosition(arm, wrist, intake,
+        // ArmState.STOW, WristState.STOW));
 
-        // Fire Shooter (hold)
-        new JoystickButton(operator, Button.kX.value)
-                .onTrue(new FireShooter(indexer, shooter, noteSensor))
-                .onFalse(Commands.parallel(indexer.stopIndexer(),
-                        shooter.stopFlywheels()));
+        // // Fire Shooter (hold)
+        // new JoystickButton(operator, Button.kX.value)
+        // .onTrue(new FireShooter(indexer, shooter, noteSensor))
+        // .onFalse(Commands.parallel(indexer.stopIndexer(),
+        // shooter.stopFlywheels()));
 
-        // Raise Climber (hold)
-        new JoystickButton(operator, Button.kY.value)
-                .onTrue(climber.extendClimber())
-                .onFalse(climber.stopClimber());
+        // // Raise Climber (hold)
+        // new JoystickButton(operator, Button.kY.value)
+        // .onTrue(climber.extendClimber())
+        // .onFalse(climber.stopClimber());
 
-        // Lower CLimber (hold)
-        new JoystickButton(operator, Button.kA.value)
-                .onTrue(climber.retractClimberFast())
-                .onFalse(climber.stopClimber());
+        // // Lower CLimber (hold)
+        // new JoystickButton(operator, Button.kA.value)
+        // .onTrue(climber.retractClimberFast())
+        // .onFalse(climber.stopClimber());
 
-        new JoystickButton(operator, Button.kB.value).toggleOnTrue(new RunIntake(intake, indexer));
+        // new JoystickButton(operator, Button.kB.value).toggleOnTrue(new
+        // RunIntake(intake, indexer));
 
         // #endregion
 

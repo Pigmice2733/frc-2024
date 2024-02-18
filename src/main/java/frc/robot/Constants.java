@@ -55,23 +55,20 @@ public final class Constants {
     public static final class CANConfig {
         public static final int LEFT_ARM = 31;
         public static final int RIGHT_ARM = 30;
-        public static final int ARM_ENCODER = 50;
 
-        public static final int LEFT_CLIMB = 38;
-        public static final int RIGHT_CLIMB = 39;
+        public static final int LEFT_CLIMB = 10;
+        public static final int RIGHT_CLIMB = 6;
 
-        public static final int INTAKE_WHEELS = 37;
-        public static final int INTAKE_PIVOT = 36;
-        public static final int INTAKE_ENCODER = 51;
+        public static final int INTAKE_WHEELS = 40;
+        public static final int INTAKE_PIVOT = 17;
 
         public static final int LEFT_SHOOTER = 34;
         public static final int RIGHT_SHOOTER = 35;
 
         public static final int WRIST_ROTATION = 32;
-        public static final int WRIST_ENCODER = 52;
 
-        public static final int LEFT_INDEXER = 33;
-        public static final int RIGHT_INDEXER = 40;
+        public static final int LEFT_INDEXER = 14;
+        public static final int RIGHT_INDEXER = 33;
     }
 
     public static final class DIOConfig {

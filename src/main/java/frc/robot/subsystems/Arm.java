@@ -7,8 +7,6 @@ package frc.robot.subsystems;
 import com.pigmice.frc.lib.pid_subsystem.PIDSubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkRelativeEncoder.Type;
-
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -19,7 +17,6 @@ import frc.robot.Constants.DIOConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
 
 public class Arm extends PIDSubsystemBase {
-    private final CANSparkMax encoderController;
     private final CANSparkMax rightMotor;
 
     /** Moves the shooter box up, down, and around the space above the robot. */
@@ -36,13 +33,8 @@ public class Arm extends PIDSubsystemBase {
         rightMotor.setSmartCurrentLimit(40);
         rightMotor.follow(getMotor(), false);
 
-        // Encoder
-        encoderController = new CANSparkMax(CANConfig.ARM_ENCODER,
-                MotorType.kBrushed);
-        addCustomEncoder(() -> encoderController
-                .getEncoder(Type.kQuadrature, 8192).getPosition());
+        addSoftwareStop(0, 100);
 
-        // Limit switch
         addLimitSwitch(0, DIOConfig.ARM_LIMIT_SWITCH, false,
                 LimitSwitchSide.NEGATIVE);
     }
