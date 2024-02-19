@@ -19,8 +19,8 @@ import frc.robot.Constants.WristConfig.WristState;
 public class Wrist extends PIDSubsystemBase {
     public Wrist() {
         super(new CANSparkMax(CANConfig.WRIST_ROTATION, MotorType.kBrushless), WristConfig.P, WristConfig.I,
-                WristConfig.D, new Constraints(WristConfig.MAX_VELOCITY, WristConfig.MAX_ACCELERATION), false,
-                WristConfig.MOTOR_POSITION_CONVERSION, 50, Constants.WRIST_TAB, true, true);
+                WristConfig.D, new Constraints(WristConfig.MAX_VELOCITY, WristConfig.MAX_ACCELERATION), true,
+                WristConfig.MOTOR_POSITION_CONVERSION, 50, Constants.WRIST_TAB, false, false);
 
         addSoftwareStop(-180, 180);
 

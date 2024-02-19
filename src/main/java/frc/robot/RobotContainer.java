@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -19,6 +20,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
+import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.robot.Constants.DrivetrainConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
@@ -51,12 +55,12 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
  */
 public class RobotContainer {
     private final Drivetrain drivetrain;
-    // private final Arm arm = new Arm();
-    // private final Climber climber = new Climber();
-    // private final Intake intake = new Intake();
+    private final Arm arm = new Arm();
+    private final Climber climber = new Climber();
+    private final Intake intake = new Intake();
     // private final Shooter shooter = new Shooter();
     // private final Indexer indexer = new Indexer();
-    // private final Wrist wrist = new Wrist();
+    private final Wrist wrist = new Wrist();
     // private final NoteSensor noteSensor = new NoteSensor();
     // private final Vision vision = new Vision();
 
@@ -66,11 +70,16 @@ public class RobotContainer {
 
     private final SendableChooser<AutoCommands> autoChooser;
 
+    DigitalInput switch1 = new DigitalInput(8);
+    DigitalInput switch2 = new DigitalInput(9);
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
      */
     public RobotContainer() {
+        ShuffleboardHelper.addOutput("8", Constants.DRIVER_TAB, () -> switch1.get());
+        ShuffleboardHelper.addOutput("9", Constants.DRIVER_TAB, () -> switch2.get());
         drivetrain = new Drivetrain(null);
 
         driver = new XboxController(0);
@@ -87,14 +96,15 @@ public class RobotContainer {
         configureDefaultCommands();
         configureButtonBindings();
         configureAutoChooser();
+
     }
 
     public void onEnable() {
         // TODO: uncomment after drivetrain only testing
         // arm.resetPID();
         // climberExtension.resetPID();
-        // intake.resetPID();
-        // wrist.resetPID();
+        intake.resetPID();
+        wrist.resetPID();
     }
 
     public void onDisable() {
@@ -180,13 +190,19 @@ public class RobotContainer {
         // .onTrue(climber.extendClimber())
         // .onFalse(climber.stopClimber());
 
-        // // Lower CLimber (hold)
-        // new JoystickButton(operator, Button.kA.value)
-        // .onTrue(climber.retractClimberFast())
-        // .onFalse(climber.stopClimber());
+        // Lower CLimber (hold)
+        new JoystickButton(operator, Button.kY.value)
+                .onTrue(climber.retractClimberFast())
+                .onFalse(climber.stopClimber());
 
-        // new JoystickButton(operator, Button.kB.value).toggleOnTrue(new
-        // RunIntake(intake, indexer));
+        // TODO: add indexer back to this
+        new JoystickButton(operator, Button.kB.value).onTrue(intake.runWheelsForward()).onFalse(intake.stopWheels());
+
+        new JoystickButton(operator, Button.kX.value)
+                .whileTrue(Commands.parallel(arm.goToState(ArmState.SPEAKER), wrist.goToState(WristState.SPEAKER)));
+
+        new JoystickButton(operator, Button.kA.value)
+                .whileTrue(Commands.parallel(wrist.goToState(WristState.STOW), arm.goToState(ArmState.STOW)));
 
         // #endregion
 
@@ -248,32 +264,33 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        switch (autoChooser.getSelected()) {
-            case STRAIGHT_TEST:
-                return Commands.sequence(
-                        Commands.runOnce(() -> drivetrain.getSwerveDrive()
-                                .resetOdometry(new Pose2d())),
-                        AutoBuilder.followPath(PathPlannerPath
-                                .fromPathFile("straightLineTest")));
-            case CURVED_TEST:
-                return Commands.sequence(
-                        Commands.runOnce(() -> drivetrain.getSwerveDrive()
-                                .resetOdometry(new Pose2d())),
-                        AutoBuilder.followPath(PathPlannerPath
-                                .fromPathFile("curveTest")));
-            case PATHFINDING_TEST:
-                return Commands.sequence(
-                        Commands.runOnce(
-                                () -> drivetrain.getSwerveDrive()
-                                        .resetOdometry(new Pose2d())),
-                        AutoBuilder.pathfindToPose(
-                                new Pose2d(8.3, 6.2,
-                                        drivetrain.getSwerveDrive().getYaw()),
-                                DrivetrainConfig.PATH_CONSTRAINTS));
-            case NONE:
-            default:
-                return Commands.none();
-        }
+        // switch (autoChooser.getSelected()) {
+        // case STRAIGHT_TEST:
+        // return Commands.sequence(
+        // Commands.runOnce(() -> drivetrain.getSwerveDrive()
+        // .resetOdometry(new Pose2d())),
+        // AutoBuilder.followPath(PathPlannerPath
+        // .fromPathFile("straightLineTest")));
+        // case CURVED_TEST:
+        // return Commands.sequence(
+        // Commands.runOnce(() -> drivetrain.getSwerveDrive()
+        // .resetOdometry(new Pose2d())),
+        // AutoBuilder.followPath(PathPlannerPath
+        // .fromPathFile("curveTest")));
+        // case PATHFINDING_TEST:
+        // return Commands.sequence(
+        // Commands.runOnce(
+        // () -> drivetrain.getSwerveDrive()
+        // .resetOdometry(new Pose2d())),
+        // AutoBuilder.pathfindToPose(
+        // new Pose2d(8.3, 6.2,
+        // drivetrain.getSwerveDrive().getYaw()),
+        // DrivetrainConfig.PATH_CONSTRAINTS));
+        // case NONE:
+        // default:
+        // return Commands.none();
+        // }
+        return Commands.none();
     }
 
     public static enum AutoCommands {

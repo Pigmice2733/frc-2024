@@ -27,15 +27,15 @@ public class Intake extends PIDSubsystemBase {
     public Intake() {
         super(new CANSparkMax(CANConfig.INTAKE_PIVOT, MotorType.kBrushless), IntakeConfig.P, IntakeConfig.I,
                 IntakeConfig.D, new Constraints(IntakeConfig.MAX_VELOCITY, IntakeConfig.MAX_ACCELERATION), false,
-                IntakeConfig.MOTOR_POSITION_CONVERSION, 50, Constants.INTAKE_TAB, true, true);
+                IntakeConfig.MOTOR_POSITION_CONVERSION, 50, Constants.INTAKE_TAB, true, false);
 
         wheelsMotor.restoreFactoryDefaults();
-        wheelsMotor.setInverted(false);
-        wheelsMotor.setSmartCurrentLimit(40);
+        wheelsMotor.setInverted(true);
+        wheelsMotor.setSmartCurrentLimit(80);
 
         ShuffleboardHelper.addOutput("Wheel Motor Output", Constants.INTAKE_TAB, () -> wheelsMotor.get());
 
-        addSoftwareStop(0, 100);
+        addSoftwareStop(-8, 0);
 
         addLimitSwitch(0, DIOConfig.INTAKE_LIMIT_SWITCH, false, LimitSwitchSide.NEGATIVE);
     }
@@ -44,7 +44,7 @@ public class Intake extends PIDSubsystemBase {
      * Sets the intake motor to a percent output (0.0 - 1.0) if no note is being
      * carried, and stops it otherwise.
      */
-    public void outputToMotor(double percent) {
+    public void outputToWheels(double percent) {
         wheelsMotor.set(percent);
     }
 
@@ -53,17 +53,17 @@ public class Intake extends PIDSubsystemBase {
      * otherwise.
      */
     public Command runWheelsForward() {
-        return Commands.runOnce(() -> outputToMotor(IntakeConfig.WHEELS_SPEED));
+        return Commands.runOnce(() -> outputToWheels(IntakeConfig.WHEELS_SPEED));
     }
 
     /** Spins intake wheels to eject notes. */
     public Command runWheelsBackward() {
-        return Commands.runOnce(() -> outputToMotor(-IntakeConfig.WHEELS_SPEED));
+        return Commands.runOnce(() -> outputToWheels(-IntakeConfig.WHEELS_SPEED));
     }
 
     /** Sets intake wheels to zero output. */
     public Command stopWheels() {
-        return Commands.runOnce(() -> outputToMotor(0));
+        return Commands.runOnce(() -> outputToWheels(0));
     }
 
     /** Sets the rotation state of the intake */

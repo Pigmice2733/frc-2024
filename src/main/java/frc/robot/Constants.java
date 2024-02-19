@@ -56,7 +56,7 @@ public final class Constants {
         public static final int LEFT_ARM = 31;
         public static final int RIGHT_ARM = 30;
 
-        public static final int LEFT_CLIMB = 10;
+        public static final int LEFT_CLIMB = 59;
         public static final int RIGHT_CLIMB = 6;
 
         public static final int INTAKE_WHEELS = 40;
@@ -115,21 +115,21 @@ public final class Constants {
     }
 
     public final static class ArmConfig {
-        public static final double P = 0;
+        public static final double P = 0.05;
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 0;
-        public static final double MAX_VELOCITY = 0;
+        public static final double MAX_ACCELERATION = 200;
+        public static final double MAX_VELOCITY = 180;
 
-        public static final double MOTOR_POSITION_CONVERSION = 1;
+        public static final double MOTOR_POSITION_CONVERSION = (1 / 165) * 1;
 
-        public static final double POSITION_TOLERANCE = 1;
+        public static final double POSITION_TOLERANCE = 3;
 
         public static enum ArmState {
-            STOW(90),
+            STOW(0),
             AMP(45),
-            SPEAKER(0),
+            SPEAKER(30),
             SOURCE(30);
 
             private double position;
@@ -145,28 +145,28 @@ public final class Constants {
     }
 
     public final static class ClimberConfig {
-        public static final double extensionSpeed = -0.1;
-        public static final double climbingSpeed = 0.1;
+        public static final double extensionSpeed = -0.5;
+        public static final double climbingSpeed = 0.5;
 
         public static final double downPosition = -100;
     }
 
     public final static class WristConfig {
-        public static final double P = 0;
+        public static final double P = 0.035;
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 0;
-        public static final double MAX_VELOCITY = 0;
+        public static final double MAX_ACCELERATION = 300;
+        public static final double MAX_VELOCITY = 400;
 
-        public static final double MOTOR_POSITION_CONVERSION = 1;
+        public static final double MOTOR_POSITION_CONVERSION = (1 / 68.75) * 360;
 
-        public static final double POSITION_TOLERANCE = 1;
+        public static final double POSITION_TOLERANCE = 3;
 
         public static enum WristState {
             STOW(0),
             AMP(30),
-            SPEAKER(60),
+            SPEAKER(90),
             SOURCE(45);
 
             private double position;
@@ -186,19 +186,18 @@ public final class Constants {
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 0;
-        public static final double MAX_VELOCITY = 0;
+        public static final double MAX_ACCELERATION = 1;
+        public static final double MAX_VELOCITY = 1;
 
         public static final double MOTOR_POSITION_CONVERSION = 1;
 
         public static final double POSITION_TOLERANCE = 1;
 
-        public static final double WHEELS_SPEED = 0.3;
+        public static final double WHEELS_SPEED = 0.6;
 
         public static enum IntakeState {
             STOW(0),
-            DOWN(30),
-            UP(10);
+            DOWN(-8);
 
             private double position;
 

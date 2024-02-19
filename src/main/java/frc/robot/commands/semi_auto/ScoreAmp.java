@@ -31,7 +31,7 @@ public class ScoreAmp extends SequentialCommandGroup {
                 // TODO: fix once the fixed drivetrain is merged in
                 // new PathfindToPointSwerve(drivetrain, pathfinder, Locations.AMP_SCORING),
                 // Move intake out of the way
-                intake.goToState(IntakeState.UP),
+                intake.goToState(IntakeState.STOW),
                 // Move arm and wrist to states
                 Commands.parallel(wrist.goToState(WristState.AMP), arm.goToState(ArmState.AMP)),
                 // Push the note out

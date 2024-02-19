@@ -39,7 +39,7 @@ public class ScoreSpeaker extends SequentialCommandGroup {
                         Commands.waitSeconds(AutoConfig.SHOOTER_SPINUP_TIME),
                         // Move the intake out of the way, then the arm and wrist to position
                         Commands.sequence(
-                                intake.goToState(IntakeState.UP),
+                                intake.goToState(IntakeState.STOW),
                                 Commands.parallel(
                                         wrist.goToState(WristState.SPEAKER),
                                         arm.goToState(ArmState.SPEAKER)))),

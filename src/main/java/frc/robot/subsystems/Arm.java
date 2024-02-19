@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.pigmice.frc.lib.pid_subsystem.PIDSubsystemBase;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,17 +22,18 @@ public class Arm extends PIDSubsystemBase {
 
     /** Moves the shooter box up, down, and around the space above the robot. */
     public Arm() {
-        super(new CANSparkMax(CANConfig.LEFT_ARM, MotorType.kBrushless),
+        super(new CANSparkMax(CANConfig.RIGHT_ARM, MotorType.kBrushless),
                 ArmConfig.P, ArmConfig.I, ArmConfig.D, new Constraints(
                         ArmConfig.MAX_VELOCITY, ArmConfig.MAX_ACCELERATION),
-                false, ArmConfig.MOTOR_POSITION_CONVERSION, 40,
-                Constants.ARM_TAB, true, true);
+                true, ArmConfig.MOTOR_POSITION_CONVERSION, 40,
+                Constants.ARM_TAB, true, false);
 
         // Right motor
-        rightMotor = new CANSparkMax(CANConfig.RIGHT_ARM, MotorType.kBrushless);
+        rightMotor = new CANSparkMax(CANConfig.LEFT_ARM, MotorType.kBrushless);
         rightMotor.restoreFactoryDefaults();
         rightMotor.setSmartCurrentLimit(40);
-        rightMotor.follow(getMotor(), false);
+        rightMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.follow(getMotor(), true);
 
         addSoftwareStop(0, 100);
 
