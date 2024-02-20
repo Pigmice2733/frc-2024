@@ -27,7 +27,6 @@ import frc.robot.Constants.ArmConfig.ArmState;
 import frc.robot.Constants.WristConfig.WristState;
 import frc.robot.commands.drivetrain.DriveWithJoysticks;
 import frc.robot.commands.manual.FireShooter;
-import frc.robot.commands.manual.MoveKobraToPosition;
 import frc.robot.commands.manual.RunIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;

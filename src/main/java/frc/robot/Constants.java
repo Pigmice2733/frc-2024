@@ -129,7 +129,9 @@ public final class Constants {
             STOW(0),
             AMP(45),
             SPEAKER(30),
-            SOURCE(30);
+            SOURCE(30),
+            TRAP(45),
+            WRIST_ROTATION(50);
 
             private double position;
 
@@ -166,6 +168,7 @@ public final class Constants {
             STOW(0),
             AMP(30),
             SPEAKER(90),
+            TRAP(120),
             SOURCE(45);
 
             private double position;
@@ -190,7 +193,7 @@ public final class Constants {
 
         public static final double MOTOR_POSITION_CONVERSION = 1;
 
-        public static final double POSITION_TOLERANCE = 1;
+        public static final double POSITION_TOLERANCE = 3;
 
         public static final double WHEELS_SPEED = 0.6;
 
