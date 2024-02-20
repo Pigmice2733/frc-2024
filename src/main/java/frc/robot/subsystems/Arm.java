@@ -26,7 +26,7 @@ public class Arm extends PIDSubsystemBase {
                 ArmConfig.P, ArmConfig.I, ArmConfig.D, new Constraints(
                         ArmConfig.MAX_VELOCITY, ArmConfig.MAX_ACCELERATION),
                 true, ArmConfig.MOTOR_POSITION_CONVERSION, 40,
-                Constants.ARM_TAB, true, false);
+                Constants.ARM_TAB, false, false);
 
         // Right motor
         rightMotor = new CANSparkMax(CANConfig.LEFT_ARM, MotorType.kBrushless);

@@ -16,8 +16,8 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ShooterConfig;
 
 public class Shooter extends SubsystemBase {
-    private final CANSparkMax leftMotor = new CANSparkMax(CANConfig.TOP_SHOOTER, MotorType.kBrushed);
-    private final CANSparkMax rightMotor = new CANSparkMax(CANConfig.BOTTOM_SHOOTER, MotorType.kBrushed);
+    private final CANSparkMax topMotor = new CANSparkMax(CANConfig.TOP_SHOOTER, MotorType.kBrushed);
+    private final CANSparkMax bottomMotor = new CANSparkMax(CANConfig.BOTTOM_SHOOTER, MotorType.kBrushed);
 
     /**
      * Shoots notes out of one end into the speaker and dumps them out of the other
@@ -25,16 +25,16 @@ public class Shooter extends SubsystemBase {
      * Intakes from the source into the speaker-shooting end.
      */
     public Shooter() {
-        leftMotor.restoreFactoryDefaults();
-        leftMotor.setInverted(false);
-        leftMotor.setSmartCurrentLimit(40);
+        topMotor.restoreFactoryDefaults();
+        topMotor.setInverted(true);
+        topMotor.setSmartCurrentLimit(40);
 
-        rightMotor.restoreFactoryDefaults();
-        rightMotor.setInverted(true);
-        rightMotor.setSmartCurrentLimit(40);
-        rightMotor.follow(leftMotor);
+        bottomMotor.restoreFactoryDefaults();
+        bottomMotor.setInverted(true);
+        bottomMotor.setSmartCurrentLimit(40);
+        bottomMotor.follow(topMotor);
 
-        ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> leftMotor.get());
+        ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> topMotor.get());
 
         ShuffleboardHelper.addInput("Set Speed", Constants.SHOOTER_TAB,
                 (output) -> outputToFlywheels((double) output), 0);
@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase {
 
     /* Output a percent to both flywheels */
     private void outputToFlywheels(double output) {
-        leftMotor.set(output);
+        topMotor.set(output);
     }
 
     /* Spin the flywheels in the shooting direction */

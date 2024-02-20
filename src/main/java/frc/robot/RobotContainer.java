@@ -21,10 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.DrivetrainConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
 import frc.robot.Constants.WristConfig.WristState;
@@ -74,32 +71,11 @@ public class RobotContainer {
     DigitalInput switch1 = new DigitalInput(8);
     DigitalInput switch2 = new DigitalInput(9);
 
-    CANSparkMax shooterTop = new CANSparkMax(CANConfig.TOP_SHOOTER, MotorType.kBrushed);
-    CANSparkMax shooterBottom = new CANSparkMax(CANConfig.BOTTOM_SHOOTER, MotorType.kBrushed);
-    CANSparkMax indexerTop = new CANSparkMax(CANConfig.TOP_INDEXER, MotorType.kBrushless);
-    CANSparkMax indexerBottom = new CANSparkMax(CANConfig.BOTTOM_INDEXER, MotorType.kBrushless);
-
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
      */
     public RobotContainer() {
-        shooterTop.restoreFactoryDefaults();
-        shooterTop.setSmartCurrentLimit(40);
-        shooterTop.setInverted(true);
-
-        shooterBottom.restoreFactoryDefaults();
-        shooterBottom.setSmartCurrentLimit(40);
-        shooterBottom.setInverted(true);
-
-        indexerTop.restoreFactoryDefaults();
-        indexerTop.setSmartCurrentLimit(20);
-        indexerTop.setInverted(false);
-
-        indexerBottom.restoreFactoryDefaults();
-        indexerBottom.setSmartCurrentLimit(20);
-        indexerBottom.setInverted(false);
-
         ShuffleboardHelper.addOutput("8", Constants.DRIVER_TAB, () -> switch1.get());
         ShuffleboardHelper.addOutput("9", Constants.DRIVER_TAB, () -> switch2.get());
         drivetrain = new Drivetrain(null);
@@ -118,18 +94,6 @@ public class RobotContainer {
         configureDefaultCommands();
         configureButtonBindings();
         configureAutoChooser();
-
-        ShuffleboardHelper.addInput("Top Shooter", Constants.SHOOTER_TAB, (input) -> shooterTop.set((double) input), 0);
-        ShuffleboardHelper.addInput("Bottom Shooter", Constants.SHOOTER_TAB,
-                (input) -> shooterBottom.set((double) input), 0);
-        ShuffleboardHelper.addInput("Top Indexer", Constants.SHOOTER_TAB, (input) -> indexerTop.set((double) input), 0);
-        ShuffleboardHelper.addInput("Bottom Indexer", Constants.SHOOTER_TAB,
-                (input) -> indexerBottom.set((double) input), 0);
-
-        ShuffleboardHelper.addOutput("Top Index Out", Constants.SHOOTER_TAB, () -> indexerTop.get());
-        ShuffleboardHelper.addOutput("Bottom Index Out", Constants.SHOOTER_TAB, () -> indexerBottom.get());
-        ShuffleboardHelper.addOutput("Top Shooter Out", Constants.SHOOTER_TAB, () -> shooterTop.get());
-        ShuffleboardHelper.addOutput("Bottom Shooter Out", Constants.SHOOTER_TAB, () -> shooterBottom.get());
     }
 
     public void teleopPeriodic() {

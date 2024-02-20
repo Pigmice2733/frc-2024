@@ -12,11 +12,11 @@ import frc.robot.subsystems.Intake;
 
 public class RunIntake extends Command {
   private final Intake intake;
-  // private final Indexer indexer;
+  private final Indexer indexer;
 
-  public RunIntake(Intake intake/* , Indexer indexer */) {
+  public RunIntake(Intake intake, Indexer indexer) {
     this.intake = intake;
-    // this.indexer = indexer;
+    this.indexer = indexer;
 
     addRequirements(intake/* , indexer */);
   }
@@ -24,13 +24,13 @@ public class RunIntake extends Command {
   @Override
   public void initialize() {
     intake.outputToMotor(IntakeConfig.WHEELS_SPEED);
-    // indexer.outputToMotor(IndexerConfig.DEFAULT_SPEED); TODO
+    indexer.outputToMotor(IndexerConfig.DEFAULT_SPEED);
   }
 
   @Override
   public void end(boolean interrupted) {
     intake.outputToMotor(0);
-    // indexer.outputToMotor(0); TODO
+    indexer.outputToMotor(0);
   }
 
   @Override
