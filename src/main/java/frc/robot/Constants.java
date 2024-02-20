@@ -62,13 +62,13 @@ public final class Constants {
         public static final int INTAKE_WHEELS = 40;
         public static final int INTAKE_PIVOT = 17;
 
-        public static final int LEFT_SHOOTER = 34;
-        public static final int RIGHT_SHOOTER = 35;
+        public static final int TOP_SHOOTER = 34;
+        public static final int BOTTOM_SHOOTER = 35;
 
         public static final int WRIST_ROTATION = 32;
 
-        public static final int LEFT_INDEXER = 14;
-        public static final int RIGHT_INDEXER = 33;
+        public static final int TOP_INDEXER = 14;
+        public static final int BOTTOM_INDEXER = 33;
     }
 
     public static final class DIOConfig {

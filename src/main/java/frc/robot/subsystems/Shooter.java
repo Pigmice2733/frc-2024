@@ -16,8 +16,8 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ShooterConfig;
 
 public class Shooter extends SubsystemBase {
-    private final CANSparkMax leftMotor = new CANSparkMax(CANConfig.LEFT_SHOOTER, MotorType.kBrushless);
-    private final CANSparkMax rightMotor = new CANSparkMax(CANConfig.RIGHT_SHOOTER, MotorType.kBrushless);
+    private final CANSparkMax leftMotor = new CANSparkMax(CANConfig.TOP_SHOOTER, MotorType.kBrushed);
+    private final CANSparkMax rightMotor = new CANSparkMax(CANConfig.BOTTOM_SHOOTER, MotorType.kBrushed);
 
     /**
      * Shoots notes out of one end into the speaker and dumps them out of the other

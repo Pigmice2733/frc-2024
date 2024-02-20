@@ -16,8 +16,8 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.IndexerConfig;
 
 public class Indexer extends SubsystemBase {
-    private final CANSparkMax leftMotor = new CANSparkMax(CANConfig.LEFT_INDEXER, MotorType.kBrushless);
-    private final CANSparkMax rightMotor = new CANSparkMax(CANConfig.LEFT_INDEXER, MotorType.kBrushless);
+    private final CANSparkMax leftMotor = new CANSparkMax(CANConfig.TOP_INDEXER, MotorType.kBrushless);
+    private final CANSparkMax rightMotor = new CANSparkMax(CANConfig.TOP_INDEXER, MotorType.kBrushless);
 
     /**
      * Shoots notes out of one end into the speaker and dumps them out of the other
