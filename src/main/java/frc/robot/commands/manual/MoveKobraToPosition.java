@@ -4,7 +4,12 @@
 
 package frc.robot.commands.manual;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
@@ -17,11 +22,24 @@ import frc.robot.subsystems.Wrist;
 public class MoveKobraToPosition extends SequentialCommandGroup {
     public MoveKobraToPosition(Arm arm, Wrist wrist, Intake intake, KobraState state) {
         // Lower the intake
+        ArrayList<Command> commands = new ArrayList<Command>();
+        addCommands(Commands.runOnce(() -> System.out.println("running " + state.toString())));
+        addCommands(Commands.runOnce(() -> System.out.println("running " + state.toString())));
         addCommands(intake.goToState(IntakeState.DOWN));
 
+        System.out.println("Going to " + state.toString());
+        System.out.println("Going to " + state.toString());
+        System.out.println("Going to " + state.toString());
+        System.out.println("Going to " + state.toString());
+        System.out.println("Going to " + state.toString());
+        System.out.println("Going to " + state.toString());
+
         // If the wrist can go out of frame, move the arm to the wrist rotation position
-        if (arm.getCurrentRotation() > ArmState.WRIST_ROTATION.getPosition() + ArmConfig.POSITION_TOLERANCE)
-            addCommands(arm.goToState(ArmState.WRIST_ROTATION));
+        addCommands(new ConditionalCommand(
+                arm.goToState(ArmState.WRIST_ROTATION),
+                Commands.none(),
+                () -> arm.getCurrentRotation() > (ArmState.WRIST_ROTATION.getPosition()
+                        + ArmConfig.POSITION_TOLERANCE)));
 
         // Stow the wrist
         addCommands(wrist.goToState(WristState.STOW));

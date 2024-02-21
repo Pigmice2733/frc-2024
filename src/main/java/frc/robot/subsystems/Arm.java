@@ -8,6 +8,8 @@ import com.pigmice.frc.lib.pid_subsystem.PIDSubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
+
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -35,9 +37,9 @@ public class Arm extends PIDSubsystemBase {
         rightMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.follow(getMotor(), true);
 
-        addSoftwareStop(0, 100);
+        addSoftwareStop(0, 150);
 
-        addLimitSwitch(0, DIOConfig.ARM_LIMIT_SWITCH, false,
+        addLimitSwitch(0, DIOConfig.ARM_LIMIT_SWITCH, true,
                 LimitSwitchSide.NEGATIVE);
     }
 

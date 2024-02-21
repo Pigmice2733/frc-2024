@@ -72,11 +72,11 @@ public final class Constants {
     }
 
     public static final class DIOConfig {
-        public static final int ARM_LIMIT_SWITCH = 0;
-        public static final int INTAKE_LIMIT_SWITCH = 1;
-        public static final int INTAKE_BEAM_BREAK = 3;
-        public static final int INDEXER_BEAM_BREAK = 4;
-        public static final int SHOOTER_BEAM_BREAK = 5;
+        public static final int ARM_LIMIT_SWITCH = 8;
+        public static final int INTAKE_LIMIT_SWITCH = 9;
+        public static final int INTAKE_BEAM_BREAK = 0;
+        public static final int INDEXER_BEAM_BREAK = 1;
+        public static final int SHOOTER_BEAM_BREAK = 2;
     }
 
     public final static class DrivetrainConfig {
@@ -118,20 +118,20 @@ public final class Constants {
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 200;
-        public static final double MAX_VELOCITY = 180;
+        public static final double MAX_ACCELERATION = 460;
+        public static final double MAX_VELOCITY = 300;
 
-        public static final double MOTOR_POSITION_CONVERSION = (1 / 165) * 1;
+        public static final double MOTOR_POSITION_CONVERSION = (1 / 165.0) * 360;
 
         public static final double POSITION_TOLERANCE = 3;
 
         public static enum ArmState {
             STOW(0),
-            AMP(45),
+            AMP(120),
             SPEAKER(30),
-            SOURCE(30),
+            SOURCE(60),
             TRAP(45),
-            WRIST_ROTATION(50);
+            WRIST_ROTATION(60);
 
             private double position;
 
@@ -166,10 +166,10 @@ public final class Constants {
 
         public static enum WristState {
             STOW(0),
-            AMP(30),
-            SPEAKER(90),
-            TRAP(120),
-            SOURCE(45);
+            AMP(-90),
+            SPEAKER(45),
+            TRAP(90),
+            SOURCE(90);
 
             private double position;
 
@@ -184,14 +184,14 @@ public final class Constants {
     }
 
     public final static class IntakeConfig {
-        public static final double P = 0;
+        public static final double P = 0.02;
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 1;
-        public static final double MAX_VELOCITY = 1;
+        public static final double MAX_ACCELERATION = 220;
+        public static final double MAX_VELOCITY = 150;
 
-        public static final double MOTOR_POSITION_CONVERSION = 1;
+        public static final double MOTOR_POSITION_CONVERSION = 10.5;
 
         public static final double POSITION_TOLERANCE = 3;
 
@@ -199,7 +199,7 @@ public final class Constants {
 
         public static enum IntakeState {
             STOW(0),
-            DOWN(-8);
+            DOWN(-90);
 
             private double position;
 

@@ -48,10 +48,12 @@ public class Climber extends SubsystemBase {
     private void outputToMotors(double percent, boolean applySoftwareStop) {
         double rightOut = percent;
         double leftOut = percent;
-        if (applySoftwareStop) {
-            leftOut = Utils.applySoftwareStop(getLeftPosition(), leftOut, ClimberConfig.downPosition, 0);
-            rightOut = Utils.applySoftwareStop(getRightPosition(), rightOut, ClimberConfig.downPosition, 0);
-        }
+        // if (applySoftwareStop) {
+        // leftOut = Utils.applySoftwareStop(getLeftPosition(), leftOut,
+        // ClimberConfig.downPosition, 0);
+        // rightOut = Utils.applySoftwareStop(getRightPosition(), rightOut,
+        // ClimberConfig.downPosition, 0);
+        // }
         leftMotor.set(percent);
         rightMotor.set(percent);
     }

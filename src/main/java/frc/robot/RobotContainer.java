@@ -27,7 +27,9 @@ import frc.robot.Constants.ArmConfig.ArmState;
 import frc.robot.Constants.WristConfig.WristState;
 import frc.robot.commands.drivetrain.DriveWithJoysticks;
 import frc.robot.commands.manual.FireShooter;
+import frc.robot.commands.manual.MoveKobraToPosition;
 import frc.robot.commands.manual.RunIntake;
+import frc.robot.commands.manual.MoveKobraToPosition.KobraState;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
@@ -51,13 +53,13 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    private final Drivetrain drivetrain;
-    // private final Arm arm = new Arm();
+    // private final Drivetrain drivetrain;
+    private final Arm arm = new Arm();
     // private final Climber climber = new Climber();
-    // private final Intake intake = new Intake();
+    private final Intake intake = new Intake();
     // private final Shooter shooter = new Shooter();
     // private final Indexer indexer = new Indexer();
-    // private final Wrist wrist = new Wrist();
+    private final Wrist wrist = new Wrist();
     // private final NoteSensor noteSensor = new NoteSensor();
     // private final Vision vision = new Vision();
 
@@ -67,17 +69,19 @@ public class RobotContainer {
 
     private final SendableChooser<AutoCommands> autoChooser;
 
-    DigitalInput switch1 = new DigitalInput(8);
-    DigitalInput switch2 = new DigitalInput(9);
+    // DigitalInput switch0 = new DigitalInput(0);
+    // DigitalInput switch1 = new DigitalInput(1);
+    // DigitalInput switch2 = new DigitalInput(2);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
      */
     public RobotContainer() {
-        ShuffleboardHelper.addOutput("8", Constants.DRIVER_TAB, () -> switch1.get());
-        ShuffleboardHelper.addOutput("9", Constants.DRIVER_TAB, () -> switch2.get());
-        drivetrain = new Drivetrain(null);
+        // ShuffleboardHelper.addOutput("0", Constants.DRIVER_TAB, () -> switch0.get());
+        // ShuffleboardHelper.addOutput("1", Constants.DRIVER_TAB, () -> switch1.get());
+        // ShuffleboardHelper.addOutput("2", Constants.DRIVER_TAB, () -> switch2.get());
+        // drivetrain = new Drivetrain(null);
 
         driver = new XboxController(0);
         operator = new XboxController(1);
@@ -101,10 +105,10 @@ public class RobotContainer {
 
     public void onEnable() {
         // TODO: uncomment after drivetrain only testing
-        // arm.resetPID();
+        arm.resetPID();
         // climberExtension.resetPID();
-        // intake.resetPID();
-        // wrist.resetPID();
+        intake.resetPID();
+        wrist.resetPID();
     }
 
     public void onDisable() {
@@ -112,9 +116,9 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-        drivetrain.setDefaultCommand(new DriveWithJoysticks(drivetrain,
-                controls::getDriveSpeedX,
-                controls::getDriveSpeedY, controls::getTurnSpeed));
+        // drivetrain.setDefaultCommand(new DriveWithJoysticks(drivetrain,
+        // controls::getDriveSpeedX,
+        // controls::getDriveSpeedY, controls::getTurnSpeed));
     }
 
     private void configureAutoChooser() {
@@ -142,9 +146,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         // #region DRIVER
 
-        new JoystickButton(driver, Button.kX.value)
-                .onTrue(Commands.runOnce(() -> drivetrain.getSwerveDrive()
-                        .resetOdometry(new Pose2d())));
+        // new JoystickButton(driver, Button.kX.value)
+        // .onTrue(Commands.runOnce(() -> drivetrain.getSwerveDrive()
+        // .resetOdometry(new Pose2d())));
 
         /*
          * new JoystickButton(driver, Button.kA.value)
@@ -157,27 +161,21 @@ public class RobotContainer {
 
         // #region MANUAL
 
-        // // Speaker Position
-        // new POVButton(operator, 0) // up
-        // .onTrue(new MoveKobraToPosition(arm, wrist, intake,
-        // ArmState.SPEAKER,
-        // WristState.SPEAKER));
+        // Speaker Position
+        new POVButton(operator, 0) // up
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER));
 
-        // // Amp Position
-        // new POVButton(operator, 90) // right
-        // .onTrue(new MoveKobraToPosition(arm, wrist, intake,
-        // ArmState.AMP, WristState.AMP));
+        // Amp Position
+        new POVButton(operator, 90) // right
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.AMP));
 
-        // // Source Position
-        // new POVButton(operator, 270) // left
-        // .onTrue(new MoveKobraToPosition(arm, wrist, intake,
-        // ArmState.SOURCE,
-        // WristState.SOURCE));
+        // Source Position
+        new POVButton(operator, 270) // left
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SOURCE));
 
-        // // Stow Position
-        // new POVButton(operator, 180) // down
-        // .onTrue(new MoveKobraToPosition(arm, wrist, intake,
-        // ArmState.STOW, WristState.STOW));
+        // Stow Position
+        new POVButton(operator, 180) // down
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW));
 
         // // Fire Shooter (hold)
         // new JoystickButton(operator, Button.kX.value)
@@ -185,15 +183,18 @@ public class RobotContainer {
         // .onFalse(Commands.parallel(indexer.stopIndexer(),
         // shooter.stopFlywheels()));
 
-        // // Raise Climber (hold)
+        // Raise Climber (hold)
         // new JoystickButton(operator, Button.kY.value)
         // .onTrue(climber.extendClimber())
         // .onFalse(climber.stopClimber());
 
-        // Lower CLimber (hold)
-        // new JoystickButton(operator, Button.kY.value)
+        // // Lower CLimber (hold)
+        // new JoystickButton(operator, Button.kA.value)
         // .onTrue(climber.retractClimberFast())
         // .onFalse(climber.stopClimber());
+
+        // new JoystickButton(operator, Button.kB.value).onTrue(new RunIntake(intake,
+        // noteSensor));
 
         // TODO: add indexer back to this
         // new JoystickButton(operator,

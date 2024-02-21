@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.pigmice.frc.lib.pid_subsystem.PIDSubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
+
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,7 +20,7 @@ import frc.robot.Constants.WristConfig.WristState;
 public class Wrist extends PIDSubsystemBase {
     public Wrist() {
         super(new CANSparkMax(CANConfig.WRIST_ROTATION, MotorType.kBrushless), WristConfig.P, WristConfig.I,
-                WristConfig.D, new Constraints(WristConfig.MAX_VELOCITY, WristConfig.MAX_ACCELERATION), true,
+                WristConfig.D, new Constraints(WristConfig.MAX_VELOCITY, WristConfig.MAX_ACCELERATION), false,
                 WristConfig.MOTOR_POSITION_CONVERSION, 50, Constants.WRIST_TAB, false, false);
 
         addSoftwareStop(-180, 180);
