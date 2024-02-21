@@ -27,6 +27,7 @@ import frc.robot.Constants.ArmConfig.ArmState;
 import frc.robot.Constants.WristConfig.WristState;
 import frc.robot.commands.drivetrain.DriveWithJoysticks;
 import frc.robot.commands.manual.FireShooter;
+import frc.robot.commands.manual.IntakeCycle;
 import frc.robot.commands.manual.MoveKobraToPosition;
 import frc.robot.commands.manual.RunIntake;
 import frc.robot.commands.manual.MoveKobraToPosition.KobraState;
@@ -60,7 +61,7 @@ public class RobotContainer {
     // private final Shooter shooter = new Shooter();
     // private final Indexer indexer = new Indexer();
     private final Wrist wrist = new Wrist();
-    // private final NoteSensor noteSensor = new NoteSensor();
+    private final NoteSensor noteSensor = new NoteSensor();
     // private final Vision vision = new Vision();
 
     private final XboxController driver;
@@ -177,6 +178,14 @@ public class RobotContainer {
         new POVButton(operator, 180) // down
                 .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW));
 
+        new JoystickButton(operator, Button.kB.value).onTrue(new RunIntake(intake,
+                noteSensor));
+
+        // TODO: Test after running indexer
+        // new JoystickButton(operator, Button.kX.value).onTrue(new IntakeCycle(intake,
+        // indexer, arm, wrist,
+        // noteSensor));
+
         // // Fire Shooter (hold)
         // new JoystickButton(operator, Button.kX.value)
         // .onTrue(new FireShooter(indexer, shooter, noteSensor))
@@ -192,9 +201,6 @@ public class RobotContainer {
         // new JoystickButton(operator, Button.kA.value)
         // .onTrue(climber.retractClimberFast())
         // .onFalse(climber.stopClimber());
-
-        // new JoystickButton(operator, Button.kB.value).onTrue(new RunIntake(intake,
-        // noteSensor));
 
         // TODO: add indexer back to this
         // new JoystickButton(operator,

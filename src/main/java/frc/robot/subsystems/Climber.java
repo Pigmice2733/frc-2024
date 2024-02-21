@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
-import com.pigmice.frc.lib.utils.Utils;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -48,14 +47,15 @@ public class Climber extends SubsystemBase {
     private void outputToMotors(double percent, boolean applySoftwareStop) {
         double rightOut = percent;
         double leftOut = percent;
+        // TODO: climber software stop
         // if (applySoftwareStop) {
         // leftOut = Utils.applySoftwareStop(getLeftPosition(), leftOut,
         // ClimberConfig.downPosition, 0);
         // rightOut = Utils.applySoftwareStop(getRightPosition(), rightOut,
         // ClimberConfig.downPosition, 0);
         // }
-        leftMotor.set(percent);
-        rightMotor.set(percent);
+        leftMotor.set(rightOut);
+        rightMotor.set(leftOut);
     }
 
     /** Lifts the climber up */

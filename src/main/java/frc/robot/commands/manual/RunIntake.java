@@ -5,9 +5,7 @@
 package frc.robot.commands.manual;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.IndexerConfig;
 import frc.robot.Constants.IntakeConfig;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NoteSensor;
 

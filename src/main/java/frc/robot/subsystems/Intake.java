@@ -81,6 +81,14 @@ public class Intake extends PIDSubsystemBase {
     /** Sets the target rotation, then waits until it gets to that rotation */
     public Command goToState(IntakeState state) {
         return Commands.parallel(setTargetState(state), Commands.waitUntil(
-                () -> Math.abs(getCurrentRotation() - state.getPosition()) < IntakeConfig.POSITION_TOLERANCE));
+                () -> atState(state)));
+    }
+
+    public boolean atState(IntakeState state) {
+        return Math.abs(getCurrentRotation() - state.getPosition()) < IntakeConfig.POSITION_TOLERANCE;
+    }
+
+    public Command waitForState(IntakeState state) {
+        return Commands.waitUntil(() -> atState(state));
     }
 }
