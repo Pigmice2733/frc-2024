@@ -1,0 +1,120 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.422741136270286,
+        "y": 5.545747295712128
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.5227411362702856,
+        "y": 5.545747295712128
+      },
+      "isLocked": false,
+      "linkedName": "speakerCenter"
+    },
+    {
+      "anchor": {
+        "x": 2.175417092232631,
+        "y": 5.545747295712128
+      },
+      "prevControl": {
+        "x": 2.175417092232631,
+        "y": 5.665073971657378
+      },
+      "nextControl": {
+        "x": 2.175417092232631,
+        "y": 5.445747295712128
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.422741136270286,
+        "y": 5.545747295712128
+      },
+      "prevControl": {
+        "x": 1.522741136270286,
+        "y": 5.545747295712128
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "speakerCenter"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "prepScore",
+      "waypointRelativePos": 1.25,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "prepScore"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "fireShooter",
+      "waypointRelativePos": 1.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "fireShooter"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "prepIntake",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "prepIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 7.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 360.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 0.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

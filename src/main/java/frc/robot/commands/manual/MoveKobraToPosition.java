@@ -16,6 +16,8 @@ import frc.robot.subsystems.Wrist;
 
 public class MoveKobraToPosition extends SequentialCommandGroup {
     public MoveKobraToPosition(Arm arm, Wrist wrist, Intake intake, KobraState state) {
+        currentKobraState = state;
+
         // Lower the intake
         addCommands(Commands.runOnce(() -> System.out.println("running " + state.toString())));
         addCommands(Commands.runOnce(() -> System.out.println("running " + state.toString())));
@@ -61,6 +63,8 @@ public class MoveKobraToPosition extends SequentialCommandGroup {
 
         addRequirements(arm, wrist, intake);
     }
+
+    public static KobraState currentKobraState;
 
     public enum KobraState {
         STOW,

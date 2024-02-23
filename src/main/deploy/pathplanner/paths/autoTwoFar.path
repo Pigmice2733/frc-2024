@@ -1,0 +1,126 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7251390307442104,
+        "y": 4.35248053625963
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.6063206377245165,
+        "y": 4.159722059732688
+      },
+      "isLocked": false,
+      "linkedName": "speakerFar"
+    },
+    {
+      "anchor": {
+        "x": 2.3131017183233036,
+        "y": 4.086290259150996
+      },
+      "prevControl": {
+        "x": 1.872415310882044,
+        "y": 4.086290259150996
+      },
+      "nextControl": {
+        "x": 2.6986186713771874,
+        "y": 4.086290259150996
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.7251390307442104,
+        "y": 4.35248053625963
+      },
+      "prevControl": {
+        "x": 1.2024457345252095,
+        "y": 4.095469234223708
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "speakerFar"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "prepIntake",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "prepIntake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "prepScore",
+      "waypointRelativePos": 1.35,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "prepScore"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "fireShooter",
+      "waypointRelativePos": 1.65,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "fireShooter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 7.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 360.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -60.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": -60.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

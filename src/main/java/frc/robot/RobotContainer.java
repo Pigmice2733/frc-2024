@@ -26,7 +26,7 @@ import frc.robot.Constants.DrivetrainConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
 import frc.robot.Constants.WristConfig.WristState;
 import frc.robot.commands.drivetrain.DriveWithJoysticks;
-import frc.robot.commands.manual.FireShooter;
+import frc.robot.commands.manual.ShootAmp;
 import frc.robot.commands.manual.IntakeCycle;
 import frc.robot.commands.manual.MoveKobraToPosition;
 import frc.robot.commands.manual.RunIntake;
@@ -145,7 +145,7 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        new JoystickButton(operator, Button.kX.value).whileTrue(new FireShooter(indexer, shooter))
+        new JoystickButton(operator, Button.kX.value).whileTrue(new ShootAmp(indexer, shooter))
                 .onFalse(Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
 
         // new JoystickButton(operator, Button.kY.value)
