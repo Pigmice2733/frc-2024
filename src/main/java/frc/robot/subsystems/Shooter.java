@@ -35,9 +35,6 @@ public class Shooter extends SubsystemBase {
         bottomMotor.follow(topMotor);
 
         ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> topMotor.get());
-
-        ShuffleboardHelper.addInput("Set Speed", Constants.SHOOTER_TAB,
-                (output) -> outputToFlywheels((double) output), 0);
     }
 
     /* Output a percent to both flywheels */

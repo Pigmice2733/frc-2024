@@ -54,12 +54,12 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    // private final Drivetrain drivetrain;
+    private final Drivetrain drivetrain;
     private final Arm arm = new Arm();
-    // private final Climber climber = new Climber();
+    private final Climber climber = new Climber();
     private final Intake intake = new Intake();
-    // private final Shooter shooter = new Shooter();
-    // private final Indexer indexer = new Indexer();
+    private final Shooter shooter = new Shooter();
+    private final Indexer indexer = new Indexer();
     private final Wrist wrist = new Wrist();
     private final NoteSensor noteSensor = new NoteSensor();
     // private final Vision vision = new Vision();
@@ -82,7 +82,7 @@ public class RobotContainer {
         // ShuffleboardHelper.addOutput("0", Constants.DRIVER_TAB, () -> switch0.get());
         // ShuffleboardHelper.addOutput("1", Constants.DRIVER_TAB, () -> switch1.get());
         // ShuffleboardHelper.addOutput("2", Constants.DRIVER_TAB, () -> switch2.get());
-        // drivetrain = new Drivetrain(null);
+        drivetrain = new Drivetrain(null);
 
         driver = new XboxController(0);
         operator = new XboxController(1);
@@ -117,9 +117,9 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-        // drivetrain.setDefaultCommand(new DriveWithJoysticks(drivetrain,
-        // controls::getDriveSpeedX,
-        // controls::getDriveSpeedY, controls::getTurnSpeed));
+        drivetrain.setDefaultCommand(new DriveWithJoysticks(drivetrain,
+                controls::getDriveSpeedX,
+                controls::getDriveSpeedY, controls::getTurnSpeed));
     }
 
     private void configureAutoChooser() {
@@ -145,11 +145,30 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        new JoystickButton(operator, Button.kX.value).whileTrue(new FireShooter(indexer, shooter))
+                .onFalse(Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
+
+        // new JoystickButton(operator, Button.kY.value)
+        // .onTrue(Commands.parallel(shooter.spinFlywheelsBackward(),
+        // indexer.indexBackward()))
+        // .onFalse(Commands.parallel(shooter.stopFlywheels(), indexer.stopIndexer()));
+
+        new JoystickButton(operator, Button.kB.value).onTrue(new RunIntake(intake, indexer,
+                noteSensor));
+
+        // new JoystickButton(operator, Button.kA.value).onTrue(new IntakeCycle(intake,
+        // indexer,
+        // arm, wrist, noteSensor));
+
+        // new JoystickButton(operator, Button.kA.value)
+        // .onTrue(Commands.runOnce(() -> indexer.indexForward().schedule()))
+        // .onFalse(Commands.runOnce(() -> indexer.stopIndexer().schedule()));
+
         // #region DRIVER
 
-        // new JoystickButton(driver, Button.kX.value)
-        // .onTrue(Commands.runOnce(() -> drivetrain.getSwerveDrive()
-        // .resetOdometry(new Pose2d())));
+        new JoystickButton(driver, Button.kX.value)
+                .onTrue(Commands.runOnce(() -> drivetrain.getSwerveDrive()
+                        .resetOdometry(new Pose2d())));
 
         /*
          * new JoystickButton(driver, Button.kA.value)
@@ -178,9 +197,6 @@ public class RobotContainer {
         new POVButton(operator, 180) // down
                 .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW));
 
-        new JoystickButton(operator, Button.kB.value).onTrue(new RunIntake(intake,
-                noteSensor));
-
         // TODO: Test after running indexer
         // new JoystickButton(operator, Button.kX.value).onTrue(new IntakeCycle(intake,
         // indexer, arm, wrist,
@@ -193,14 +209,14 @@ public class RobotContainer {
         // shooter.stopFlywheels()));
 
         // Raise Climber (hold)
-        // new JoystickButton(operator, Button.kY.value)
-        // .onTrue(climber.extendClimber())
-        // .onFalse(climber.stopClimber());
+        new JoystickButton(operator, Button.kY.value)
+                .onTrue(climber.extendClimber())
+                .onFalse(climber.stopClimber());
 
-        // // Lower CLimber (hold)
-        // new JoystickButton(operator, Button.kA.value)
-        // .onTrue(climber.retractClimberFast())
-        // .onFalse(climber.stopClimber());
+        // Lower CLimber (hold)
+        new JoystickButton(operator, Button.kA.value)
+                .onTrue(climber.retractClimberFast())
+                .onFalse(climber.stopClimber());
 
         // TODO: add indexer back to this
         // new JoystickButton(operator,

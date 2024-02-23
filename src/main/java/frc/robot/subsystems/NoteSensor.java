@@ -12,7 +12,7 @@ import frc.robot.Constants.DIOConfig;
 public class NoteSensor extends SubsystemBase {
     private final DigitalInput intakeBeamBreak;
     private final DigitalInput indexerBeamBreak;
-    private final DigitalInput shooterBeamBreak;
+    // private final DigitalInput shooterBeamBreak;
 
     private NoteState noteState = NoteState.NONE;
 
@@ -23,11 +23,12 @@ public class NoteSensor extends SubsystemBase {
     public NoteSensor() {
         intakeBeamBreak = new DigitalInput(DIOConfig.INTAKE_BEAM_BREAK);
         indexerBeamBreak = new DigitalInput(DIOConfig.INDEXER_BEAM_BREAK);
-        shooterBeamBreak = new DigitalInput(DIOConfig.SHOOTER_BEAM_BREAK);
+        // shooterBeamBreak = new DigitalInput(DIOConfig.SHOOTER_BEAM_BREAK);
 
         ShuffleboardHelper.addOutput("Intake Break", Constants.DRIVER_TAB, () -> noteInIntake());
         ShuffleboardHelper.addOutput("Indexer Break", Constants.DRIVER_TAB, () -> noteInIndexer());
-        ShuffleboardHelper.addOutput("Shooter Break", Constants.DRIVER_TAB, () -> noteInShooter());
+        // ShuffleboardHelper.addOutput("Shooter Break", Constants.DRIVER_TAB, () ->
+        // noteInShooter());
     }
 
     @Override
@@ -37,8 +38,8 @@ public class NoteSensor extends SubsystemBase {
             noteState = NoteState.INTAKE;
         else if (noteInIndexer())
             noteState = NoteState.INDEXER;
-        else if (noteInShooter())
-            noteState = NoteState.SHOOTER;
+        // else if (noteInShooter())
+        // noteState = NoteState.SHOOTER;
         else
             noteState = NoteState.NONE;
     }
@@ -58,10 +59,10 @@ public class NoteSensor extends SubsystemBase {
         return Commands.waitUntil(() -> noteInIndexer());
     }
 
-    /** Ends as soon as a note is detected in the indexer */
-    public Command waitForNoteInShooter() {
-        return Commands.waitUntil(() -> noteInShooter());
-    }
+    // /** Ends as soon as a note is detected in the indexer */
+    // public Command waitForNoteInShooter() {
+    // return Commands.waitUntil(() -> noteInShooter());
+    // }
 
     /** Ends as soon as any beam break sensor detects a note */
     public Command waitForNoNote() {
@@ -76,9 +77,9 @@ public class NoteSensor extends SubsystemBase {
         return !indexerBeamBreak.get();
     }
 
-    public boolean noteInShooter() {
-        return !shooterBeamBreak.get();
-    }
+    // public boolean noteInShooter() {
+    // return !shooterBeamBreak.get();
+    // }
 
     public enum NoteState {
         NONE,

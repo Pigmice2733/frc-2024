@@ -5,38 +5,27 @@
 package frc.robot.commands.manual;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.AutoConfig;
+import frc.robot.Constants.IndexerConfig;
 import frc.robot.Constants.IntakeConfig;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NoteSensor;
 
-public class RunIntake extends Command {
+public class RunIntake extends SequentialCommandGroup {
   private final Intake intake;
   private final NoteSensor noteSensor;
-  // private final Indexer indexer;
+  private final Indexer indexer;
 
-  public RunIntake(Intake intake/* , Indexer indexer */, NoteSensor noteSensor) {
+  public RunIntake(Intake intake, Indexer indexer, NoteSensor noteSensor) {
     this.intake = intake;
     this.noteSensor = noteSensor;
-    // this.indexer = indexer;
+    this.indexer = indexer;
 
-    addRequirements(intake/* , indexer */);
-  }
-
-  @Override
-  public void execute() {
-    // indexer.outputToMotor(IndexerConfig.DEFAULT_SPEED);
-    intake.outputToWheels(IntakeConfig.WHEELS_SPEED);
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    intake.outputToWheels(0);
-    // indexer.outputToMotor(0);
-  }
-
-  @Override
-  public boolean isFinished() {
-    return noteSensor.noteInIntake();
-    // return false;
+    addCommands(intake.runWheelsForward(), indexer.indexForward(), noteSensor.waitForNoteInIndexer(),
+        Commands.waitSeconds(AutoConfig.EXTRA_INDEX_TIME), intake.stopWheels(), indexer.stopIndexer());
+    addRequirements(intake, indexer);
   }
 }

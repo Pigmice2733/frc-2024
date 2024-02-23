@@ -21,13 +21,6 @@ public class MoveKobraToPosition extends SequentialCommandGroup {
         addCommands(Commands.runOnce(() -> System.out.println("running " + state.toString())));
         addCommands(intake.goToState(IntakeState.DOWN));
 
-        System.out.println("Going to " + state.toString());
-        System.out.println("Going to " + state.toString());
-        System.out.println("Going to " + state.toString());
-        System.out.println("Going to " + state.toString());
-        System.out.println("Going to " + state.toString());
-        System.out.println("Going to " + state.toString());
-
         // If the wrist can go out of frame, move the arm to the wrist rotation position
         addCommands(Commands.either(
                 arm.goToState(ArmState.WRIST_ROTATION),

@@ -75,8 +75,8 @@ public final class Constants {
         public static final int ARM_LIMIT_SWITCH = 8;
         public static final int INTAKE_LIMIT_SWITCH = 9;
         public static final int INTAKE_BEAM_BREAK = 0;
-        public static final int INDEXER_BEAM_BREAK = 1;
-        public static final int SHOOTER_BEAM_BREAK = 2;
+        public static final int INDEXER_BEAM_BREAK = 2;
+        // public static final int SHOOTER_BEAM_BREAK = 2;
     }
 
     public final static class DrivetrainConfig {
@@ -127,8 +127,8 @@ public final class Constants {
 
         public static enum ArmState {
             STOW(0),
-            AMP(120),
-            SPEAKER(30),
+            AMP(100),
+            SPEAKER(50),
             SOURCE(60),
             TRAP(45),
             WRIST_ROTATION(60);
@@ -167,7 +167,7 @@ public final class Constants {
         public static enum WristState {
             STOW(0),
             AMP(-90),
-            SPEAKER(45),
+            SPEAKER(115),
             TRAP(90),
             SOURCE(90);
 
@@ -195,11 +195,11 @@ public final class Constants {
 
         public static final double POSITION_TOLERANCE = 3;
 
-        public static final double WHEELS_SPEED = 0.6;
+        public static final double WHEELS_SPEED = 0.75;
 
         public static enum IntakeState {
             STOW(0),
-            DOWN(-90);
+            DOWN(-115);
 
             private double position;
 
@@ -214,13 +214,14 @@ public final class Constants {
     }
 
     public final static class ShooterConfig {
-        public static final double DEFAULT_SPEED = 0.3;
-        public static final double BACKWARD_SPEED = -0.3;
+        public static final double DEFAULT_SPEED = 1;
+        public static final double BACKWARD_SPEED = -0.4;
     }
 
     public final static class IndexerConfig {
-        public static final double DEFAULT_SPEED = 0.3;
-        public static final double BACKWARD_SPEED = -0.3;
+        public static final double DEFAULT_SPEED = 0.5;
+        public static final double BACKWARD_SPEED = -0.5;
+        public static final double SHOOTING_SPEED = 1;
     }
 
     public final static class VisionConfig {
@@ -229,11 +230,12 @@ public final class Constants {
 
     /** Details for auto such as timings and speeds. All times in seconds. */
     public static class AutoConfig {
-        public final static double INTAKE_MOVE_TIME = 3;
         public final static double INTAKE_FEED_TIME = 1;
-        public final static double SHOOTER_SPINUP_TIME = 3;
+        public final static double SHOOTER_SPINUP_TIME = 1;
         public final static double CLIMB_DRIVE_TIME = 1;
         public final static double CLIMB_DRIVE_SPEED = 0.5;
+        public final static double BACKUP_NOTE_TIME = 0.1;
+        public final static double EXTRA_INDEX_TIME = 0.25;
 
         public static class Locations {
             // Start of the "lineup" path for these positions
