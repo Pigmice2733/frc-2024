@@ -12,28 +12,32 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 
 public class FireShooter extends SequentialCommandGroup {
-        public FireShooter(Indexer indexer, Shooter shooter) {
-                addCommands(
-                                Commands.either(
-                                                // Amp scoring (condition is true)
-                                                Commands.sequence(Commands.parallel(indexer.indexBackward(),
-                                                                shooter.spinFlywheelsBackward())),
+    public FireShooter(Indexer indexer, Shooter shooter) {
+        addCommands(
+                Commands.either(
+                        // Amp scoring (condition is true)
+                        Commands.sequence(Commands.parallel(indexer.indexBackward(),
+                                shooter.spinFlywheelsBackward())),
 
-                                                // Speaker scoring (condition is false)
-                                                Commands.sequence(shooter.spinFlywheelsForward(),
-                                                                indexer.indexBackward(),
-                                                                Commands.parallel(
-                                                                                Commands.sequence(
-                                                                                                Commands.waitSeconds(
-                                                                                                                AutoConfig.BACKUP_NOTE_TIME),
-                                                                                                indexer.stopIndexer()),
-                                                                                Commands.waitSeconds(
-                                                                                                AutoConfig.SHOOTER_SPINUP_TIME)),
-                                                                indexer.runForShooting()),
+                        // Speaker scoring (condition is false)
+                        Commands.sequence(shooter.spinFlywheelsForward(),
+                                indexer.indexBackward(),
+                                Commands.parallel(
+                                        Commands.sequence(
+                                                Commands.waitSeconds(
+                                                        AutoConfig.BACKUP_NOTE_TIME),
+                                                indexer.stopIndexer()),
+                                        Commands.waitSeconds(
+                                                AutoConfig.SHOOTER_SPINUP_TIME)),
+                                indexer.runForShooting()),
 
-                                                // Condition
-                                                () -> MoveKobraToPosition.currentKobraState == KobraState.AMP));
+                        // Condition
+                        () -> {
+                            System.out.println(MoveKobraToPosition.currentKobraState);
+                            return MoveKobraToPosition.currentKobraState == KobraState.AMP;
+                        }));
+        addCommands(Commands.waitSeconds(0.75));
 
-                addRequirements(indexer, shooter);
-        }
+        addRequirements(indexer, shooter);
+    }
 }

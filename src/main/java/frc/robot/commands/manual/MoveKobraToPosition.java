@@ -16,11 +16,11 @@ import frc.robot.subsystems.Wrist;
 
 public class MoveKobraToPosition extends SequentialCommandGroup {
     public MoveKobraToPosition(Arm arm, Wrist wrist, Intake intake, KobraState state) {
-        currentKobraState = state;
+        addCommands(Commands.runOnce(() -> {
+            currentKobraState = state;
+        }));
 
         // Lower the intake
-        addCommands(Commands.runOnce(() -> System.out.println("running " + state.toString())));
-        addCommands(Commands.runOnce(() -> System.out.println("running " + state.toString())));
         addCommands(intake.goToState(IntakeState.DOWN));
 
         // If the wrist can go out of frame, move the arm to the wrist rotation position
@@ -40,9 +40,9 @@ public class MoveKobraToPosition extends SequentialCommandGroup {
                 break;
             case AMP:
                 addCommands(
-                        arm.goToState(ArmState.WRIST_ROTATION), // Arm to wrist rotation pos then...
-                        wrist.goToState(WristState.AMP), // Wrist to amp pos then...
-                        arm.goToState(ArmState.AMP)); // Arm to amp pos
+                        Commands.parallel(arm.goToState(ArmState.AMP), // Arm to wrist rotation pos then...
+                                wrist.goToState(WristState.AMP))); // Wrist to amp pos then...
+                // arm.goToState(ArmState.AMP)); // Arm to amp pos
                 break;
             case SOURCE:
                 addCommands(Commands.parallel( // At the same time:

@@ -12,9 +12,9 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NoteSensor;
 
 public class RunIntake extends SequentialCommandGroup {
-  public RunIntake(Intake intake, Indexer indexer, NoteSensor noteSensor) {
-    addCommands(intake.runWheelsForward(), indexer.indexForward(), noteSensor.waitForNoteInIndexer(),
-        Commands.waitSeconds(AutoConfig.EXTRA_INDEX_TIME), intake.stopWheels(), indexer.stopIndexer());
-    addRequirements(intake, indexer);
-  }
+    public RunIntake(Intake intake, Indexer indexer, NoteSensor noteSensor) {
+        addCommands(intake.runWheelsForward(), indexer.indexForward(), noteSensor.waitForNoteInIndexer(),
+                Commands.waitSeconds(AutoConfig.EXTRA_INDEX_TIME), intake.stopWheels(), indexer.stopIndexer());
+        addRequirements(indexer);
+    }
 }

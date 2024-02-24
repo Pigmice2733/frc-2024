@@ -1,6 +1,12 @@
 package frc.robot.commands.autonomous;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.autonomous.subcommands.ScoreFromStartAuto;
+import frc.robot.commands.manual.FireShooter;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Indexer;
@@ -14,8 +20,16 @@ public class RunAutoRoutine extends SequentialCommandGroup {
             Shooter shooter, NoteSensor noteSensor, AutoRoutine autoRoutine) {
 
         switch (autoRoutine) {
-            case ONE_CLOSE:
-                addCommands(null);
+            case TWO_CENTER:
+                addCommands(
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true),
+                        Commands.runOnce(
+                                () -> drivetrain.getSwerveDrive().resetOdometry(
+                                        PathPlannerPath.fromPathFile("autoTwoCenter")
+                                                .getPreviewStartingHolonomicPose())),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoTwoCenter")),
+                        Commands.waitSeconds(0.75), new FireShooter(indexer, shooter),
+                        Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
         }
 
         addRequirements(drivetrain, intake, arm, wrist, indexer, shooter);

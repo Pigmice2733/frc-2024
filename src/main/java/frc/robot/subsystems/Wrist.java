@@ -19,9 +19,9 @@ public class Wrist extends PIDSubsystemBase {
     public Wrist() {
         super(new CANSparkMax(CANConfig.WRIST_ROTATION, MotorType.kBrushless), WristConfig.P, WristConfig.I,
                 WristConfig.D, new Constraints(WristConfig.MAX_VELOCITY, WristConfig.MAX_ACCELERATION), false,
-                WristConfig.MOTOR_POSITION_CONVERSION, 50, Constants.WRIST_TAB, false, false);
+                WristConfig.MOTOR_POSITION_CONVERSION, 40, Constants.WRIST_TAB, false, false);
 
-        addSoftwareStop(-180, 180);
+        addSoftwareStop(-90, 360);
     }
 
     /** Sets the height state of the climber */

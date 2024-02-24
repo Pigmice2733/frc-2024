@@ -101,7 +101,7 @@ public final class Constants {
         private static final PIDConstants PATH_TURN_PID = new PIDConstants(5.0,
                 0, 0);
 
-        public static final double MAX_PATH_DRIVE_SPEED = 1;
+        public static final double MAX_PATH_DRIVE_SPEED = 0.1;
         // public static final double MAX_PATH_TURN_SPEED = 1;
 
         // Offset from chassis center that the robot will rotate about
@@ -128,7 +128,7 @@ public final class Constants {
         public static enum ArmState {
             STOW(0),
             AMP(100),
-            SPEAKER(50),
+            SPEAKER(72),
             SOURCE(60),
             TRAP(45),
             WRIST_ROTATION(60);
@@ -166,8 +166,8 @@ public final class Constants {
 
         public static enum WristState {
             STOW(0),
-            AMP(-90),
-            SPEAKER(115),
+            AMP(250),
+            SPEAKER(136),
             TRAP(90),
             SOURCE(90);
 
@@ -184,7 +184,7 @@ public final class Constants {
     }
 
     public final static class IntakeConfig {
-        public static final double P = 0.02;
+        public static final double P = 0.015;
         public static final double I = 0;
         public static final double D = 0;
 
@@ -231,10 +231,10 @@ public final class Constants {
     /** Details for auto such as timings and speeds. All times in seconds. */
     public static class AutoConfig {
         public final static double INTAKE_FEED_TIME = 1;
-        public final static double SHOOTER_SPINUP_TIME = 1;
+        public final static double SHOOTER_SPINUP_TIME = 0.5;
         public final static double CLIMB_DRIVE_TIME = 1;
         public final static double CLIMB_DRIVE_SPEED = 0.5;
-        public final static double BACKUP_NOTE_TIME = 0.1;
+        public final static double BACKUP_NOTE_TIME = 0.125;
         public final static double EXTRA_INDEX_TIME = 0.25;
 
         public static class Locations {

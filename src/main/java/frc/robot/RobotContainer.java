@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.AutoBuilderException;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,8 +27,13 @@ import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 import frc.robot.Constants.DrivetrainConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
 import frc.robot.Constants.WristConfig.WristState;
+import frc.robot.commands.autonomous.RunAutoRoutine;
+import frc.robot.commands.autonomous.RunAutoRoutine.AutoRoutine;
+import frc.robot.commands.autonomous.subcommands.FireShooterAuto;
+import frc.robot.commands.autonomous.subcommands.ScoreFromStartAuto;
 import frc.robot.commands.drivetrain.DriveWithJoysticks;
 import frc.robot.commands.manual.ShootAmp;
+import frc.robot.commands.manual.FireShooter;
 import frc.robot.commands.manual.IntakeCycle;
 import frc.robot.commands.manual.MoveKobraToPosition;
 import frc.robot.commands.manual.RunIntake;
@@ -145,7 +152,7 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        new JoystickButton(operator, Button.kX.value).whileTrue(new ShootAmp(indexer, shooter))
+        new JoystickButton(operator, Button.kX.value).whileTrue(new FireShooter(indexer, shooter))
                 .onFalse(Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
 
         // new JoystickButton(operator, Button.kY.value)
@@ -316,7 +323,18 @@ public class RobotContainer {
         // default:
         // return Commands.none();
         // }
-        return Commands.none();
+        // return Commands.none();
+        // return new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter);
+
+        NamedCommands.registerCommand("prepIntake",
+                Commands.sequence(Commands.parallel(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW),
+                        new RunIntake(intake, indexer, noteSensor)),
+                        new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER)));
+
+        NamedCommands.registerCommand("prepScore", new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER));
+        NamedCommands.registerCommand("fireShooter", new FireShooter(indexer, shooter));
+
+        return new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter, noteSensor, AutoRoutine.TWO_CENTER);
     }
 
     public static enum AutoCommands {

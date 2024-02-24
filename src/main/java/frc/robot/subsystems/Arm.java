@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConfig;
 import frc.robot.Constants.CANConfig;
-import frc.robot.Constants.DIOConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
 
 public class Arm extends PIDSubsystemBase {
@@ -25,7 +24,7 @@ public class Arm extends PIDSubsystemBase {
         super(new CANSparkMax(CANConfig.RIGHT_ARM, MotorType.kBrushless),
                 ArmConfig.P, ArmConfig.I, ArmConfig.D, new Constraints(
                         ArmConfig.MAX_VELOCITY, ArmConfig.MAX_ACCELERATION),
-                true, ArmConfig.MOTOR_POSITION_CONVERSION, 40,
+                true, ArmConfig.MOTOR_POSITION_CONVERSION, 30,
                 Constants.ARM_TAB, false, false);
 
         // Right motor
@@ -37,8 +36,8 @@ public class Arm extends PIDSubsystemBase {
 
         addSoftwareStop(0, 150);
 
-        addLimitSwitch(0, DIOConfig.ARM_LIMIT_SWITCH, true,
-                LimitSwitchSide.NEGATIVE);
+        // addLimitSwitch(0, DIOConfig.ARM_LIMIT_SWITCH, true,
+        // LimitSwitchSide.NEGATIVE);
     }
 
     /** Sets the arm to the given state. */
