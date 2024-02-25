@@ -67,9 +67,9 @@ public class RobotContainer {
     private final Intake intake = new Intake();
     private final Shooter shooter = new Shooter();
     private final Indexer indexer = new Indexer();
-    private final Wrist wrist = new Wrist();
+    private final Wrist wrist;
     private final NoteSensor noteSensor = new NoteSensor();
-    // private final Vision vision = new Vision();
+    private final Vision vision = new Vision();
 
     private final XboxController driver;
     private final XboxController operator;
@@ -77,19 +77,13 @@ public class RobotContainer {
 
     private final SendableChooser<AutoCommands> autoChooser;
 
-    // DigitalInput switch0 = new DigitalInput(0);
-    // DigitalInput switch1 = new DigitalInput(1);
-    // DigitalInput switch2 = new DigitalInput(2);
-
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
      */
     public RobotContainer() {
-        // ShuffleboardHelper.addOutput("0", Constants.DRIVER_TAB, () -> switch0.get());
-        // ShuffleboardHelper.addOutput("1", Constants.DRIVER_TAB, () -> switch1.get());
-        // ShuffleboardHelper.addOutput("2", Constants.DRIVER_TAB, () -> switch2.get());
-        drivetrain = new Drivetrain(null);
+        drivetrain = new Drivetrain(vision);
+        wrist = new Wrist(arm::getCurrentRotation);
 
         driver = new XboxController(0);
         operator = new XboxController(1);
@@ -108,7 +102,6 @@ public class RobotContainer {
     }
 
     public void teleopPeriodic() {
-        // indexerBottom.set(.3);
     }
 
     public void onEnable() {
@@ -327,14 +320,19 @@ public class RobotContainer {
         // return new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter);
 
         NamedCommands.registerCommand("prepIntake",
-                Commands.sequence(Commands.parallel(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW),
-                        new RunIntake(intake, indexer, noteSensor)),
+                Commands.sequence(
+                        Commands.parallel(
+                                new MoveKobraToPosition(arm, wrist, intake,
+                                        KobraState.STOW),
+                                new RunIntake(intake, indexer, noteSensor)),
                         new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER)));
 
-        NamedCommands.registerCommand("prepScore", new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER));
+        NamedCommands.registerCommand("prepScore",
+                new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER));
         NamedCommands.registerCommand("fireShooter", new FireShooter(indexer, shooter));
 
-        return new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter, noteSensor, AutoRoutine.TWO_CENTER);
+        return new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter, noteSensor,
+                AutoRoutine.TWO_CENTER);
     }
 
     public static enum AutoCommands {

@@ -4,24 +4,50 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.pigmice.frc.lib.pid_subsystem.PIDSubsystemBase;
+import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmConfig;
 import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.WristConfig;
 import frc.robot.Constants.WristConfig.WristState;
 
 public class Wrist extends PIDSubsystemBase {
-    public Wrist() {
+    private final Supplier<Double> getArmRotation;
+
+    public Wrist(Supplier<Double> getArmRotation) {
         super(new CANSparkMax(CANConfig.WRIST_ROTATION, MotorType.kBrushless), WristConfig.P, WristConfig.I,
                 WristConfig.D, new Constraints(WristConfig.MAX_VELOCITY, WristConfig.MAX_ACCELERATION), false,
                 WristConfig.MOTOR_POSITION_CONVERSION, 40, Constants.WRIST_TAB, false, false);
 
-        addSoftwareStop(-90, 360);
+        ShuffleboardHelper.addOutput("Extension Distance", Constants.WRIST_TAB,
+                () -> calculateExtensionDistance(getCurrentRotation(), getArmRotation.get()));
+
+        ShuffleboardHelper.addOutput("Over E Limit", Constants.WRIST_TAB, () -> {
+            return calculateExtensionDistance(getCurrentRotation(), getArmRotation.get()) > 12.0;
+        });
+
+        ShuffleboardHelper.addOutput("Min Wrist Angle", Constants.WRIST_TAB,
+                () -> calculateMinWristAngle(getCurrentRotation()));
+
+        this.getArmRotation = getArmRotation;
+        addSoftwareStop(0, 360);
+
+        // TODO: test a dynamic software stop
+        /*
+         * addSoftwareStop(
+         * () -> calculateMinWristAngle(getArmRotation.get()),
+         * () -> 360.0);
+         */
     }
 
     /** Sets the height state of the climber */
@@ -46,5 +72,41 @@ public class Wrist extends PIDSubsystemBase {
 
     public Command waitForState(WristState state) {
         return Commands.waitUntil(() -> atState(state));
+    }
+
+    @Override
+    public double getCurrentRotation() {
+        // Makes the wrists current rotation relative to the ground
+        return getMotor().getEncoder().getPosition() - getArmRotation.get();
+    }
+
+    /** @return the extension distance of the arm outside the drivetrain frame */
+    public static double calculateExtensionDistance(double armAngle, double wristAngle) {
+        // x pos of wrist pivot relative to shoulder pivot
+        double wristPivotX = -Math.cos(Units.degreesToRadians(armAngle)) * ArmConfig.LENGTH_INCHES;
+
+        // The length of the wrist in the x dimension
+        double wristLengthX = Math.cos(Units.degreesToRadians(wristAngle)) * WristConfig.LENGTH_INCHES;
+
+        // Total extension distance relative to the shoulder pivot
+        double relativeExtensionDistance = wristPivotX + wristLengthX;
+
+        // Return the extension distance outside of the frame
+        return relativeExtensionDistance - ArmConfig.PIVOT_TO_FRAME_INCHES;
+    }
+
+    public static double calculateMinWristAngle(double armAngle) {
+        // x pos of wrist pivot relative to frame
+        double wristPivotX = -Math.cos(Units.degreesToRadians(armAngle)) * ArmConfig.LENGTH_INCHES
+                - ArmConfig.PIVOT_TO_FRAME_INCHES;
+
+        // The max wrist length in x dimension
+        double maxWristLengthX = 12.0 - wristPivotX;
+
+        if (maxWristLengthX > WristConfig.LENGTH_INCHES)
+            return 0;
+
+        // The min angle the wrist can be at without going over max extension limit
+        return Math.acos(maxWristLengthX / WristConfig.LENGTH_INCHES);
     }
 }

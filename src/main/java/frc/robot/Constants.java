@@ -125,6 +125,11 @@ public final class Constants {
 
         public static final double POSITION_TOLERANCE = 3;
 
+        public static final double LENGTH_INCHES = 30;
+
+        // The distance from the arm pivot to the robots frame in inches
+        public static final double PIVOT_TO_FRAME_INCHES = 4;
+
         public static enum ArmState {
             STOW(0),
             AMP(100),
@@ -164,12 +169,14 @@ public final class Constants {
 
         public static final double POSITION_TOLERANCE = 3;
 
+        public static final double LENGTH_INCHES = 14;
+
         public static enum WristState {
             STOW(0),
-            AMP(250),
-            SPEAKER(136),
-            TRAP(90),
-            SOURCE(90);
+            AMP(0),
+            SPEAKER(0),
+            TRAP(0),
+            SOURCE(0);
 
             private double position;
 
