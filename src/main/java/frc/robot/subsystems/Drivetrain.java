@@ -14,9 +14,7 @@ import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -106,7 +104,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         fieldWidget.setRobotPose(swerveDrive.getPose());
-        // addVisionMeasurements();
+        addVisionMeasurements();
     }
 
     /** Adds vision measurements to correct the odometry */
@@ -120,13 +118,9 @@ public class Drivetrain extends SubsystemBase {
             return;
 
         /*
-         * estimatedPose = new Pose2d(estimatedPose.getX(), estimatedPose.getY(),
-         * new Rotation2d(estimatedPose.getRotation().getRadians()));
+         * swerveDrive.addVisionMeasurement(estimatedPose,
+         * Timer.getFPGATimestamp());
          */
-
-        swerveDrive.addVisionMeasurement(estimatedPose,
-                Timer.getFPGATimestamp());
-
     }
 
     public SwerveDrive getSwerveDrive() {

@@ -42,19 +42,22 @@ public class Indexer extends SubsystemBase {
         topMotor.set(output);
     }
 
+    /** Spins the indexer at full power for shooting */
     public Command runForShooting() {
         return Commands.runOnce(() -> outputToMotor(IndexerConfig.SHOOTING_SPEED));
     }
 
+    /** Spins the indexer slowly for indexing */
     public Command indexForward() {
         return Commands.runOnce(() -> outputToMotor(IndexerConfig.DEFAULT_SPEED));
     }
 
-    /** Intake into the shooter box, as long as no note is being carried. */
+    /** Runs the indexer backward for amp scoring */
     public Command indexBackward() {
         return Commands.runOnce(() -> outputToMotor(IndexerConfig.BACKWARD_SPEED));
     }
 
+    /** Completely stops the indexer wheels */
     public Command stopIndexer() {
         return Commands.runOnce(() -> outputToMotor(0));
     }

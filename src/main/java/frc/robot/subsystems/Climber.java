@@ -9,12 +9,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CANConfig;
-import frc.robot.Constants.ClimberConfig;
 
 public class Climber extends SubsystemBase {
     private final CANSparkMax rightMotor;
@@ -33,7 +30,6 @@ public class Climber extends SubsystemBase {
         rightMotor.setInverted(true);
         rightMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setSmartCurrentLimit(40);
-        // rightMotor.follow(leftMotor, false);
 
         ShuffleboardHelper.addOutput("Left Pos", Constants.CLIMBER_TAB, () -> getLeftPosition());
         ShuffleboardHelper.addOutput("Right Pos", Constants.CLIMBER_TAB, () -> getRightPosition());
@@ -44,9 +40,10 @@ public class Climber extends SubsystemBase {
     }
 
     /** Spins both of the climber motors */
-    private void outputToMotors(double percent, boolean applySoftwareStop) {
+    public void outputToMotors(double percent) {
         double rightOut = percent;
         double leftOut = percent;
+
         // TODO: climber software stop
         // if (applySoftwareStop) {
         // leftOut = Utils.applySoftwareStop(getLeftPosition(), leftOut,
@@ -54,28 +51,9 @@ public class Climber extends SubsystemBase {
         // rightOut = Utils.applySoftwareStop(getRightPosition(), rightOut,
         // ClimberConfig.downPosition, 0);
         // }
+
         leftMotor.set(rightOut);
         rightMotor.set(leftOut);
-    }
-
-    /** Lifts the climber up */
-    public Command extendClimber() {
-        return Commands.runOnce(() -> outputToMotors(ClimberConfig.extensionSpeed, false)); // TODO soft stop
-    }
-
-    /** For stowing the climber at the start of a match */
-    public Command retractClimberSlow() {
-        return Commands.runOnce(() -> outputToMotors(-ClimberConfig.extensionSpeed, false)); // TODO soft stop
-    }
-
-    /** For actually climbing lifting the robot */
-    public Command retractClimberFast() {
-        return Commands.runOnce(() -> outputToMotors(ClimberConfig.climbingSpeed, false)); // TODO soft stop
-    }
-
-    /** Stops the climber */
-    public Command stopClimber() {
-        return Commands.runOnce(() -> outputToMotors(0, false)); // TODO soft stop
     }
 
     /** @return the current encoder position */

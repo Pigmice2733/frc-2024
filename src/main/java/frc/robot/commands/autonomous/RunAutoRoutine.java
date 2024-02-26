@@ -67,6 +67,8 @@ public class RunAutoRoutine extends SequentialCommandGroup {
                                                 .getPreviewStartingHolonomicPose())),
                         AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoOneClose")));
                 break;
+            default:
+                break;
         }
 
         addRequirements(drivetrain, intake, arm, wrist, indexer, shooter);

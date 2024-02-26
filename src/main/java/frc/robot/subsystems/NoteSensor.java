@@ -12,41 +12,17 @@ import frc.robot.Constants.DIOConfig;
 public class NoteSensor extends SubsystemBase {
     private final DigitalInput intakeBeamBreak;
     private final DigitalInput indexerBeamBreak;
-    // private final DigitalInput shooterBeamBreak;
+    private final DigitalInput shooterBeamBreak;
 
-    private NoteState noteState = NoteState.NONE;
-
-    /**
-     * Detects when the shooter is carrying a note. If it is, the shooter prepares
-     * to shoot, and the intake stops running.
-     */
+    /** Detects notes in the intake, indexer, and shooter */
     public NoteSensor() {
         intakeBeamBreak = new DigitalInput(DIOConfig.INTAKE_BEAM_BREAK);
         indexerBeamBreak = new DigitalInput(DIOConfig.INDEXER_BEAM_BREAK);
-        // shooterBeamBreak = new DigitalInput(DIOConfig.SHOOTER_BEAM_BREAK);
+        shooterBeamBreak = new DigitalInput(DIOConfig.SHOOTER_BEAM_BREAK);
 
         ShuffleboardHelper.addOutput("Intake Break", Constants.DRIVER_TAB, () -> noteInIntake());
         ShuffleboardHelper.addOutput("Indexer Break", Constants.DRIVER_TAB, () -> noteInIndexer());
-        // ShuffleboardHelper.addOutput("Shooter Break", Constants.DRIVER_TAB, () ->
-        // noteInShooter());
-    }
-
-    @Override
-    public void periodic() {
-        // Check for a note
-        if (noteInIntake())
-            noteState = NoteState.INTAKE;
-        else if (noteInIndexer())
-            noteState = NoteState.INDEXER;
-        // else if (noteInShooter())
-        // noteState = NoteState.SHOOTER;
-        else
-            noteState = NoteState.NONE;
-    }
-
-    /** @return the current note state */
-    public NoteState getNoteState() {
-        return noteState;
+        ShuffleboardHelper.addOutput("Shooter Break", Constants.DRIVER_TAB, () -> noteInShooter());
     }
 
     /** Ends as soon as a note is detected in the intake */
@@ -59,32 +35,23 @@ public class NoteSensor extends SubsystemBase {
         return Commands.waitUntil(() -> noteInIndexer());
     }
 
-    // /** Ends as soon as a note is detected in the indexer */
-    // public Command waitForNoteInShooter() {
-    // return Commands.waitUntil(() -> noteInShooter());
-    // }
-
-    /** Ends as soon as any beam break sensor detects a note */
-    public Command waitForNoNote() {
-        return Commands.waitUntil(() -> noteState == NoteState.NONE);
+    /** Ends as soon as a note is detected in the indexer */
+    public Command waitForNoteInShooter() {
+        return Commands.waitUntil(() -> noteInShooter());
     }
 
+    /** @returns true if there is a note in the intake */
     public boolean noteInIntake() {
         return !intakeBeamBreak.get();
     }
 
+    /** @returns true if there is a note in the indexer */
     public boolean noteInIndexer() {
         return !indexerBeamBreak.get();
     }
 
-    // public boolean noteInShooter() {
-    // return !shooterBeamBreak.get();
-    // }
-
-    public enum NoteState {
-        NONE,
-        INTAKE,
-        INDEXER,
-        SHOOTER
+    /** @returns true if there is a note in the shooter */
+    public boolean noteInShooter() {
+        return !shooterBeamBreak.get();
     }
 }

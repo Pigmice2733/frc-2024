@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.Supplier;
-
 import com.pigmice.frc.lib.pid_subsystem.PIDSubsystemBase;
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 import com.revrobotics.CANSparkMax;
@@ -77,6 +75,7 @@ public class Wrist extends PIDSubsystemBase {
         return Math.abs(getCurrentRotation() - state.getPosition()) < WristConfig.POSITION_TOLERANCE;
     }
 
+    /** Waits until the wrist is at a state, without commanding it to go there */
     public Command waitForState(WristState state) {
         return Commands.waitUntil(() -> atState(state));
     }

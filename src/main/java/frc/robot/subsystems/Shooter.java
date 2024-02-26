@@ -19,11 +19,7 @@ public class Shooter extends SubsystemBase {
     private final CANSparkMax topMotor = new CANSparkMax(CANConfig.TOP_SHOOTER, MotorType.kBrushed);
     private final CANSparkMax bottomMotor = new CANSparkMax(CANConfig.BOTTOM_SHOOTER, MotorType.kBrushed);
 
-    /**
-     * Shoots notes out of one end into the speaker and dumps them out of the other
-     * end into the amp.
-     * Intakes from the source into the speaker-shooting end.
-     */
+    /** Controls the flywheels on the far end of the box for shooting */
     public Shooter() {
         topMotor.restoreFactoryDefaults();
         topMotor.setInverted(true);

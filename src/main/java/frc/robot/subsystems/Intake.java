@@ -73,7 +73,7 @@ public class Intake extends PIDSubsystemBase {
         return Commands.runOnce(() -> setTargetRotation(state.getPosition()));
     }
 
-    /** Sets the rotation state to 'STOW' */
+    /** Sets the intake pivot state to 'STOW' */
     public Command stow() {
         return setTargetState(IntakeState.STOW);
     }
@@ -84,10 +84,12 @@ public class Intake extends PIDSubsystemBase {
                 () -> atState(state)));
     }
 
+    /** @return true if the intake pivot is at a certain state */
     public boolean atState(IntakeState state) {
         return Math.abs(getCurrentRotation() - state.getPosition()) < IntakeConfig.POSITION_TOLERANCE;
     }
 
+    /** Waits until the intake is at a state, without commanding it to go there */
     public Command waitForState(IntakeState state) {
         return Commands.waitUntil(() -> atState(state));
     }

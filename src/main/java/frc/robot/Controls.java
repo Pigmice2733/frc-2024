@@ -1,8 +1,8 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Constants.ClimberConfig;
 import frc.robot.Constants.DrivetrainConfig;
 
 public class Controls {
@@ -17,46 +17,50 @@ public class Controls {
         this.operator = operator;
     }
 
-    LinearFilter driveSpeedYFilter = LinearFilter.singlePoleIIR(0.05, 0.02);
-
-    /** Returns the left joystick y-axis multiplied by the drive speed. */
+    /**
+     * @return the left joystick y-axis multiplied by the drive speed. When the Y
+     *         button is held, the result is multiplied by the slowmode multiplier
+     *         before
+     *         returning.
+     */
     public double getDriveSpeedY() {
         double joystickY = MathUtil.applyDeadband(-driver.getLeftY(), threshold);
-
-        // joystickY = driveSpeedYFilter.calculate(joystickY); // input smoothing
 
         return joystickY * DrivetrainConfig.MAX_DRIVE_SPEED
                 * (driver.getYButton() ? DrivetrainConfig.SLOWMODE_MULTIPLIER : 1);
     }
 
-    LinearFilter driveSpeedXFilter = LinearFilter.singlePoleIIR(0.05, 0.02);
-
     /**
-     * Returns the left joystick x-axis multiplied by the drive speed. When the Y
-     * button is held, the result is multiplied by the slowmode multiplier before
-     * returning.
+     * @return the left joystick x-axis multiplied by the drive speed. When the Y
+     *         button is held, the result is multiplied by the slowmode multiplier
+     *         before
+     *         returning.
      */
     public double getDriveSpeedX() {
         double joystickX = MathUtil.applyDeadband(-driver.getLeftX(), threshold);
-
-        // joystickX = driveSpeedXFilter.calculate(joystickX); // input smoothing
 
         return joystickX * DrivetrainConfig.MAX_DRIVE_SPEED
                 * (driver.getYButton() ? DrivetrainConfig.SLOWMODE_MULTIPLIER : 1);
     }
 
-    LinearFilter turnSpeedFilter = LinearFilter.singlePoleIIR(0.05, 0.02);
-
     /**
-     * Returns the right joystick x-axis multiplied by the drive speed. When the Y
-     * button is held, the result is multiplied by the slowmode multiplier before
-     * returning.
+     * @return the right joystick x-axis multiplied by the drive speed. When the Y
+     *         button is held, the result is multiplied by the slowmode multiplier
+     *         before
+     *         returning.
      */
     public double getTurnSpeed() {
         double joystickTurn = MathUtil.applyDeadband(driver.getRightX(), threshold);
 
-        // joystickTurn = turnSpeedFilter.calculate(joystickTurn); // input smoothing
+        return -joystickTurn * DrivetrainConfig.MAX_TURN_SPEED
+                * (driver.getYButton() ? DrivetrainConfig.SLOWMODE_MULTIPLIER : 1);
+    }
 
-        return -joystickTurn * DrivetrainConfig.MAX_TURN_SPEED;
+    /** @return the climber speed calculated from the triggers */
+    public double getClimberSpeed() {
+        double leftTrigger = MathUtil.applyDeadband(operator.getLeftTriggerAxis(), threshold);
+        double rightTrigger = MathUtil.applyDeadband(operator.getRightTriggerAxis(), threshold);
+
+        return (leftTrigger - rightTrigger) * ClimberConfig.climbingSpeed;
     }
 }

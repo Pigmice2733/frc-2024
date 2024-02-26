@@ -45,16 +45,11 @@ public class Arm extends PIDSubsystemBase {
         rightMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.follow(getMotor(), true);
 
-        // addSoftwareStop(0, 150);
-
         addSoftwareStop(
                 () -> calculateMinArmAngle(Wrist.getRotation()),
                 () -> calculateMaxArmAngle(Wrist.getRotation()));
 
         setMaxAllowedOutput(0.8);
-
-        // addLimitSwitch(0, DIOConfig.ARM_LIMIT_SWITCH, true,
-        // LimitSwitchSide.NEGATIVE);
     }
 
     /** Sets the arm to the given state. */
@@ -73,10 +68,12 @@ public class Arm extends PIDSubsystemBase {
                 Commands.waitUntil(() -> atState(state)));
     }
 
+    /** @return true if the arm is at a certain state */
     public boolean atState(ArmState state) {
         return Math.abs(getCurrentRotation() - state.getPosition()) < ArmConfig.POSITION_TOLERANCE;
     }
 
+    /** Waits until the intake is at a state, without commanding it to go there */
     public Command waitForState(ArmState state) {
         return Commands.waitUntil(() -> atState(state));
     }

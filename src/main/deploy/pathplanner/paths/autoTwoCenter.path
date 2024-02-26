@@ -60,7 +60,7 @@
   ],
   "eventMarkers": [
     {
-      "name": "prepIntake",
+      "name": "prepIntakeCenter",
       "waypointRelativePos": 0.0,
       "command": {
         "type": "parallel",
@@ -69,7 +69,7 @@
             {
               "type": "named",
               "data": {
-                "name": "prepIntake"
+                "name": "prepIntakeCenter"
               }
             }
           ]

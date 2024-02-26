@@ -28,6 +28,7 @@ public class ZeroIntake extends Command {
   @Override
   public void end(boolean interrupted) {
     intake.getMotor().set(0);
+
     intake.startPID();
     intake.setEncoderPosition(0);
     intake.resetPID();

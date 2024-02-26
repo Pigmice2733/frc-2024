@@ -76,13 +76,13 @@ public final class Constants {
         public static final int INTAKE_LIMIT_SWITCH = 9;
         public static final int INTAKE_BEAM_BREAK = 0;
         public static final int INDEXER_BEAM_BREAK = 2;
-        // public static final int SHOOTER_BEAM_BREAK = 2;
+        public static final int SHOOTER_BEAM_BREAK = 1;
     }
 
     public final static class DrivetrainConfig {
         public static final double MAX_DRIVE_SPEED = 2; // max meters / second
         public static final double MAX_TURN_SPEED = 2; // max radians / second
-        public static final double SLOWMODE_MULTIPLIER = 0.5;
+        public static final double SLOWMODE_MULTIPLIER = 0.3;
 
         // distance from the center of one wheel to another
         public static final double TRACK_WIDTH_METERS = 0.5842;
@@ -153,9 +153,7 @@ public final class Constants {
     }
 
     public final static class ClimberConfig {
-        public static final double extensionSpeed = -0.8;
         public static final double climbingSpeed = 0.8;
-
         public static final double downPosition = -100;
     }
 
@@ -258,13 +256,6 @@ public final class Constants {
                     Rotation2d.fromDegrees(-120));
             public final static Pose2d CLIMBING_LINEUP = new Pose2d(7.37, 4.03,
                     Rotation2d.fromDegrees(180));
-
-            // TODO: do we want lineup commands for all 3 climbing spots?
-            // public final static Pose2d CLIMBING_RIGHT = new Pose2d(0, 0, new
-            // Rotation2d());
-            // public final static Pose2d CLIMBING_BACK = new Pose2d(0, 0, new
-            // Rotation2d());
-
             public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(10.2, 4,
                     new Rotation2d(0));
         }
