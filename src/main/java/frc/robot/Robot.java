@@ -105,8 +105,7 @@ public class Robot extends TimedRobot {
         }
 
         m_robotContainer.onEnable();
-
-        // m_robotContainer.turret.resetRotationController();
+        m_robotContainer.teleopEnable();
     }
 
     /** This function is called periodically during operator control. */

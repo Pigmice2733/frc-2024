@@ -11,7 +11,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.DIOConfig;
@@ -28,7 +27,7 @@ public class Intake extends PIDSubsystemBase {
     public Intake() {
         super(new CANSparkMax(CANConfig.INTAKE_PIVOT, MotorType.kBrushless), IntakeConfig.P, IntakeConfig.I,
                 IntakeConfig.D, new Constraints(IntakeConfig.MAX_VELOCITY, IntakeConfig.MAX_ACCELERATION), false,
-                IntakeConfig.MOTOR_POSITION_CONVERSION, 50, Constants.INTAKE_TAB, true, true); // TODO
+                IntakeConfig.MOTOR_POSITION_CONVERSION, 50, Constants.INTAKE_TAB, false, false);
 
         wheelsMotor.restoreFactoryDefaults();
         wheelsMotor.setInverted(true);
@@ -40,7 +39,7 @@ public class Intake extends PIDSubsystemBase {
 
         addLimitSwitch(0, DIOConfig.INTAKE_LIMIT_SWITCH, true, LimitSwitchSide.POSITIVE);
 
-        setMaxAllowedOutput(0.5);
+        setMaxAllowedOutput(0.3);
     }
 
     /**
@@ -81,9 +80,8 @@ public class Intake extends PIDSubsystemBase {
 
     /** Sets the target rotation, then waits until it gets to that rotation */
     public Command goToState(IntakeState state) {
-        return new InstantCommand();
-        // return Commands.parallel(setTargetState(state), Commands.waitUntil(
-        // () -> atState(state))); TODO
+        return Commands.parallel(setTargetState(state), Commands.waitUntil(
+                () -> atState(state)));
     }
 
     public boolean atState(IntakeState state) {
@@ -91,7 +89,6 @@ public class Intake extends PIDSubsystemBase {
     }
 
     public Command waitForState(IntakeState state) {
-        return new InstantCommand();
-        // return Commands.waitUntil(() -> atState(state)); TODO
+        return Commands.waitUntil(() -> atState(state));
     }
 }

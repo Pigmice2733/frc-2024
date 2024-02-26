@@ -3,55 +3,104 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7159600556714989,
-        "y": 6.76655098038276
+        "x": 0.8221644973960404,
+        "y": 6.651755158003897
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7159600556715022,
-        "y": 6.76655098038276
+        "x": 1.8221644973960438,
+        "y": 6.651755158003897
       },
       "isLocked": false,
       "linkedName": "speakerClose"
     },
     {
       "anchor": {
-        "x": 2.1019852916509385,
-        "y": 7.0052043322732604
+        "x": 1.8278568434107654,
+        "y": 6.815114671846308
       },
       "prevControl": {
-        "x": 2.4033649106388255,
-        "y": 7.044092025045892
+        "x": 1.5931096449849627,
+        "y": 6.815114671846308
       },
       "nextControl": {
-        "x": 1.8174370643968816,
-        "y": 6.968488431982414
+        "x": 2.0626040418365674,
+        "y": 6.815114671846308
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.7159600556714989,
-        "y": 6.76655098038276
+        "x": 2.6547327548991713,
+        "y": 6.815114671846308
       },
       "prevControl": {
-        "x": 1.1565508591616536,
-        "y": 6.803266880673608
+        "x": 2.9561123738870583,
+        "y": 6.854002364618939
+      },
+      "nextControl": {
+        "x": 2.3701845276451143,
+        "y": 6.778398771555461
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.5013930170513679,
+        "y": 6.921104398556871
+      },
+      "prevControl": {
+        "x": 1.8160623652331307,
+        "y": 6.941384802954975
+      },
+      "nextControl": {
+        "x": 1.186723668869605,
+        "y": 6.900823994158767
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.9543963735286459,
+        "y": 6.570545740279316
+      },
+      "prevControl": {
+        "x": 1.3949871770188007,
+        "y": 6.607261640570163
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "speakerClose"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1,
+      "waypointRelativePos": 2.0,
       "rotationDegrees": 0.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0,
       "rotateFast": false
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 4.0,
+      "constraints": {
+        "maxVelocity": 0.75,
+        "maxAcceleration": 1.3,
+        "maxAngularVelocity": 90.0,
+        "maxAngularAcceleration": 180.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "prepIntake",
@@ -64,40 +113,6 @@
               "type": "named",
               "data": {
                 "name": "prepIntake"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "prepScore",
-      "waypointRelativePos": 1.15,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "prepScore"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "fireShooter",
-      "waypointRelativePos": 1.4,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "fireShooter"
               }
             }
           ]

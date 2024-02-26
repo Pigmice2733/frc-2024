@@ -96,12 +96,12 @@ public final class Constants {
 
         // From what I have seen, it is common to only use a P value in path
         // following
-        private static final PIDConstants PATH_DRIVE_PID = new PIDConstants(5.0,
+        private static final PIDConstants PATH_DRIVE_PID = new PIDConstants(1.2,
                 0, 0);
-        private static final PIDConstants PATH_TURN_PID = new PIDConstants(5.0,
+        private static final PIDConstants PATH_TURN_PID = new PIDConstants(1.2,
                 0, 0);
 
-        public static final double MAX_PATH_DRIVE_SPEED = 0.1;
+        public static final double MAX_PATH_MODULE_SPEED = 6;
         // public static final double MAX_PATH_TURN_SPEED = 1;
 
         // Offset from chassis center that the robot will rotate about
@@ -109,7 +109,7 @@ public final class Constants {
         // Translation2d(0, 0);
 
         public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
-                PATH_DRIVE_PID, PATH_TURN_PID, MAX_PATH_DRIVE_SPEED,
+                PATH_DRIVE_PID, PATH_TURN_PID, MAX_PATH_MODULE_SPEED,
                 DRIVE_BASE_RADIUS, new ReplanningConfig());
     }
 
@@ -133,10 +133,12 @@ public final class Constants {
         public static enum ArmState {
             STOW(0),
             AMP(100),
-            SPEAKER(72),
+            SPEAKER_CENTER(68),
+            SPEAKER_SIDE(63),
             SOURCE(60),
             TRAP(45),
-            WRIST_ROTATION(60);
+            WRIST_ROTATION(60),
+            GRAB_FROM_CHASSIS(38);
 
             private double position;
 
@@ -151,19 +153,19 @@ public final class Constants {
     }
 
     public final static class ClimberConfig {
-        public static final double extensionSpeed = -0.5;
-        public static final double climbingSpeed = 0.5;
+        public static final double extensionSpeed = -0.8;
+        public static final double climbingSpeed = 0.8;
 
         public static final double downPosition = -100;
     }
 
     public final static class WristConfig {
-        public static final double P = 0.035;
+        public static final double P = 0.045;
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 300;
-        public static final double MAX_VELOCITY = 400;
+        public static final double MAX_ACCELERATION = 700;
+        public static final double MAX_VELOCITY = 500;
 
         public static final double MOTOR_POSITION_CONVERSION = (1 / 68.75) * 360;
 
@@ -173,10 +175,12 @@ public final class Constants {
 
         public static enum WristState {
             STOW(0),
-            AMP(0),
-            SPEAKER(0),
+            AMP(140),
+            SPEAKER_CENTER(64),
+            SPEAKER_SIDE(63),
             TRAP(0),
-            SOURCE(0);
+            SOURCE(0),
+            GRAB_FROM_CHASSIS(259);
 
             private double position;
 
@@ -246,7 +250,7 @@ public final class Constants {
 
         public static class Locations {
             // Start of the "lineup" path for these positions
-            public final static Pose2d AMP_LINEUP = new Pose2d(1.82, 6.29,
+            public final static Pose2d AMP_LINEUP = new Pose2d(1.83, 7.4,
                     Rotation2d.fromDegrees(90));
             public final static Pose2d SPEAKER_LINEUP = new Pose2d(2.36, 5.56,
                     Rotation2d.fromDegrees(180));

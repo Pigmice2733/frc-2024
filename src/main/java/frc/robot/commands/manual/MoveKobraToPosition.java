@@ -5,6 +5,7 @@
 package frc.robot.commands.manual;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
@@ -12,10 +13,18 @@ import frc.robot.Constants.IntakeConfig.IntakeState;
 import frc.robot.Constants.WristConfig.WristState;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.NoteSensor;
 import frc.robot.subsystems.Wrist;
 
 public class MoveKobraToPosition extends SequentialCommandGroup {
-    public MoveKobraToPosition(Arm arm, Wrist wrist, Intake intake, KobraState state) {
+    public MoveKobraToPosition(Arm arm, Wrist wrist, Intake intake, KobraState state, NoteSensor noteSensor,
+            boolean stowIntake) {
+        addCommands(new InstantCommand(() -> {
+            if (state != KobraState.STOW && !noteSensor.noteInIndexer()) {
+                this.cancel();
+            }
+        }));
+
         addCommands(Commands.runOnce(() -> {
             currentKobraState = state;
         }));
@@ -49,16 +58,30 @@ public class MoveKobraToPosition extends SequentialCommandGroup {
                         arm.goToState(ArmState.SOURCE), // Arm to source position and...
                         wrist.goToState(WristState.SOURCE))); // Wrist to source position
                 break;
-            case SPEAKER:
+            case SPEAKER_CENTER:
                 addCommands(Commands.parallel( // At the same time:
-                        arm.goToState(ArmState.SPEAKER), // Arm to speaker position and...
-                        wrist.goToState(WristState.SPEAKER))); // Wrist to speaker position
+                        arm.goToState(ArmState.SPEAKER_CENTER), // Arm to speaker position and...
+                        wrist.goToState(WristState.SPEAKER_CENTER))); // Wrist to speaker position
+                break;
+            case SPEAKER_SIDE:
+                addCommands(Commands.parallel( // At the same time:
+                        arm.goToState(ArmState.SPEAKER_SIDE), // Arm to speaker position and...
+                        wrist.goToState(WristState.SPEAKER_SIDE))); // Wrist to speaker position
                 break;
             case TRAP:
                 addCommands(Commands.parallel( // At the same time:
                         arm.goToState(ArmState.TRAP), // Arm to trap position and...
                         wrist.goToState(WristState.TRAP))); // Wrist to trap position
                 break;
+            case GRAB_FROM_CHASSIS:
+                addCommands(Commands.parallel( // At the same time:
+                        arm.goToState(ArmState.GRAB_FROM_CHASSIS), // Arm to trap position and...
+                        wrist.goToState(WristState.GRAB_FROM_CHASSIS))); // Wrist to trap position
+                break;
+        }
+
+        if (stowIntake) {
+            addCommands(intake.goToState(IntakeState.STOW));
         }
 
         addRequirements(arm, wrist, intake);
@@ -69,8 +92,10 @@ public class MoveKobraToPosition extends SequentialCommandGroup {
     public enum KobraState {
         STOW,
         AMP,
-        SPEAKER,
+        SPEAKER_CENTER,
+        SPEAKER_SIDE,
         SOURCE,
-        TRAP
+        TRAP,
+        GRAB_FROM_CHASSIS
     }
 }

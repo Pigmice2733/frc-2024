@@ -27,11 +27,11 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         topMotor.restoreFactoryDefaults();
         topMotor.setInverted(true);
-        topMotor.setSmartCurrentLimit(80);
+        topMotor.setSmartCurrentLimit(100);
 
         bottomMotor.restoreFactoryDefaults();
         bottomMotor.setInverted(true);
-        bottomMotor.setSmartCurrentLimit(80);
+        bottomMotor.setSmartCurrentLimit(100);
         bottomMotor.follow(topMotor);
 
         ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> topMotor.get());

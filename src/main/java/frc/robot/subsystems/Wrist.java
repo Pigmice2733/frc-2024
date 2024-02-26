@@ -22,32 +22,39 @@ import frc.robot.Constants.WristConfig;
 import frc.robot.Constants.WristConfig.WristState;
 
 public class Wrist extends PIDSubsystemBase {
-    private final Supplier<Double> getArmRotation;
+    private static Wrist instance;
 
-    public Wrist(Supplier<Double> getArmRotation) {
+    public static double getRotation() {
+        if (instance != null)
+            return instance.getCurrentRotation();
+        System.out.println("wrist is null");
+        return 0;
+    }
+
+    public Wrist() {
         super(new CANSparkMax(CANConfig.WRIST_ROTATION, MotorType.kBrushless), WristConfig.P, WristConfig.I,
                 WristConfig.D, new Constraints(WristConfig.MAX_VELOCITY, WristConfig.MAX_ACCELERATION), false,
                 WristConfig.MOTOR_POSITION_CONVERSION, 40, Constants.WRIST_TAB, false, false);
+        instance = this;
 
         ShuffleboardHelper.addOutput("Extension Distance", Constants.WRIST_TAB,
-                () -> calculateExtensionDistance(getCurrentRotation(), getArmRotation.get()));
+                () -> calculateExtensionDistance(getCurrentRotation(), Arm.getRotation()));
 
         ShuffleboardHelper.addOutput("Over E Limit", Constants.WRIST_TAB, () -> {
-            return calculateExtensionDistance(getCurrentRotation(), getArmRotation.get()) > 12.0;
+            return calculateExtensionDistance(getCurrentRotation(), Arm.getRotation()) > 12.0;
         });
 
         ShuffleboardHelper.addOutput("Min Wrist Angle", Constants.WRIST_TAB,
                 () -> calculateMinWristAngle(getCurrentRotation()));
 
-        this.getArmRotation = getArmRotation;
-        addSoftwareStop(0, 360);
+        // addSoftwareStop(0, 360);
 
         // TODO: test a dynamic software stop
-        /*
-         * addSoftwareStop(
-         * () -> calculateMinWristAngle(getArmRotation.get()),
-         * () -> 360.0);
-         */
+        addSoftwareStop(
+                () -> calculateMinWristAngle(Arm.getRotation()),
+                () -> calculateMaxWristAngle(Arm.getRotation()));
+
+        setMaxAllowedOutput(0.8);
     }
 
     /** Sets the height state of the climber */
@@ -77,7 +84,7 @@ public class Wrist extends PIDSubsystemBase {
     @Override
     public double getCurrentRotation() {
         // Makes the wrists current rotation relative to the ground
-        return getMotor().getEncoder().getPosition() - getArmRotation.get();
+        return getMotor().getEncoder().getPosition() - Arm.getRotation();
     }
 
     /** @return the extension distance of the arm outside the drivetrain frame */
@@ -96,17 +103,32 @@ public class Wrist extends PIDSubsystemBase {
     }
 
     public static double calculateMinWristAngle(double armAngle) {
-        // x pos of wrist pivot relative to frame
-        double wristPivotX = -Math.cos(Units.degreesToRadians(armAngle)) * ArmConfig.LENGTH_INCHES
-                - ArmConfig.PIVOT_TO_FRAME_INCHES;
+        /*
+         * // x pos of wrist pivot relative to frame
+         * double wristPivotX = -Math.cos(Units.degreesToRadians(armAngle)) *
+         * ArmConfig.LENGTH_INCHES
+         * - ArmConfig.PIVOT_TO_FRAME_INCHES;
+         * 
+         * // The max wrist length in x dimension
+         * double maxWristLengthX = 12.0 - wristPivotX;
+         * 
+         * if (maxWristLengthX > WristConfig.LENGTH_INCHES)
+         * return 0;
+         * 
+         * // The min angle the wrist can be at without going over max extension limit
+         * return Math.acos(maxWristLengthX / WristConfig.LENGTH_INCHES);
+         */
 
-        // The max wrist length in x dimension
-        double maxWristLengthX = 12.0 - wristPivotX;
+        if (armAngle >= 80) {
+            return 90;
+        }
+        return -armAngle;
+    }
 
-        if (maxWristLengthX > WristConfig.LENGTH_INCHES)
-            return 0;
+    public static double calculateMaxWristAngle(double armAngle) {
+        if (armAngle < 40)
+            return 90;
 
-        // The min angle the wrist can be at without going over max extension limit
-        return Math.acos(maxWristLengthX / WristConfig.LENGTH_INCHES);
+        return 270;
     }
 }

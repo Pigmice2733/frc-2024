@@ -6,7 +6,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autonomous.subcommands.ScoreFromStartAuto;
-import frc.robot.commands.manual.FireShooter;
+import frc.robot.commands.manual.MoveKobraToPosition.KobraState;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Indexer;
@@ -22,14 +22,51 @@ public class RunAutoRoutine extends SequentialCommandGroup {
         switch (autoRoutine) {
             case TWO_CENTER:
                 addCommands(
-                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true),
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true, KobraState.SPEAKER_CENTER,
+                                noteSensor),
                         Commands.runOnce(
                                 () -> drivetrain.getSwerveDrive().resetOdometry(
                                         PathPlannerPath.fromPathFile("autoTwoCenter")
                                                 .getPreviewStartingHolonomicPose())),
                         AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoTwoCenter")),
-                        Commands.waitSeconds(0.75), new FireShooter(indexer, shooter),
-                        Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, false, KobraState.SPEAKER_SIDE,
+                                noteSensor));
+                break;
+            case TWO_CLOSE:
+                addCommands(
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true, KobraState.SPEAKER_SIDE,
+                                noteSensor),
+                        Commands.runOnce(
+                                () -> drivetrain.getSwerveDrive().resetOdometry(
+                                        PathPlannerPath.fromPathFile("autoTwoClose")
+                                                .getPreviewStartingHolonomicPose())),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoTwoClose")),
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, false, KobraState.SPEAKER_SIDE,
+                                noteSensor));
+                break;
+            case TWO_FAR:
+                addCommands(
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true, KobraState.SPEAKER_SIDE,
+                                noteSensor),
+                        Commands.runOnce(
+                                () -> drivetrain.getSwerveDrive().resetOdometry(
+                                        PathPlannerPath.fromPathFile("autoTwoFar")
+                                                .getPreviewStartingHolonomicPose())),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoTwoFar")),
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, false, KobraState.SPEAKER_SIDE,
+                                noteSensor));
+                break;
+
+            case ONE_CLOSE:
+                addCommands(
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true, KobraState.SPEAKER_SIDE,
+                                noteSensor),
+                        Commands.runOnce(
+                                () -> drivetrain.getSwerveDrive().resetOdometry(
+                                        PathPlannerPath.fromPathFile("autoOneClose")
+                                                .getPreviewStartingHolonomicPose())),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoOneClose")));
+                break;
         }
 
         addRequirements(drivetrain, intake, arm, wrist, indexer, shooter);

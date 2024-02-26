@@ -10,18 +10,23 @@ import frc.robot.commands.manual.MoveKobraToPosition.KobraState;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.NoteSensor;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 
 public class ScoreFromStartAuto extends SequentialCommandGroup {
     public ScoreFromStartAuto(Intake intake, Indexer indexer, Arm arm, Wrist wrist, Shooter shooter,
-            boolean waitForStow) {
-        addCommands(new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER),
+            boolean waitForStow, KobraState shootingState, NoteSensor noteSensor) {
+        addCommands(
+                Commands.either(
+                        new MoveKobraToPosition(arm, wrist, intake, shootingState, noteSensor, false),
+                        Commands.none(),
+                        () -> MoveKobraToPosition.currentKobraState != shootingState),
                 new FireShooter(indexer, shooter), Commands.waitSeconds(0.15),
                 Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
 
         if (waitForStow)
-            addCommands(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW));
+            addCommands(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW, noteSensor, false));
         else
             addCommands(Commands.parallel(arm.setTargetState(ArmState.STOW), wrist.setTargetState(WristState.STOW)));
         addRequirements(intake, indexer, arm, wrist, shooter);

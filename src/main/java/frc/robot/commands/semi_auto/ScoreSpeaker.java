@@ -41,8 +41,8 @@ public class ScoreSpeaker extends SequentialCommandGroup {
                         Commands.sequence(
                                 intake.goToState(IntakeState.STOW),
                                 Commands.parallel(
-                                        wrist.goToState(WristState.SPEAKER),
-                                        arm.goToState(ArmState.SPEAKER)))),
+                                        wrist.goToState(WristState.SPEAKER_CENTER),
+                                        arm.goToState(ArmState.SPEAKER_CENTER)))),
                 // Push the note forward to shoot
                 indexer.indexForward(),
                 // Wait until the note is out

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,9 +25,12 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 
+import frc.robot.Constants.AutoConfig;
 import frc.robot.Constants.DrivetrainConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
+import frc.robot.Constants.IntakeConfig.IntakeState;
 import frc.robot.Constants.WristConfig.WristState;
+import frc.robot.commands.ZeroIntake;
 import frc.robot.commands.autonomous.RunAutoRoutine;
 import frc.robot.commands.autonomous.RunAutoRoutine.AutoRoutine;
 import frc.robot.commands.autonomous.subcommands.FireShooterAuto;
@@ -67,7 +71,7 @@ public class RobotContainer {
     private final Intake intake = new Intake();
     private final Shooter shooter = new Shooter();
     private final Indexer indexer = new Indexer();
-    private final Wrist wrist;
+    private final Wrist wrist = new Wrist();
     private final NoteSensor noteSensor = new NoteSensor();
     private final Vision vision = new Vision();
 
@@ -75,7 +79,7 @@ public class RobotContainer {
     private final XboxController operator;
     public final Controls controls;
 
-    private final SendableChooser<AutoCommands> autoChooser;
+    private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
@@ -83,12 +87,10 @@ public class RobotContainer {
      */
     public RobotContainer() {
         drivetrain = new Drivetrain(vision);
-        wrist = new Wrist(arm::getCurrentRotation);
 
         driver = new XboxController(0);
         operator = new XboxController(1);
         controls = new Controls(driver, operator);
-        autoChooser = new SendableChooser<AutoCommands>();
 
         DriverStation.silenceJoystickConnectionWarning(true);
         ControllerRumbler.setControllers(driver, operator);
@@ -105,11 +107,13 @@ public class RobotContainer {
     }
 
     public void onEnable() {
-        // TODO: uncomment after drivetrain only testing
         arm.resetPID();
-        // climberExtension.resetPID();
         intake.resetPID();
         wrist.resetPID();
+    }
+
+    public void teleopEnable() {
+        new ZeroIntake(intake).schedule();
     }
 
     public void onDisable() {
@@ -124,13 +128,14 @@ public class RobotContainer {
 
     private void configureAutoChooser() {
         // Default to doing nothing
-        autoChooser.setDefaultOption("None", AutoCommands.NONE);
+        autoChooser.setDefaultOption("None", Commands.none());
 
-        autoChooser.addOption("None", AutoCommands.NONE);
-        autoChooser.addOption("Straight Path", AutoCommands.STRAIGHT_TEST);
-        autoChooser.addOption("Curve Test", AutoCommands.CURVED_TEST);
-        autoChooser.addOption("Pathfinding Test",
-                AutoCommands.PATHFINDING_TEST);
+        autoChooser.addOption("Two Center", new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
+                noteSensor, AutoRoutine.TWO_CENTER));
+        autoChooser.addOption("Two Close", new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
+                noteSensor, AutoRoutine.TWO_CLOSE));
+        autoChooser.addOption("Two Far",
+                new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter, noteSensor, AutoRoutine.TWO_FAR));
 
         Constants.DRIVER_TAB.add("Auto Command", autoChooser);
     }
@@ -148,13 +153,19 @@ public class RobotContainer {
         new JoystickButton(operator, Button.kX.value).whileTrue(new FireShooter(indexer, shooter))
                 .onFalse(Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
 
+        /*
+         * new JoystickButton(driver, Button.kY.value).whileTrue(
+         * AutoBuilder.pathfindToPose(AutoConfig.Locations.AMP_LINEUP,
+         * DrivetrainConfig.PATH_CONSTRAINTS));
+         */
+
         // new JoystickButton(operator, Button.kY.value)
         // .onTrue(Commands.parallel(shooter.spinFlywheelsBackward(),
         // indexer.indexBackward()))
         // .onFalse(Commands.parallel(shooter.stopFlywheels(), indexer.stopIndexer()));
 
         new JoystickButton(operator, Button.kB.value).onTrue(new RunIntake(intake, indexer,
-                noteSensor));
+                arm, wrist, noteSensor));
 
         // new JoystickButton(operator, Button.kA.value).onTrue(new IntakeCycle(intake,
         // indexer,
@@ -183,19 +194,25 @@ public class RobotContainer {
 
         // Speaker Position
         new POVButton(operator, 0) // up
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_CENTER, noteSensor, true));
 
         // Amp Position
         new POVButton(operator, 90) // right
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.AMP));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.AMP, noteSensor, true));
 
         // Source Position
         new POVButton(operator, 270) // left
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SOURCE));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_SIDE, noteSensor, true));
 
         // Stow Position
         new POVButton(operator, 180) // down
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW, noteSensor, true));
+
+        new JoystickButton(operator, Button.kLeftBumper.value)
+                .onTrue(intake.goToState(IntakeState.STOW));
+
+        new JoystickButton(operator,
+                Button.kRightBumper.value).onTrue(intake.runWheelsBackward()).onFalse(intake.stopWheels());
 
         // TODO: Test after running indexer
         // new JoystickButton(operator, Button.kX.value).onTrue(new IntakeCycle(intake,
@@ -217,18 +234,6 @@ public class RobotContainer {
         new JoystickButton(operator, Button.kA.value)
                 .onTrue(climber.retractClimberFast())
                 .onFalse(climber.stopClimber());
-
-        // TODO: add indexer back to this
-        // new JoystickButton(operator,
-        // Button.kB.value).onTrue(intake.runWheelsForward()).onFalse(intake.stopWheels());
-
-        // new JoystickButton(operator, Button.kX.value)
-        // .whileTrue(Commands.parallel(arm.goToState(ArmState.SPEAKER),
-        // wrist.goToState(WristState.SPEAKER)));
-
-        // new JoystickButton(operator, Button.kA.value)
-        // .whileTrue(Commands.parallel(wrist.goToState(WristState.STOW),
-        // arm.goToState(ArmState.STOW)));
 
         // #endregion
 
@@ -290,49 +295,27 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // switch (autoChooser.getSelected()) {
-        // case STRAIGHT_TEST:
-        // return Commands.sequence(
-        // Commands.runOnce(() -> drivetrain.getSwerveDrive()
-        // .resetOdometry(new Pose2d())),
-        // AutoBuilder.followPath(PathPlannerPath
-        // .fromPathFile("straightLineTest")));
-        // case CURVED_TEST:
-        // return Commands.sequence(
-        // Commands.runOnce(() -> drivetrain.getSwerveDrive()
-        // .resetOdometry(new Pose2d())),
-        // AutoBuilder.followPath(PathPlannerPath
-        // .fromPathFile("curveTest")));
-        // case PATHFINDING_TEST:
-        // return Commands.sequence(
-        // Commands.runOnce(
-        // () -> drivetrain.getSwerveDrive()
-        // .resetOdometry(new Pose2d())),
-        // AutoBuilder.pathfindToPose(
-        // new Pose2d(8.3, 6.2,
-        // drivetrain.getSwerveDrive().getYaw()),
-        // DrivetrainConfig.PATH_CONSTRAINTS));
-        // case NONE:
-        // default:
-        // return Commands.none();
-        // }
-        // return Commands.none();
-        // return new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter);
-
         NamedCommands.registerCommand("prepIntake",
                 Commands.sequence(
                         Commands.parallel(
-                                new MoveKobraToPosition(arm, wrist, intake,
-                                        KobraState.STOW),
-                                new RunIntake(intake, indexer, noteSensor)),
-                        new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER)));
+                                new RunIntake(intake, indexer, arm, wrist, noteSensor)),
+                        new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_SIDE, noteSensor, false))); // TODO:
+                                                                                                                   // both
+                                                                                                                   // speaker
+        // sides
 
         NamedCommands.registerCommand("prepScore",
-                new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER));
+                new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_SIDE, noteSensor, true)); // TODO: both
+                                                                                                         // speaker
+                                                                                                         // sides
         NamedCommands.registerCommand("fireShooter", new FireShooter(indexer, shooter));
 
-        return new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter, noteSensor,
+        return new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
+                noteSensor,
                 AutoRoutine.TWO_CENTER);
+
+        // TODO: Test auto chooser
+        // return AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoTwoClose"));
     }
 
     public static enum AutoCommands {

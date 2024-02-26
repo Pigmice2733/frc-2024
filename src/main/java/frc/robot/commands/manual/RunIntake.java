@@ -7,13 +7,18 @@ package frc.robot.commands.manual;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConfig;
+import frc.robot.commands.manual.MoveKobraToPosition.KobraState;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NoteSensor;
+import frc.robot.subsystems.Wrist;
 
 public class RunIntake extends SequentialCommandGroup {
-    public RunIntake(Intake intake, Indexer indexer, NoteSensor noteSensor) {
-        addCommands(intake.runWheelsForward(), indexer.indexForward(), noteSensor.waitForNoteInIndexer(),
+    public RunIntake(Intake intake, Indexer indexer, Arm arm, Wrist wrist, NoteSensor noteSensor) {
+        addCommands(
+                new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW, noteSensor, false),
+                intake.runWheelsForward(), indexer.indexForward(), noteSensor.waitForNoteInIndexer(),
                 Commands.waitSeconds(AutoConfig.EXTRA_INDEX_TIME), intake.stopWheels(), indexer.stopIndexer());
         addRequirements(indexer);
     }

@@ -19,6 +19,15 @@ import frc.robot.Constants.ArmConfig.ArmState;
 public class Arm extends PIDSubsystemBase {
     private final CANSparkMax rightMotor;
 
+    private static Arm instance;
+
+    public static double getRotation() {
+        if (instance != null)
+            return instance.getCurrentRotation();
+        System.out.println("arm is null");
+        return 0;
+    }
+
     /** Moves the shooter box up, down, and around the space above the robot. */
     public Arm() {
         super(new CANSparkMax(CANConfig.RIGHT_ARM, MotorType.kBrushless),
@@ -27,6 +36,8 @@ public class Arm extends PIDSubsystemBase {
                 true, ArmConfig.MOTOR_POSITION_CONVERSION, 30,
                 Constants.ARM_TAB, false, false);
 
+        instance = this;
+
         // Right motor
         rightMotor = new CANSparkMax(CANConfig.LEFT_ARM, MotorType.kBrushless);
         rightMotor.restoreFactoryDefaults();
@@ -34,7 +45,13 @@ public class Arm extends PIDSubsystemBase {
         rightMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.follow(getMotor(), true);
 
-        addSoftwareStop(0, 150);
+        // addSoftwareStop(0, 150);
+
+        addSoftwareStop(
+                () -> calculateMinArmAngle(Wrist.getRotation()),
+                () -> calculateMaxArmAngle(Wrist.getRotation()));
+
+        setMaxAllowedOutput(0.8);
 
         // addLimitSwitch(0, DIOConfig.ARM_LIMIT_SWITCH, true,
         // LimitSwitchSide.NEGATIVE);
@@ -62,5 +79,21 @@ public class Arm extends PIDSubsystemBase {
 
     public Command waitForState(ArmState state) {
         return Commands.waitUntil(() -> atState(state));
+    }
+
+    public static double calculateMinArmAngle(double wristAngle) {
+        /*
+         * if (wristAngle > 90)
+         * return 40;
+         */
+
+        return 0;
+    }
+
+    public static double calculateMaxArmAngle(double wristAngle) {
+        if (wristAngle < 90)
+            return 80;
+
+        return 110;
     }
 }

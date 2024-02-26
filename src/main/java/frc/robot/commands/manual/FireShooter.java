@@ -32,10 +32,7 @@ public class FireShooter extends SequentialCommandGroup {
                                 indexer.runForShooting()),
 
                         // Condition
-                        () -> {
-                            System.out.println(MoveKobraToPosition.currentKobraState);
-                            return MoveKobraToPosition.currentKobraState == KobraState.AMP;
-                        }));
+                        () -> MoveKobraToPosition.currentKobraState == KobraState.AMP));
         addCommands(Commands.waitSeconds(0.75));
 
         addRequirements(indexer, shooter);
