@@ -6,7 +6,6 @@ package frc.robot.commands.manual;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.AutoConfig;
 import frc.robot.commands.manual.MoveKobraToPosition.KobraState;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Indexer;
@@ -25,10 +24,10 @@ public class RunIntake extends SequentialCommandGroup {
 
                 // TODO: test this after the next beam break is mounted
                 // (REMOVE EXTRA INDEX TIME)
-                // noteSensor.waitForNoteInShooter(),
+                noteSensor.waitForNoteInShooter(),
 
                 // Wait a little longer, then stop all the wheels
-                Commands.waitSeconds(AutoConfig.EXTRA_INDEX_TIME), intake.stopWheels(), indexer.stopIndexer());
+                /* Commands.waitSeconds(AutoConfig.EXTRA_INDEX_TIME), */ intake.stopWheels(), indexer.stopIndexer());
         addRequirements(indexer);
     }
 }

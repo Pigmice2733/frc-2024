@@ -19,6 +19,8 @@ public class RunAutoRoutine extends SequentialCommandGroup {
     public RunAutoRoutine(Drivetrain drivetrain, Intake intake, Arm arm, Wrist wrist, Indexer indexer,
             Shooter shooter, NoteSensor noteSensor, AutoRoutine autoRoutine) {
 
+        addCommands(shooter.stopFlywheels(), indexer.stopIndexer(), intake.stopWheels());
+
         switch (autoRoutine) {
             case TWO_CENTER:
                 addCommands(
@@ -29,7 +31,7 @@ public class RunAutoRoutine extends SequentialCommandGroup {
                                         PathPlannerPath.fromPathFile("autoTwoCenter")
                                                 .getPreviewStartingHolonomicPose())),
                         AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoTwoCenter")),
-                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, false, KobraState.SPEAKER_SIDE,
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, false, KobraState.SPEAKER_CENTER,
                                 noteSensor));
                 break;
             case TWO_CLOSE:

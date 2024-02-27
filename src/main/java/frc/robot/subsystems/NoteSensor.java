@@ -40,6 +40,10 @@ public class NoteSensor extends SubsystemBase {
         return Commands.waitUntil(() -> noteInShooter());
     }
 
+    public Command waitForNoNoteInShooter() {
+        return Commands.waitUntil(() -> !noteInShooter());
+    }
+
     /** @returns true if there is a note in the intake */
     public boolean noteInIntake() {
         return !intakeBeamBreak.get();

@@ -33,7 +33,7 @@ public class Arm extends PIDSubsystemBase {
         super(new CANSparkMax(CANConfig.RIGHT_ARM, MotorType.kBrushless),
                 ArmConfig.P, ArmConfig.I, ArmConfig.D, new Constraints(
                         ArmConfig.MAX_VELOCITY, ArmConfig.MAX_ACCELERATION),
-                true, ArmConfig.MOTOR_POSITION_CONVERSION, 30,
+                true, ArmConfig.MOTOR_POSITION_CONVERSION, 20,
                 Constants.ARM_TAB, false, false);
 
         instance = this;
@@ -41,7 +41,7 @@ public class Arm extends PIDSubsystemBase {
         // Right motor
         rightMotor = new CANSparkMax(CANConfig.LEFT_ARM, MotorType.kBrushless);
         rightMotor.restoreFactoryDefaults();
-        rightMotor.setSmartCurrentLimit(40);
+        rightMotor.setSmartCurrentLimit(25);
         rightMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.follow(getMotor(), true);
 

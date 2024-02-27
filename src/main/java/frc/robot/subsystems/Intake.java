@@ -27,11 +27,11 @@ public class Intake extends PIDSubsystemBase {
     public Intake() {
         super(new CANSparkMax(CANConfig.INTAKE_PIVOT, MotorType.kBrushless), IntakeConfig.P, IntakeConfig.I,
                 IntakeConfig.D, new Constraints(IntakeConfig.MAX_VELOCITY, IntakeConfig.MAX_ACCELERATION), false,
-                IntakeConfig.MOTOR_POSITION_CONVERSION, 50, Constants.INTAKE_TAB, false, false);
+                IntakeConfig.MOTOR_POSITION_CONVERSION, 20, Constants.INTAKE_TAB, false, false);
 
         wheelsMotor.restoreFactoryDefaults();
-        wheelsMotor.setInverted(true);
-        wheelsMotor.setSmartCurrentLimit(60);
+        wheelsMotor.setInverted(false);
+        wheelsMotor.setSmartCurrentLimit(50);
 
         ShuffleboardHelper.addOutput("Wheel Motor Output", Constants.INTAKE_TAB, () -> wheelsMotor.get());
 
@@ -47,7 +47,7 @@ public class Intake extends PIDSubsystemBase {
      * carried, and stops it otherwise.
      */
     public void outputToWheels(double percent) {
-        wheelsMotor.set(percent);
+        wheelsMotor.set(-percent);
     }
 
     /**

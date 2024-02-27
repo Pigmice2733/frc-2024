@@ -22,11 +22,11 @@ public class ScoreFromStartAuto extends SequentialCommandGroup {
                         new MoveKobraToPosition(arm, wrist, intake, shootingState, noteSensor, false),
                         Commands.none(),
                         () -> MoveKobraToPosition.currentKobraState != shootingState),
-                new FireShooter(indexer, shooter), Commands.waitSeconds(0.15),
+                new FireShooter(indexer, shooter, noteSensor), Commands.waitSeconds(0.15),
                 Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
 
         if (waitForStow)
-            addCommands(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW, noteSensor, false));
+            addCommands(Commands.parallel(arm.goToState(ArmState.STOW), wrist.goToState(WristState.STOW)));
         else
             addCommands(Commands.parallel(arm.setTargetState(ArmState.STOW), wrist.setTargetState(WristState.STOW)));
         addRequirements(intake, indexer, arm, wrist, shooter);

@@ -19,11 +19,13 @@ import frc.robot.subsystems.Wrist;
 public class MoveKobraToPosition extends SequentialCommandGroup {
     public MoveKobraToPosition(Arm arm, Wrist wrist, Intake intake, KobraState state, NoteSensor noteSensor,
             boolean stowIntake) {
-        addCommands(new InstantCommand(() -> {
-            if (state != KobraState.STOW && !noteSensor.noteInIndexer()) {
-                this.cancel();
-            }
-        }));
+        /*
+         * addCommands(new InstantCommand(() -> {
+         * if (state != KobraState.STOW && !noteSensor.noteInIndexer()) {
+         * this.cancel();
+         * }
+         * }));
+         */
 
         addCommands(Commands.runOnce(() -> {
             currentKobraState = state;

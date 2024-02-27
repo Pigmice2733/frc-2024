@@ -27,7 +27,7 @@ public class Controls {
         double joystickY = MathUtil.applyDeadband(-driver.getLeftY(), threshold);
 
         return joystickY * DrivetrainConfig.MAX_DRIVE_SPEED
-                * (driver.getYButton() ? DrivetrainConfig.SLOWMODE_MULTIPLIER : 1);
+                * (driver.getRightBumper() ? DrivetrainConfig.SLOWMODE_MULTIPLIER : 1);
     }
 
     /**
@@ -40,7 +40,7 @@ public class Controls {
         double joystickX = MathUtil.applyDeadband(-driver.getLeftX(), threshold);
 
         return joystickX * DrivetrainConfig.MAX_DRIVE_SPEED
-                * (driver.getYButton() ? DrivetrainConfig.SLOWMODE_MULTIPLIER : 1);
+                * (driver.getRightBumper() ? DrivetrainConfig.SLOWMODE_MULTIPLIER : 1);
     }
 
     /**
@@ -53,7 +53,7 @@ public class Controls {
         double joystickTurn = MathUtil.applyDeadband(driver.getRightX(), threshold);
 
         return -joystickTurn * DrivetrainConfig.MAX_TURN_SPEED
-                * (driver.getYButton() ? DrivetrainConfig.SLOWMODE_MULTIPLIER : 1);
+                * (driver.getRightBumper() ? DrivetrainConfig.SLOWMODE_MULTIPLIER : 1);
     }
 
     /** @return the climber speed calculated from the triggers */

@@ -22,11 +22,11 @@ public class Shooter extends SubsystemBase {
     /** Controls the flywheels on the far end of the box for shooting */
     public Shooter() {
         topMotor.restoreFactoryDefaults();
-        topMotor.setInverted(true);
+        topMotor.setInverted(false);
         topMotor.setSmartCurrentLimit(100);
 
         bottomMotor.restoreFactoryDefaults();
-        bottomMotor.setInverted(true);
+        bottomMotor.setInverted(false);
         bottomMotor.setSmartCurrentLimit(100);
         bottomMotor.follow(topMotor);
 
@@ -35,7 +35,7 @@ public class Shooter extends SubsystemBase {
 
     /* Output a percent to both flywheels */
     private void outputToFlywheels(double output) {
-        topMotor.set(output);
+        topMotor.set(-output);
     }
 
     /* Spin the flywheels in the shooting direction */

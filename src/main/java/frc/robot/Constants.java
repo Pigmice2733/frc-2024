@@ -80,7 +80,7 @@ public final class Constants {
     }
 
     public final static class DrivetrainConfig {
-        public static final double MAX_DRIVE_SPEED = 2; // max meters / second
+        public static final double MAX_DRIVE_SPEED = 1.8; // max meters / second
         public static final double MAX_TURN_SPEED = 2; // max radians / second
         public static final double SLOWMODE_MULTIPLIER = 0.3;
 
@@ -153,7 +153,7 @@ public final class Constants {
     }
 
     public final static class ClimberConfig {
-        public static final double climbingSpeed = 0.8;
+        public static final double climbingSpeed = -0.8;
         public static final double downPosition = -100;
     }
 

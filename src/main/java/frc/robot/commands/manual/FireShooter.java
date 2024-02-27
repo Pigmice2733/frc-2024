@@ -9,23 +9,24 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConfig;
 import frc.robot.commands.manual.MoveKobraToPosition.KobraState;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.NoteSensor;
 import frc.robot.subsystems.Shooter;
 
 public class FireShooter extends SequentialCommandGroup {
-    public FireShooter(Indexer indexer, Shooter shooter) {
+    public FireShooter(Indexer indexer, Shooter shooter, NoteSensor noteSensor) {
         addCommands(
                 Commands.either(
                         // Amp scoring (condition is true)
-                        Commands.sequence(Commands.parallel(indexer.indexBackward(),
-                                shooter.spinFlywheelsBackward())),
+                        Commands.sequence(Commands.runOnce(() -> System.out.println("AMP")),
+                                Commands.parallel(indexer.indexBackward(),
+                                        shooter.spinFlywheelsBackward())),
 
                         // Speaker scoring (condition is false)
                         Commands.sequence(shooter.spinFlywheelsForward(),
                                 indexer.indexBackward(),
                                 Commands.parallel(
                                         Commands.sequence(
-                                                Commands.waitSeconds(
-                                                        AutoConfig.BACKUP_NOTE_TIME),
+                                                noteSensor.waitForNoNoteInShooter(),
                                                 indexer.stopIndexer()),
                                         Commands.waitSeconds(
                                                 AutoConfig.SHOOTER_SPINUP_TIME)),

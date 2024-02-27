@@ -18,10 +18,10 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 
-import frc.robot.commands.ZeroIntake;
 import frc.robot.commands.autonomous.RunAutoRoutine;
 import frc.robot.commands.autonomous.RunAutoRoutine.AutoRoutine;
 import frc.robot.commands.drivetrain.DriveWithJoysticks;
+import frc.robot.commands.manual.CancelIntake;
 import frc.robot.commands.manual.FireShooter;
 import frc.robot.commands.manual.MoveKobraToPosition;
 import frc.robot.commands.manual.RunClimber;
@@ -85,8 +85,8 @@ public class RobotContainer {
 
         configureDefaultCommands();
         configureButtonBindings();
-        configureAutoChooser();
         configureNamedCommands();
+        configureAutoChooser();
     }
 
     public void teleopPeriodic() {
@@ -99,7 +99,7 @@ public class RobotContainer {
     }
 
     public void teleopEnable() {
-        new ZeroIntake(intake).schedule();
+        // new ZeroIntake(intake).schedule();
     }
 
     public void onDisable() {
@@ -125,7 +125,8 @@ public class RobotContainer {
                 noteSensor, AutoRoutine.TWO_CLOSE));
 
         autoChooser.addOption("Two Far",
-                new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter, noteSensor, AutoRoutine.TWO_FAR));
+                new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter, noteSensor,
+                        AutoRoutine.TWO_FAR));
 
         Constants.DRIVER_TAB.add("Auto Command", autoChooser);
     }
@@ -146,12 +147,15 @@ public class RobotContainer {
          */
 
         // RIGHT BUMPER - hold to fire the shooter (amp or speaker)
-        new JoystickButton(operator, Button.kRightBumper.value).whileTrue(new FireShooter(indexer, shooter))
+        new JoystickButton(operator, Button.kRightBumper.value).whileTrue(new FireShooter(indexer, shooter, noteSensor))
                 .onFalse(Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
 
         // B - press to toggle the intake
-        new JoystickButton(operator, Button.kB.value).toggleOnTrue(
+        new JoystickButton(operator, Button.kB.value).onTrue(
                 new RunIntake(intake, indexer, arm, wrist, noteSensor));
+
+        // TODO: make sure this isn't causing the intake cycle to break
+        new JoystickButton(operator, Button.kX.value).onTrue(new CancelIntake(intake, indexer));
 
         // TODO: test this and see if the drive team likes it better
         // B - press to toggle in intake cycle command
@@ -162,11 +166,13 @@ public class RobotContainer {
 
         // POV UP - press for center speaker position
         new POVButton(operator, 0)
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_CENTER, noteSensor, false));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_CENTER,
+                        noteSensor, false));
 
         // POV LEFT - press for side speaker position
         new POVButton(operator, 270) // left
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_SIDE, noteSensor, false));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_SIDE, noteSensor,
+                        false));
 
         // POV RIGHT - press for amp position
         new POVButton(operator, 90) // right
@@ -174,12 +180,12 @@ public class RobotContainer {
 
         // POV DOWN - press for stow position
         new POVButton(operator, 180) // down
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW, noteSensor, true));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW, noteSensor, false));
 
-        // START - hold to run the intake and indexer backward
-        new JoystickButton(operator, Button.kStart.value)
-                .onTrue(Commands.parallel(intake.runWheelsBackward(), indexer.indexBackward()))
-                .onFalse(Commands.parallel(indexer.stopIndexer(), intake.stopWheels()));
+        // A - hold to run the intake and indexer backward
+        new JoystickButton(operator, Button.kA.value)
+                .onTrue(intake.runWheelsBackward())
+                .onFalse(intake.stopWheels());
     }
 
     /** Configures the named commands used in path planner */
@@ -189,31 +195,36 @@ public class RobotContainer {
                 Commands.sequence(
                         Commands.parallel(
                                 new RunIntake(intake, indexer, arm, wrist, noteSensor)),
-                        new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_CENTER, noteSensor, false)));
+                        new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_CENTER,
+                                noteSensor, false)));
 
         NamedCommands.registerCommand("prepIntakeSide",
                 Commands.sequence(
                         Commands.parallel(
                                 new RunIntake(intake, indexer, arm, wrist, noteSensor)),
-                        new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_SIDE, noteSensor, false)));
+                        new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_SIDE,
+                                noteSensor, false)));
 
         NamedCommands.registerCommand("prepScoreCenter",
-                new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_CENTER, noteSensor, true));
+                new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_CENTER, noteSensor,
+                        true));
 
         NamedCommands.registerCommand("prepScoreSide",
                 new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_SIDE, noteSensor, true));
 
-        NamedCommands.registerCommand("fireShooter", new FireShooter(indexer, shooter));
+        NamedCommands.registerCommand("fireShooter", new FireShooter(indexer, shooter, noteSensor));
     }
 
     /** Use this to pass the autonomous command to the main {@link Robot} class. */
     public Command getAutonomousCommand() {
-        return new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
-                noteSensor,
-                AutoRoutine.TWO_CENTER);
+        /*
+         * return new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
+         * noteSensor,
+         * AutoRoutine.TWO_CENTER);
+         */
 
         // TODO: Test auto chooser - might be responsible for the intake not running
-        // return autoChooser.getSelected();
+        return autoChooser.getSelected();
     }
 
     public static enum AutoCommands {
