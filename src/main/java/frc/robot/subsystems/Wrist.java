@@ -27,17 +27,17 @@ public class Wrist extends PIDSubsystemBase {
         addLimitSwitch(0, DIOConfig.WRIST_LIMIT_SWITCH, false, LimitSwitchSide.NEGATIVE);
     }
 
-    /** Sets the height state of the climber */
+    /** Sets the rotation state of the wrist. */
     public Command setTargetState(WristState state) {
         return Commands.runOnce(() -> setTargetRotation(state.getPosition()));
     }
 
-    /** Sets the rotation state to 'STOW' */
+    /** Sets the wrist to the STOW state. */
     public Command stow() {
         return setTargetState(WristState.STOW);
     }
 
-    /** Sets the target rotation, then waits until it gets to that rotation */
+    /** Sets the target rotation, then waits until it gets to that rotation. */
     public Command goToState(WristState state) {
         return Commands.parallel(setTargetState(state), Commands.waitUntil(
                 () -> Math.abs(getCurrentRotation() - state.getPosition()) < WristConfig.POSITION_TOLERANCE));
