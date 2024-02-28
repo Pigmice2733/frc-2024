@@ -4,38 +4,31 @@
 
 package frc.robot.commands.manual;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.IndexerConfig;
-import frc.robot.Constants.IntakeConfig;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.AutoConfig;
+import frc.robot.commands.manual.MoveKobraToPosition.KobraState;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.NoteSensor;
+import frc.robot.subsystems.Wrist;
 
-public class RunIntake extends Command {
-  private final Intake intake;
-  // private final Indexer indexer;
+public class RunIntake extends SequentialCommandGroup {
+    public RunIntake(Intake intake, Indexer indexer, Arm arm, Wrist wrist, NoteSensor noteSensor) {
+        addCommands(
+                // Stow kobra, keeping intake down
+                new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW, noteSensor, false),
 
-  public RunIntake(Intake intake/* , Indexer indexer */) {
-    this.intake = intake;
-    // this.indexer = indexer;
+                // Start the intake + indexer and wait for a note in the indexer
+                Commands.parallel(intake.runWheelsForward(), indexer.indexForward(), noteSensor.waitForNoteInIndexer()),
 
-    addRequirements(intake/* , indexer */);
-  }
+                // TODO: test this after the next beam break is mounted
+                // (REMOVE EXTRA INDEX TIME)
+                // noteSensor.waitForNoteInShooter(),
 
-  @Override
-  public void initialize() {
-    intake.outputToMotor(IntakeConfig.WHEELS_SPEED);
-    // indexer.outputToMotor(IndexerConfig.DEFAULT_SPEED); TODO
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    intake.outputToMotor(0);
-    // indexer.outputToMotor(0); TODO
-  }
-
-  @Override
-  public boolean isFinished() {
-    // TODO: note sensor
-    return false;
-  }
+                // Wait a little longer, then stop all the wheels
+                Commands.waitSeconds(AutoConfig.EXTRA_INDEX_TIME), intake.stopWheels(), indexer.stopIndexer());
+        addRequirements(indexer);
+    }
 }

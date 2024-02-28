@@ -27,17 +27,19 @@ public class Intake extends PIDSubsystemBase {
     public Intake() {
         super(new CANSparkMax(CANConfig.INTAKE_PIVOT, MotorType.kBrushless), IntakeConfig.P, IntakeConfig.I,
                 IntakeConfig.D, new Constraints(IntakeConfig.MAX_VELOCITY, IntakeConfig.MAX_ACCELERATION), false,
-                IntakeConfig.MOTOR_POSITION_CONVERSION, 50, Constants.INTAKE_TAB, true, false);
+                IntakeConfig.MOTOR_POSITION_CONVERSION, 50, Constants.INTAKE_TAB, false, false);
 
         wheelsMotor.restoreFactoryDefaults();
         wheelsMotor.setInverted(true);
-        wheelsMotor.setSmartCurrentLimit(80);
+        wheelsMotor.setSmartCurrentLimit(60);
 
         ShuffleboardHelper.addOutput("Wheel Motor Output", Constants.INTAKE_TAB, () -> wheelsMotor.get());
 
-        addSoftwareStop(-8, 0);
+        addSoftwareStop(-115, 5);
 
-        addLimitSwitch(0, DIOConfig.INTAKE_LIMIT_SWITCH, false, LimitSwitchSide.NEGATIVE);
+        addLimitSwitch(0, DIOConfig.INTAKE_LIMIT_SWITCH, true, LimitSwitchSide.POSITIVE);
+
+        setMaxAllowedOutput(0.3);
     }
 
     /**
@@ -71,7 +73,7 @@ public class Intake extends PIDSubsystemBase {
         return Commands.runOnce(() -> setTargetRotation(state.getPosition()));
     }
 
-    /** Sets the rotation state to 'STOW' */
+    /** Sets the intake pivot state to 'STOW' */
     public Command stow() {
         return setTargetState(IntakeState.STOW);
     }
@@ -79,6 +81,16 @@ public class Intake extends PIDSubsystemBase {
     /** Sets the target rotation, then waits until it gets to that rotation */
     public Command goToState(IntakeState state) {
         return Commands.parallel(setTargetState(state), Commands.waitUntil(
-                () -> Math.abs(getCurrentRotation() - state.getPosition()) < IntakeConfig.POSITION_TOLERANCE));
+                () -> atState(state)));
+    }
+
+    /** @return true if the intake pivot is at a certain state */
+    public boolean atState(IntakeState state) {
+        return Math.abs(getCurrentRotation() - state.getPosition()) < IntakeConfig.POSITION_TOLERANCE;
+    }
+
+    /** Waits until the intake is at a state, without commanding it to go there */
+    public Command waitForState(IntakeState state) {
+        return Commands.waitUntil(() -> atState(state));
     }
 }

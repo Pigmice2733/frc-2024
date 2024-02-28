@@ -8,14 +8,13 @@ package frc.robot.commands.semi_auto;
 // import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.AutoConfig;
-import frc.robot.Constants.AutoConfig.Locations;
+import frc.robot.commands.manual.MoveKobraToPosition;
+import frc.robot.commands.manual.MoveKobraToPosition.KobraState;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.NoteSensor;
 import frc.robot.subsystems.Wrist;
 
 public class Climb extends SequentialCommandGroup {
@@ -24,12 +23,12 @@ public class Climb extends SequentialCommandGroup {
      * for other chains.
      */
     public Climb(/* SwerveDrivetrain drivetrain, */ Pathfinder pathfinder, Arm arm, Wrist wrist, Climber climber,
-            Intake intake) {
+            Intake intake, NoteSensor noteSensor) {
         addCommands(
                 // Pathfind to the chain and stop in front of it
                 // new PathfindToPointSwerve(drivetrain, pathfinder, Locations.CLIMBING_LEFT),
                 // Stow all other subsystems
-                new Stow(intake, arm, wrist)
+                new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW, noteSensor, true)
         // Raise climber TODO
         // climber.goToState(ClimberState.UP),
         // Drive to under the chain

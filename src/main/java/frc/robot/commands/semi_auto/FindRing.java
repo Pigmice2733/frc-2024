@@ -8,12 +8,12 @@ package frc.robot.commands.semi_auto;
 // import com.pigmice.frc.lib.drivetrain.swerve.commands.pathfinder.PathfindToPointSwerve;
 import com.pigmice.frc.lib.pathfinder.Pathfinder;
 
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.AutoConfig.Locations;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NoteSensor;
+import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.vision.Vision;
 
 public class FindRing extends SequentialCommandGroup {
@@ -21,7 +21,7 @@ public class FindRing extends SequentialCommandGroup {
      * Searches for a ring on the floor and picks it up.
      */
     public FindRing(/* SwerveDrivetrain drivetrain, */Pathfinder pathfinder, Intake intake, Indexer indexer,
-            NoteSensor noteSensor, Vision vision) {
+            Arm arm, Wrist wrist, NoteSensor noteSensor, Vision vision) {
 
         addCommands(
                 // Search for a ring (maybe pathfind to a central location)
@@ -33,8 +33,8 @@ public class FindRing extends SequentialCommandGroup {
                 // Once a ring is spotted, drive in front of it
                 // TODO
                 // Pick the ring up
-                new IntakeFromGround(intake, indexer, noteSensor));
+                new IntakeFromGround(intake, indexer, arm, wrist, noteSensor));
 
-        addRequirements(/* TODO drivetrain, */intake, indexer, noteSensor);
+        addRequirements(/* TODO drivetrain, */intake, indexer, arm, wrist, noteSensor);
     }
 }

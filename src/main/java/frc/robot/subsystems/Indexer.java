@@ -16,8 +16,8 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.IndexerConfig;
 
 public class Indexer extends SubsystemBase {
-    private final CANSparkMax leftMotor = new CANSparkMax(CANConfig.TOP_INDEXER, MotorType.kBrushless);
-    private final CANSparkMax rightMotor = new CANSparkMax(CANConfig.TOP_INDEXER, MotorType.kBrushless);
+    private final CANSparkMax topMotor = new CANSparkMax(CANConfig.TOP_INDEXER, MotorType.kBrushless);
+    private final CANSparkMax bottomMotor = new CANSparkMax(CANConfig.BOTTOM_INDEXER, MotorType.kBrushless);
 
     /**
      * Shoots notes out of one end into the speaker and dumps them out of the other
@@ -25,35 +25,39 @@ public class Indexer extends SubsystemBase {
      * Intakes from the source into the speaker-shooting end.
      */
     public Indexer() {
-        leftMotor.restoreFactoryDefaults();
-        leftMotor.setInverted(false);
-        leftMotor.setSmartCurrentLimit(40);
+        topMotor.restoreFactoryDefaults();
+        topMotor.setInverted(false);
+        topMotor.setSmartCurrentLimit(30);
 
-        rightMotor.restoreFactoryDefaults();
-        rightMotor.setInverted(false);
-        rightMotor.setSmartCurrentLimit(40);
+        bottomMotor.restoreFactoryDefaults();
+        bottomMotor.setInverted(false);
+        bottomMotor.setSmartCurrentLimit(30);
 
-        rightMotor.follow(leftMotor);
+        bottomMotor.follow(topMotor);
 
-        ShuffleboardHelper.addOutput("Motor Output", Constants.INDEXER_TAB, () -> leftMotor.get());
-
-        ShuffleboardHelper.addInput("Set Speed", Constants.SHOOTER_TAB,
-                (output) -> outputToMotor((double) output), 0);
+        ShuffleboardHelper.addOutput("Motor Output", Constants.INDEXER_TAB, () -> topMotor.get());
     }
 
     public void outputToMotor(double output) {
-        leftMotor.set(output);
+        topMotor.set(output);
     }
 
+    /** Spins the indexer at full power for shooting */
+    public Command runForShooting() {
+        return Commands.runOnce(() -> outputToMotor(IndexerConfig.SHOOTING_SPEED));
+    }
+
+    /** Spins the indexer slowly for indexing */
     public Command indexForward() {
         return Commands.runOnce(() -> outputToMotor(IndexerConfig.DEFAULT_SPEED));
     }
 
-    /** Intake into the shooter box, as long as no note is being carried. */
+    /** Runs the indexer backward for amp scoring */
     public Command indexBackward() {
         return Commands.runOnce(() -> outputToMotor(IndexerConfig.BACKWARD_SPEED));
     }
 
+    /** Completely stops the indexer wheels */
     public Command stopIndexer() {
         return Commands.runOnce(() -> outputToMotor(0));
     }

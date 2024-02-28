@@ -81,13 +81,12 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        m_robotContainer.onEnable();
 
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         }
-
-        m_robotContainer.onEnable();
     }
 
     /** This function is called periodically during autonomous. */
@@ -106,8 +105,7 @@ public class Robot extends TimedRobot {
         }
 
         m_robotContainer.onEnable();
-
-        // m_robotContainer.turret.resetRotationController();
+        m_robotContainer.teleopEnable();
     }
 
     /** This function is called periodically during operator control. */

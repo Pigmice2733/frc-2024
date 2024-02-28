@@ -11,7 +11,6 @@ import com.pigmice.frc.lib.pathfinder.Pathfinder;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmConfig.ArmState;
-import frc.robot.Constants.AutoConfig.Locations;
 import frc.robot.Constants.IntakeConfig.IntakeState;
 import frc.robot.Constants.WristConfig.WristState;
 import frc.robot.subsystems.Arm;
@@ -37,7 +36,7 @@ public class ScoreAmp extends SequentialCommandGroup {
                 // Push the note out
                 indexer.indexBackward(),
                 // Wait until note is out
-                noteSensor.waitForNoNote(),
+                // TODO noteSensor.waitForNoNote(),
                 // Stop running the indexer
                 indexer.stopIndexer());
 

@@ -72,18 +72,17 @@ public final class Constants {
     }
 
     public static final class DIOConfig {
-        public static final int ARM_LIMIT_SWITCH = 0;
-        public static final int INTAKE_LIMIT_SWITCH = 1;
-        public static final int WRIST_LIMIT_SWITCH = 2;
-        public static final int INTAKE_BEAM_BREAK = 3;
-        public static final int INDEXER_BEAM_BREAK = 4;
-        public static final int SHOOTER_BEAM_BREAK = 5;
+        public static final int ARM_LIMIT_SWITCH = 8;
+        public static final int INTAKE_LIMIT_SWITCH = 9;
+        public static final int INTAKE_BEAM_BREAK = 0;
+        public static final int INDEXER_BEAM_BREAK = 2;
+        public static final int SHOOTER_BEAM_BREAK = 1;
     }
 
     public final static class DrivetrainConfig {
         public static final double MAX_DRIVE_SPEED = 2; // max meters / second
         public static final double MAX_TURN_SPEED = 2; // max radians / second
-        public static final double SLOWMODE_MULTIPLIER = 0.5;
+        public static final double SLOWMODE_MULTIPLIER = 0.3;
 
         // distance from the center of one wheel to another
         public static final double TRACK_WIDTH_METERS = 0.5842;
@@ -97,12 +96,12 @@ public final class Constants {
 
         // From what I have seen, it is common to only use a P value in path
         // following
-        private static final PIDConstants PATH_DRIVE_PID = new PIDConstants(5.0,
+        private static final PIDConstants PATH_DRIVE_PID = new PIDConstants(1.2,
                 0, 0);
-        private static final PIDConstants PATH_TURN_PID = new PIDConstants(5.0,
+        private static final PIDConstants PATH_TURN_PID = new PIDConstants(1.2,
                 0, 0);
 
-        public static final double MAX_PATH_DRIVE_SPEED = 1;
+        public static final double MAX_PATH_MODULE_SPEED = 6;
         // public static final double MAX_PATH_TURN_SPEED = 1;
 
         // Offset from chassis center that the robot will rotate about
@@ -110,7 +109,7 @@ public final class Constants {
         // Translation2d(0, 0);
 
         public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
-                PATH_DRIVE_PID, PATH_TURN_PID, MAX_PATH_DRIVE_SPEED,
+                PATH_DRIVE_PID, PATH_TURN_PID, MAX_PATH_MODULE_SPEED,
                 DRIVE_BASE_RADIUS, new ReplanningConfig());
     }
 
@@ -119,18 +118,27 @@ public final class Constants {
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 200;
-        public static final double MAX_VELOCITY = 180;
+        public static final double MAX_ACCELERATION = 460;
+        public static final double MAX_VELOCITY = 300;
 
-        public static final double MOTOR_POSITION_CONVERSION = (1 / 165) * 1;
+        public static final double MOTOR_POSITION_CONVERSION = (1 / 165.0) * 360;
 
         public static final double POSITION_TOLERANCE = 3;
 
+        public static final double LENGTH_INCHES = 30;
+
+        // The distance from the arm pivot to the robots frame in inches
+        public static final double PIVOT_TO_FRAME_INCHES = 4;
+
         public static enum ArmState {
             STOW(0),
-            AMP(45),
-            SPEAKER(30),
-            SOURCE(30);
+            AMP(100),
+            SPEAKER_CENTER(68),
+            SPEAKER_SIDE(63),
+            SOURCE(60),
+            TRAP(45),
+            WRIST_ROTATION(60),
+            GRAB_FROM_CHASSIS(38);
 
             private double position;
 
@@ -145,29 +153,32 @@ public final class Constants {
     }
 
     public final static class ClimberConfig {
-        public static final double extensionSpeed = -0.5;
-        public static final double climbingSpeed = 0.5;
-
+        public static final double climbingSpeed = 0.8;
         public static final double downPosition = -100;
     }
 
     public final static class WristConfig {
-        public static final double P = 0.035;
+        public static final double P = 0.045;
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 300;
-        public static final double MAX_VELOCITY = 400;
+        public static final double MAX_ACCELERATION = 700;
+        public static final double MAX_VELOCITY = 500;
 
         public static final double MOTOR_POSITION_CONVERSION = (1 / 68.75) * 360;
 
         public static final double POSITION_TOLERANCE = 3;
 
+        public static final double LENGTH_INCHES = 14;
+
         public static enum WristState {
             STOW(0),
-            AMP(30),
-            SPEAKER(90),
-            SOURCE(45);
+            AMP(140),
+            SPEAKER_CENTER(64),
+            SPEAKER_SIDE(63),
+            TRAP(0),
+            SOURCE(0),
+            GRAB_FROM_CHASSIS(259);
 
             private double position;
 
@@ -182,22 +193,22 @@ public final class Constants {
     }
 
     public final static class IntakeConfig {
-        public static final double P = 0;
+        public static final double P = 0.015;
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 1;
-        public static final double MAX_VELOCITY = 1;
+        public static final double MAX_ACCELERATION = 220;
+        public static final double MAX_VELOCITY = 150;
 
-        public static final double MOTOR_POSITION_CONVERSION = 1;
+        public static final double MOTOR_POSITION_CONVERSION = 10.5;
 
-        public static final double POSITION_TOLERANCE = 1;
+        public static final double POSITION_TOLERANCE = 3;
 
-        public static final double WHEELS_SPEED = 0.6;
+        public static final double WHEELS_SPEED = 0.75;
 
         public static enum IntakeState {
             STOW(0),
-            DOWN(-8);
+            DOWN(-115);
 
             private double position;
 
@@ -212,13 +223,14 @@ public final class Constants {
     }
 
     public final static class ShooterConfig {
-        public static final double DEFAULT_SPEED = 0.3;
-        public static final double BACKWARD_SPEED = -0.3;
+        public static final double DEFAULT_SPEED = 1;
+        public static final double BACKWARD_SPEED = -0.4;
     }
 
     public final static class IndexerConfig {
-        public static final double DEFAULT_SPEED = 0.3;
-        public static final double BACKWARD_SPEED = -0.3;
+        public static final double DEFAULT_SPEED = 0.5;
+        public static final double BACKWARD_SPEED = -0.5;
+        public static final double SHOOTING_SPEED = 1;
     }
 
     public final static class VisionConfig {
@@ -227,15 +239,16 @@ public final class Constants {
 
     /** Details for auto such as timings and speeds. All times in seconds. */
     public static class AutoConfig {
-        public final static double INTAKE_MOVE_TIME = 3;
         public final static double INTAKE_FEED_TIME = 1;
-        public final static double SHOOTER_SPINUP_TIME = 3;
+        public final static double SHOOTER_SPINUP_TIME = 0.5;
         public final static double CLIMB_DRIVE_TIME = 1;
         public final static double CLIMB_DRIVE_SPEED = 0.5;
+        public final static double BACKUP_NOTE_TIME = 0.125;
+        public final static double EXTRA_INDEX_TIME = 0.25;
 
         public static class Locations {
             // Start of the "lineup" path for these positions
-            public final static Pose2d AMP_LINEUP = new Pose2d(1.82, 6.29,
+            public final static Pose2d AMP_LINEUP = new Pose2d(1.83, 7.4,
                     Rotation2d.fromDegrees(90));
             public final static Pose2d SPEAKER_LINEUP = new Pose2d(2.36, 5.56,
                     Rotation2d.fromDegrees(180));
@@ -243,13 +256,6 @@ public final class Constants {
                     Rotation2d.fromDegrees(-120));
             public final static Pose2d CLIMBING_LINEUP = new Pose2d(7.37, 4.03,
                     Rotation2d.fromDegrees(180));
-
-            // TODO: do we want lineup commands for all 3 climbing spots?
-            // public final static Pose2d CLIMBING_RIGHT = new Pose2d(0, 0, new
-            // Rotation2d());
-            // public final static Pose2d CLIMBING_BACK = new Pose2d(0, 0, new
-            // Rotation2d());
-
             public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(10.2, 4,
                     new Rotation2d(0));
         }

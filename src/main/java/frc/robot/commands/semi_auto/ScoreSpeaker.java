@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
-import frc.robot.Constants.AutoConfig.Locations;
 import frc.robot.Constants.IntakeConfig.IntakeState;
 import frc.robot.Constants.WristConfig.WristState;
 import frc.robot.subsystems.Arm;
@@ -41,12 +40,12 @@ public class ScoreSpeaker extends SequentialCommandGroup {
                         Commands.sequence(
                                 intake.goToState(IntakeState.STOW),
                                 Commands.parallel(
-                                        wrist.goToState(WristState.SPEAKER),
-                                        arm.goToState(ArmState.SPEAKER)))),
+                                        wrist.goToState(WristState.SPEAKER_CENTER),
+                                        arm.goToState(ArmState.SPEAKER_CENTER)))),
                 // Push the note forward to shoot
                 indexer.indexForward(),
                 // Wait until the note is out
-                noteSensor.waitForNoNote(),
+                // TODO noteSensor.waitForNoNote(),
                 // Stop spinning the indexer and shooter wheels
                 Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
 

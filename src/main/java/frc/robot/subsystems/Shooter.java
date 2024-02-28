@@ -16,34 +16,28 @@ import frc.robot.Constants.CANConfig;
 import frc.robot.Constants.ShooterConfig;
 
 public class Shooter extends SubsystemBase {
-    private final CANSparkMax leftMotor;
-    private final CANSparkMax rightMotor;
+    private final CANSparkMax topMotor;
+    private final CANSparkMax bottomMotor;
 
-    /**
-     * Shoots notes out of one end into the speaker and dumps them out of the other
-     * end into the amp. Intakes from the source into the speaker-shooting end.
-     */
+    /** Controls the flywheels on the far end of the box for shooting */
     public Shooter() {
-        leftMotor = new CANSparkMax(CANConfig.TOP_SHOOTER, MotorType.kBrushed);
-        leftMotor.restoreFactoryDefaults();
-        leftMotor.setInverted(false);
-        leftMotor.setSmartCurrentLimit(40);
+        topMotor = new CANSparkMax(CANConfig.TOP_SHOOTER, MotorType.kBrushed);
+        topMotor.restoreFactoryDefaults();
+        topMotor.setInverted(true);
+        topMotor.setSmartCurrentLimit(100);
 
-        rightMotor = new CANSparkMax(CANConfig.BOTTOM_SHOOTER, MotorType.kBrushed);
-        rightMotor.restoreFactoryDefaults();
-        rightMotor.setInverted(true);
-        rightMotor.setSmartCurrentLimit(40);
-        rightMotor.follow(leftMotor);
+        bottomMotor = new CANSparkMax(CANConfig.BOTTOM_SHOOTER, MotorType.kBrushed);
+        bottomMotor.restoreFactoryDefaults();
+        bottomMotor.setInverted(true);
+        bottomMotor.setSmartCurrentLimit(100);
+        bottomMotor.follow(topMotor);
 
-        ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, leftMotor::get);
-
-        ShuffleboardHelper.addInput("Set Speed", Constants.SHOOTER_TAB,
-                (output) -> outputToFlywheels((double) output), 0);
+        ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> topMotor.get());
     }
 
     /* Sets the output to the flywheels as a percent. */
     private void outputToFlywheels(double output) {
-        leftMotor.set(output);
+        topMotor.set(output);
     }
 
     /* Spin the flywheels in the shooting direction. */
