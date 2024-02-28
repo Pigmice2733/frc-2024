@@ -19,15 +19,14 @@ public class RunIntake extends SequentialCommandGroup {
                 // Stow kobra, keeping intake down
                 new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW, noteSensor, false),
 
-                // Start the intake + indexer and wait for a note in the indexer
-                Commands.parallel(intake.runWheelsForward(), indexer.indexForward(), noteSensor.waitForNoteInIndexer()),
+                // Start the intake + indexer
+                Commands.parallel(intake.runWheelsForward(), indexer.indexForward()),
 
-                // TODO: test this after the next beam break is mounted
-                // (REMOVE EXTRA INDEX TIME)
+                // Wait for a note in the shooter
                 noteSensor.waitForNoteInShooter(),
 
-                // Wait a little longer, then stop all the wheels
-                /* Commands.waitSeconds(AutoConfig.EXTRA_INDEX_TIME), */ intake.stopWheels(), indexer.stopIndexer());
+                // Stop all the wheels
+                intake.stopWheels(), indexer.stopIndexer());
         addRequirements(indexer);
     }
 }
