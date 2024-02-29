@@ -20,6 +20,7 @@ import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 
 import frc.robot.commands.autonomous.RunAutoRoutine;
 import frc.robot.commands.autonomous.RunAutoRoutine.AutoRoutine;
+import frc.robot.commands.autonomous.subcommands.ScoreFromStartAuto;
 import frc.robot.commands.drivetrain.DriveWithJoysticks;
 import frc.robot.commands.manual.CancelIntake;
 import frc.robot.commands.manual.FireShooter;
@@ -118,17 +119,31 @@ public class RobotContainer {
         // Default to doing nothing
         autoChooser.setDefaultOption("None", Commands.none());
 
+        autoChooser.addOption("Just Shoot Center", new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true,
+                KobraState.SPEAKER_CENTER, noteSensor));
+
+        autoChooser.addOption("Just Shoot Side", new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true,
+                KobraState.SPEAKER_SIDE, noteSensor));
+
+        autoChooser.addOption("One Close", new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
+                noteSensor, AutoRoutine.ONE_CLOSE));
+
+        autoChooser.addOption("One Center", new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
+                noteSensor, AutoRoutine.ONE_CENTER));
+
+        autoChooser.addOption("One Far", new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
+                noteSensor, AutoRoutine.ONE_FAR));
+
         autoChooser.addOption("Two Center", new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
                 noteSensor, AutoRoutine.TWO_CENTER));
 
         autoChooser.addOption("Two Close", new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
                 noteSensor, AutoRoutine.TWO_CLOSE));
 
-        autoChooser.addOption("Two Far",
-                new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter, noteSensor,
-                        AutoRoutine.TWO_FAR));
+        autoChooser.addOption("Two Far", new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
+                noteSensor, AutoRoutine.TWO_FAR));
 
-        Constants.DRIVER_TAB.add("Auto Command", autoChooser);
+        Constants.DRIVER_TAB.add("Auto Command", autoChooser).withPosition(0, 0);
     }
 
     /** Use this method to define your button->command mappings. */
@@ -147,12 +162,13 @@ public class RobotContainer {
          */
 
         // RIGHT BUMPER - hold to fire the shooter (amp or speaker)
-        new JoystickButton(operator, Button.kRightBumper.value).whileTrue(new FireShooter(indexer, shooter, noteSensor))
+        new JoystickButton(operator, Button.kRightBumper.value)
+                .whileTrue(new FireShooter(indexer, shooter, noteSensor))
                 .onFalse(Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
 
         // B - press to toggle the intake
         new JoystickButton(operator, Button.kB.value).onTrue(
-                new RunIntake(intake, indexer, arm, wrist, noteSensor));
+                new RunIntake(intake, indexer, arm, wrist, shooter, noteSensor));
 
         // TODO: make sure this isn't causing the intake cycle to break
         new JoystickButton(operator, Button.kX.value).onTrue(new CancelIntake(intake, indexer));
@@ -166,21 +182,24 @@ public class RobotContainer {
 
         // POV UP - press for center speaker position
         new POVButton(operator, 0)
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_CENTER,
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_CENTER,
                         noteSensor, false));
 
         // POV LEFT - press for side speaker position
         new POVButton(operator, 270) // left
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_SIDE, noteSensor,
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE,
+                        noteSensor,
                         false));
 
         // POV RIGHT - press for amp position
         new POVButton(operator, 90) // right
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.AMP, noteSensor, false));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.AMP, noteSensor,
+                        false));
 
         // POV DOWN - press for stow position
         new POVButton(operator, 180) // down
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW, noteSensor, false));
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW, noteSensor,
+                        false));
 
         // A - hold to run the intake and indexer backward
         new JoystickButton(operator, Button.kA.value)
@@ -194,23 +213,29 @@ public class RobotContainer {
         NamedCommands.registerCommand("prepIntakeCenter",
                 Commands.sequence(
                         Commands.parallel(
-                                new RunIntake(intake, indexer, arm, wrist, noteSensor)),
-                        new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_CENTER,
+                                new RunIntake(intake, indexer, arm, wrist, shooter,
+                                        noteSensor)),
+                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_CENTER,
                                 noteSensor, false)));
 
         NamedCommands.registerCommand("prepIntakeSide",
                 Commands.sequence(
                         Commands.parallel(
-                                new RunIntake(intake, indexer, arm, wrist, noteSensor)),
-                        new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_SIDE,
+                                new RunIntake(intake, indexer, arm, wrist, shooter,
+                                        noteSensor)),
+                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE,
                                 noteSensor, false)));
 
+        NamedCommands.registerCommand("prepIntake",
+                new RunIntake(intake, indexer, arm, wrist, shooter, noteSensor));
+
         NamedCommands.registerCommand("prepScoreCenter",
-                new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_CENTER, noteSensor,
+                new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_CENTER, noteSensor,
                         true));
 
         NamedCommands.registerCommand("prepScoreSide",
-                new MoveKobraToPosition(arm, wrist, intake, KobraState.SPEAKER_SIDE, noteSensor, true));
+                new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE, noteSensor,
+                        true));
 
         NamedCommands.registerCommand("fireShooter", new FireShooter(indexer, shooter, noteSensor));
     }

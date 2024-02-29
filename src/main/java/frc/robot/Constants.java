@@ -118,7 +118,7 @@ public final class Constants {
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 460;
+        public static final double MAX_ACCELERATION = 300;
         public static final double MAX_VELOCITY = 300;
 
         public static final double MOTOR_POSITION_CONVERSION = (1 / 165.0) * 360;
@@ -154,7 +154,8 @@ public final class Constants {
 
     public final static class ClimberConfig {
         public static final double climbingSpeed = -0.8;
-        public static final double downPosition = -100;
+        public static final double downPosition = -29;
+        public static final double upPosition = 120;
     }
 
     public final static class WristConfig {

@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.8221644973960404,
-        "y": 6.651755158003897
+        "x": 0.6699236223008809,
+        "y": 4.391563704668065
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8221644973960403,
-        "y": 6.651755158003897
+        "x": 0.6699236223008809,
+        "y": 3.9582627524741496
       },
       "isLocked": false,
-      "linkedName": "speakerClose"
+      "linkedName": "speakerFar"
     },
     {
       "anchor": {
-        "x": 2.976958421819838,
-        "y": 6.76655098038276
+        "x": 1.3374413054104268,
+        "y": 1.5809629336805036
       },
       "prevControl": {
-        "x": 1.976958421819838,
-        "y": 6.76655098038276
+        "x": 0.6159169072663073,
+        "y": 2.3024873318246235
+      },
+      "nextControl": {
+        "x": 1.852718113424813,
+        "y": 1.0656861256661172
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.0120909314571827,
+        "y": 0.7846260485673593
+      },
+      "prevControl": {
+        "x": 2.461681613805452,
+        "y": 0.749493538930016
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,25 +46,7 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "prepIntake"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.0,
     "maxAcceleration": 2.0,
@@ -63,7 +61,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 60.0,
+    "rotation": -60.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

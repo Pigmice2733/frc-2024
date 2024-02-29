@@ -20,9 +20,12 @@ public class NoteSensor extends SubsystemBase {
         indexerBeamBreak = new DigitalInput(DIOConfig.INDEXER_BEAM_BREAK);
         shooterBeamBreak = new DigitalInput(DIOConfig.SHOOTER_BEAM_BREAK);
 
-        ShuffleboardHelper.addOutput("Intake Break", Constants.DRIVER_TAB, () -> noteInIntake());
-        ShuffleboardHelper.addOutput("Indexer Break", Constants.DRIVER_TAB, () -> noteInIndexer());
-        ShuffleboardHelper.addOutput("Shooter Break", Constants.DRIVER_TAB, () -> noteInShooter());
+        ShuffleboardHelper.addOutput("Intake Break", Constants.DRIVER_TAB, () -> noteInIntake()).withPosition(0, 1)
+                .asNotDebug();
+        ShuffleboardHelper.addOutput("Indexer Break", Constants.DRIVER_TAB, () -> noteInIndexer()).withPosition(0, 2)
+                .asNotDebug();
+        ShuffleboardHelper.addOutput("Shooter Break", Constants.DRIVER_TAB, () -> noteInShooter()).withPosition(1, 0)
+                .withSize(9, 4).asNotDebug();
     }
 
     /** Ends as soon as a note is detected in the intake */

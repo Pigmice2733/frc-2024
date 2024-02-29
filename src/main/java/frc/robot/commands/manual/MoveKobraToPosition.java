@@ -5,20 +5,23 @@
 package frc.robot.commands.manual;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmConfig;
 import frc.robot.Constants.ArmConfig.ArmState;
 import frc.robot.Constants.IntakeConfig.IntakeState;
 import frc.robot.Constants.WristConfig.WristState;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NoteSensor;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 
 public class MoveKobraToPosition extends SequentialCommandGroup {
-    public MoveKobraToPosition(Arm arm, Wrist wrist, Intake intake, KobraState state, NoteSensor noteSensor,
+    public MoveKobraToPosition(Arm arm, Wrist wrist, Intake intake, Indexer indexer, Shooter shooter, KobraState state,
+            NoteSensor noteSensor,
             boolean stowIntake) {
+        addCommands(intake.stopWheels(), shooter.stopFlywheels());
         /*
          * addCommands(new InstantCommand(() -> {
          * if (state != KobraState.STOW && !noteSensor.noteInIndexer()) {
@@ -36,18 +39,24 @@ public class MoveKobraToPosition extends SequentialCommandGroup {
 
         // If the wrist can go out of frame, move the arm to the wrist rotation position
         addCommands(Commands.either(
-                arm.goToState(ArmState.WRIST_ROTATION),
+                Commands.parallel(arm.setTargetState(ArmState.WRIST_ROTATION), Commands.waitSeconds(0.05)),
                 Commands.none(),
                 () -> arm.getCurrentRotation() > (ArmState.WRIST_ROTATION.getPosition()
                         + ArmConfig.POSITION_TOLERANCE)));
 
         // Stow the wrist
-        addCommands(wrist.goToState(WristState.STOW));
+        // addCommands(wrist.goToState(WristState.STOW));
 
         // Move the the ending configuration
         switch (state) {
             case STOW:
-                addCommands(arm.goToState(ArmState.STOW)); // Stow the arm (wrist already stowed)
+                addCommands(Commands.parallel(wrist.setTargetState(WristState.STOW),
+                        Commands.sequence(Commands.waitSeconds(0.2),
+                                arm.goToState(ArmState.STOW)))); // Stow
+                // the
+                // arm
+                // (wrist
+                // already stowed)
                 break;
             case AMP:
                 addCommands(

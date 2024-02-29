@@ -11,13 +11,14 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NoteSensor;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 
 public class RunIntake extends SequentialCommandGroup {
-    public RunIntake(Intake intake, Indexer indexer, Arm arm, Wrist wrist, NoteSensor noteSensor) {
+    public RunIntake(Intake intake, Indexer indexer, Arm arm, Wrist wrist, Shooter shooter, NoteSensor noteSensor) {
         addCommands(
                 // Stow kobra, keeping intake down
-                new MoveKobraToPosition(arm, wrist, intake, KobraState.STOW, noteSensor, false),
+                new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW, noteSensor, false),
 
                 // Start the intake + indexer
                 Commands.parallel(intake.runWheelsForward(), indexer.indexForward()),

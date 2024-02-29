@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
+import com.pigmice.frc.lib.utils.Utils;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -12,6 +13,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CANConfig;
+import frc.robot.Constants.ClimberConfig;
 
 public class Climber extends SubsystemBase {
     private final CANSparkMax rightMotor;
@@ -21,15 +23,17 @@ public class Climber extends SubsystemBase {
     public Climber() {
         leftMotor = new CANSparkMax(CANConfig.LEFT_CLIMB, MotorType.kBrushless);
         leftMotor.restoreFactoryDefaults();
-        leftMotor.setInverted(true);
+        leftMotor.setInverted(false);
         leftMotor.setIdleMode(IdleMode.kBrake);
         leftMotor.setSmartCurrentLimit(40);
+        leftMotor.getEncoder().setPosition(0);
 
         rightMotor = new CANSparkMax(CANConfig.RIGHT_CLIMB, MotorType.kBrushless);
         rightMotor.restoreFactoryDefaults();
-        rightMotor.setInverted(true);
+        rightMotor.setInverted(false);
         rightMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setSmartCurrentLimit(40);
+        rightMotor.getEncoder().setPosition(0);
 
         ShuffleboardHelper.addOutput("Left Pos", Constants.CLIMBER_TAB, () -> getLeftPosition());
         ShuffleboardHelper.addOutput("Right Pos", Constants.CLIMBER_TAB, () -> getRightPosition());
@@ -44,25 +48,23 @@ public class Climber extends SubsystemBase {
         double rightOut = percent;
         double leftOut = percent;
 
-        // TODO: climber software stop
-        // if (applySoftwareStop) {
-        // leftOut = Utils.applySoftwareStop(getLeftPosition(), leftOut,
-        // ClimberConfig.downPosition, 0);
-        // rightOut = Utils.applySoftwareStop(getRightPosition(), rightOut,
-        // ClimberConfig.downPosition, 0);
-        // }
+        rightOut = -Utils.applySoftwareStop(getRightPosition(), -rightOut,
+                ClimberConfig.downPosition, ClimberConfig.upPosition);
 
-        leftMotor.set(rightOut);
-        rightMotor.set(leftOut);
+        leftOut = -Utils.applySoftwareStop(getLeftPosition(), -leftOut,
+                ClimberConfig.downPosition, ClimberConfig.upPosition);
+
+        leftMotor.set(leftOut);
+        rightMotor.set(rightOut);
     }
 
     /** @return the current encoder position */
     public double getLeftPosition() {
-        return leftMotor.getEncoder().getPosition();
+        return -leftMotor.getEncoder().getPosition();
     }
 
     /** @return the current encoder position */
     public double getRightPosition() {
-        return rightMotor.getEncoder().getPosition();
+        return -rightMotor.getEncoder().getPosition();
     }
 }

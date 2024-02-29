@@ -61,6 +61,6 @@ public class Controls {
         double leftTrigger = MathUtil.applyDeadband(operator.getLeftTriggerAxis(), threshold);
         double rightTrigger = MathUtil.applyDeadband(operator.getRightTriggerAxis(), threshold);
 
-        return (leftTrigger - rightTrigger) * ClimberConfig.climbingSpeed;
+        return (rightTrigger - leftTrigger) * ClimberConfig.climbingSpeed;
     }
 }

@@ -67,7 +67,30 @@ public class RunAutoRoutine extends SequentialCommandGroup {
                                 () -> drivetrain.getSwerveDrive().resetOdometry(
                                         PathPlannerPath.fromPathFile("autoOneClose")
                                                 .getPreviewStartingHolonomicPose())),
-                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoOneClose")));
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoOneClose")),
+                        Commands.parallel(intake.stopWheels(), indexer.stopIndexer()));
+                break;
+            case ONE_CENTER:
+                addCommands(
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true, KobraState.SPEAKER_CENTER,
+                                noteSensor),
+                        Commands.runOnce(
+                                () -> drivetrain.getSwerveDrive().resetOdometry(
+                                        PathPlannerPath.fromPathFile("autoOneCenter")
+                                                .getPreviewStartingHolonomicPose())),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoOneCenter")),
+                        Commands.parallel(intake.stopWheels(), indexer.stopIndexer()));
+                break;
+            case ONE_FAR:
+                addCommands(
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true, KobraState.SPEAKER_SIDE,
+                                noteSensor),
+                        Commands.runOnce(
+                                () -> drivetrain.getSwerveDrive().resetOdometry(
+                                        PathPlannerPath.fromPathFile("autoOneFar")
+                                                .getPreviewStartingHolonomicPose())),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoOneFar")),
+                        Commands.parallel(intake.stopWheels(), indexer.stopIndexer()));
                 break;
             default:
                 break;
@@ -82,8 +105,6 @@ public class RunAutoRoutine extends SequentialCommandGroup {
         ONE_CLOSE,
         ONE_CENTER,
         ONE_FAR,
-        ONE_CLOSE_LEAVE,
-        ONE_CENTER_LEAVE,
         ONE_FAR_LEAVE,
         TWO_CLOSE,
         TWO_CENTER,
