@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 
+import frc.robot.Constants.IntakeConfig.IntakeState;
 import frc.robot.commands.autonomous.RunAutoRoutine;
 import frc.robot.commands.autonomous.RunAutoRoutine.AutoRoutine;
 import frc.robot.commands.autonomous.subcommands.ScoreFromStartAuto;
@@ -119,11 +120,13 @@ public class RobotContainer {
         // Default to doing nothing
         autoChooser.setDefaultOption("None", Commands.none());
 
-        autoChooser.addOption("Just Shoot Center", new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true,
-                KobraState.SPEAKER_CENTER, noteSensor));
+        autoChooser.addOption("Just Shoot Center",
+                new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true,
+                        KobraState.SPEAKER_CENTER, noteSensor));
 
-        autoChooser.addOption("Just Shoot Side", new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true,
-                KobraState.SPEAKER_SIDE, noteSensor));
+        autoChooser.addOption("Just Shoot Side",
+                new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true,
+                        KobraState.SPEAKER_SIDE, noteSensor));
 
         autoChooser.addOption("One Close", new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
                 noteSensor, AutoRoutine.ONE_CLOSE));
@@ -170,8 +173,11 @@ public class RobotContainer {
         new JoystickButton(operator, Button.kB.value).onTrue(
                 new RunIntake(intake, indexer, arm, wrist, shooter, noteSensor));
 
-        // TODO: make sure this isn't causing the intake cycle to break
+        // X - cancel the intake cycle
         new JoystickButton(operator, Button.kX.value).onTrue(new CancelIntake(intake, indexer));
+
+        // Y - stow the intake
+        new JoystickButton(operator, Button.kY.value).onTrue(intake.setTargetState(IntakeState.STOW));
 
         // TODO: test this and see if the drive team likes it better
         // B - press to toggle in intake cycle command
@@ -182,23 +188,27 @@ public class RobotContainer {
 
         // POV UP - press for center speaker position
         new POVButton(operator, 0)
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_CENTER,
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter,
+                        KobraState.SPEAKER_CENTER,
                         noteSensor, false));
 
         // POV LEFT - press for side speaker position
         new POVButton(operator, 270) // left
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE,
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter,
+                        KobraState.SPEAKER_SIDE,
                         noteSensor,
                         false));
 
         // POV RIGHT - press for amp position
         new POVButton(operator, 90) // right
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.AMP, noteSensor,
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.AMP,
+                        noteSensor,
                         false));
 
         // POV DOWN - press for stow position
         new POVButton(operator, 180) // down
-                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW, noteSensor,
+                .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW,
+                        noteSensor,
                         false));
 
         // A - hold to run the intake and indexer backward
@@ -215,7 +225,8 @@ public class RobotContainer {
                         Commands.parallel(
                                 new RunIntake(intake, indexer, arm, wrist, shooter,
                                         noteSensor)),
-                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_CENTER,
+                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter,
+                                KobraState.SPEAKER_CENTER,
                                 noteSensor, false)));
 
         NamedCommands.registerCommand("prepIntakeSide",
@@ -223,18 +234,21 @@ public class RobotContainer {
                         Commands.parallel(
                                 new RunIntake(intake, indexer, arm, wrist, shooter,
                                         noteSensor)),
-                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE,
+                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter,
+                                KobraState.SPEAKER_SIDE,
                                 noteSensor, false)));
 
         NamedCommands.registerCommand("prepIntake",
                 new RunIntake(intake, indexer, arm, wrist, shooter, noteSensor));
 
         NamedCommands.registerCommand("prepScoreCenter",
-                new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_CENTER, noteSensor,
+                new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_CENTER,
+                        noteSensor,
                         true));
 
         NamedCommands.registerCommand("prepScoreSide",
-                new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE, noteSensor,
+                new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE,
+                        noteSensor,
                         true));
 
         NamedCommands.registerCommand("fireShooter", new FireShooter(indexer, shooter, noteSensor));
