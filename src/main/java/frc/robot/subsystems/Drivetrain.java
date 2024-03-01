@@ -104,7 +104,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         fieldWidget.setRobotPose(swerveDrive.getPose());
-        addVisionMeasurements();
+        // addVisionMeasurements();
     }
 
     /** Adds vision measurements to correct the odometry */
