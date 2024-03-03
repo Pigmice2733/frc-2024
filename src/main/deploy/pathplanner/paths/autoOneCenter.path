@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.422741136270286,
-        "y": 5.545747295712128
+        "x": 1.3584883107613055,
+        "y": 5.56
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.422741136270286,
-        "y": 5.545747295712128
+        "x": 2.3584883107613055,
+        "y": 5.56
       },
-      "isLocked": false,
-      "linkedName": "speakerCenter"
+      "isLocked": true,
+      "linkedName": "scoreSpeakerCenter"
     },
     {
       "anchor": {
@@ -41,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "prepIntake"
+                "name": null
               }
             }
           ]
@@ -61,7 +61,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "auto",
   "previewStartingState": {
     "rotation": 0.0,
     "velocity": 0

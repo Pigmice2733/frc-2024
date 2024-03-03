@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7401886415755699,
-        "y": 4.157346973752435
+        "x": 0.6792441553806527,
+        "y": 4.398375411623188
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.290597959227301,
-        "y": 4.028527771748839
+        "x": 1.2296534730323838,
+        "y": 4.269556209619592
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "scoreSpeakerFar"
     },
     {
       "anchor": {
@@ -227,7 +227,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "auto",
   "previewStartingState": {
     "rotation": 119.14807184571302,
     "velocity": 0

@@ -9,10 +9,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
@@ -240,6 +237,7 @@ public final class Constants {
 
     /** Details for auto such as timings and speeds. All times in seconds. */
     public static class AutoConfig {
+        // TODO: put all auto timings here, and sync between different commands
         public final static double INTAKE_FEED_TIME = 1;
         public final static double SHOOTER_SPINUP_TIME = 0.5;
         public final static double CLIMB_DRIVE_TIME = 1;
@@ -249,26 +247,30 @@ public final class Constants {
 
         public static class Locations {
             // Start of the "lineup" path for these positions
-            public final static Pose2d AMP_LINEUP = new Pose2d(1.83, 7.4,
-                    Rotation2d.fromDegrees(90));
-            public final static Pose2d SPEAKER_LINEUP = new Pose2d(2.36, 5.56,
-                    Rotation2d.fromDegrees(180));
-            public final static Pose2d SOURCE_LINEUP = new Pose2d(1.64, 1.83,
-                    Rotation2d.fromDegrees(-120));
-            public final static Pose2d CLIMBING_LINEUP = new Pose2d(7.37, 4.03,
-                    Rotation2d.fromDegrees(180));
-            public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(10.2, 4,
-                    new Rotation2d(0));
+            /*
+             * public final static Pose2d AMP_LINEUP = new Pose2d(1.83, 7.4,
+             * Rotation2d.fromDegrees(90));
+             * public final static Pose2d SPEAKER_LINEUP = new Pose2d(2.36, 5.56,
+             * Rotation2d.fromDegrees(180));
+             * public final static Pose2d SOURCE_LINEUP = new Pose2d(1.64, 1.83,
+             * Rotation2d.fromDegrees(-120));
+             * public final static Pose2d CLIMBING_LINEUP = new Pose2d(7.37, 4.03,
+             * Rotation2d.fromDegrees(180));
+             * public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(10.2, 4,
+             * new Rotation2d(0));
+             */
         }
     }
 
     public static class ControlBindings {
-        // TODO decide these with strategy / drive team
-        public final static int SCORE_AMP_BUTTON = Button.kX.value;
-        public final static int SCORE_SPEAKER_BUTTON = Button.kY.value;
-        public final static int INTAKE_GROUND_BUTTON = Button.kB.value;
-        public final static int INTAKE_SOURCE_BUTTON = Button.kB.value;
-        public final static int CLIMB_BUTTON = Button.kA.value;
-        public final static int STOW_BUTTON = Button.kB.value;
+        // TODO actually put the control binding here
+        /*
+         * public final static int SCORE_AMP_BUTTON = Button.kX.value;
+         * public final static int SCORE_SPEAKER_BUTTON = Button.kY.value;
+         * public final static int INTAKE_GROUND_BUTTON = Button.kB.value;
+         * public final static int INTAKE_SOURCE_BUTTON = Button.kB.value;
+         * public final static int CLIMB_BUTTON = Button.kA.value;
+         * public final static int STOW_BUTTON = Button.kB.value;
+         */
     }
 }
