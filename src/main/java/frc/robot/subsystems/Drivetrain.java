@@ -13,6 +13,7 @@ import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -58,7 +59,7 @@ public class Drivetrain extends SubsystemBase {
                 }, // Method that will drive the robot given
                    // ROBOT RELATIVE
                    // ChassisSpeeds
-                DrivetrainConfig.PATH_CONFIG,
+                DrivetrainConfig.PATH_FOLLOWER_CONFIG,
                 () -> {
                     // Boolean supplier that controls when the path will be
                     // mirrored for the red
@@ -104,7 +105,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         fieldWidget.setRobotPose(swerveDrive.getPose());
-        // addVisionMeasurements();
+        addVisionMeasurements();
     }
 
     /** Adds vision measurements to correct the odometry */
@@ -125,5 +126,13 @@ public class Drivetrain extends SubsystemBase {
 
     public SwerveDrive getSwerveDrive() {
         return swerveDrive;
+    }
+
+    public boolean withinDistanceOfPathEnd(Translation2d point, double positionTolerance) {
+        return swerveDrive.getPose().getTranslation().getDistance(point) < positionTolerance;
+    }
+
+    public boolean withinDistanceOfPoint(Translation2d point, double positionTolerance) {
+        return swerveDrive.getPose().getTranslation().getDistance(point) < positionTolerance;
     }
 }

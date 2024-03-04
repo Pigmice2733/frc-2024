@@ -87,7 +87,7 @@ public final class Constants {
         // distance from robot center to furthest module, in meters
         public static final double DRIVE_BASE_RADIUS = 0.41;
 
-        // TODO: sort out speeds and sync with path config
+        // TODO: sort out speeds and (maybe) sync with path config
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
                 1, 1, 1, 1);
 
@@ -105,7 +105,7 @@ public final class Constants {
         // private static final Translation2d ROTATION_CENTER_OFFSET = new
         // Translation2d(0, 0);
 
-        public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
+        public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
                 PATH_DRIVE_PID, PATH_TURN_PID, MAX_PATH_MODULE_SPEED,
                 DRIVE_BASE_RADIUS, new ReplanningConfig());
     }
@@ -260,6 +260,11 @@ public final class Constants {
              * new Rotation2d(0));
              */
         }
+    }
+
+    public static class SemiAutoConfig {
+        // All in meters
+        public static final double AMP_RAISE_ARM_DISTANCE = 2;
     }
 
     public static class ControlBindings {
