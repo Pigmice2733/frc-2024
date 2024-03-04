@@ -263,8 +263,8 @@ public final class Constants {
     }
 
     public static class SemiAutoConfig {
-        // All in meters
-        public static final double AMP_RAISE_ARM_DISTANCE = 2;
+        // In meters
+        public static final double PREPARE_ACTION_DISTANCE = 2;
     }
 
     public static class ControlBindings {

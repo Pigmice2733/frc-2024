@@ -21,7 +21,7 @@ public class MoveKobraToPosition extends SequentialCommandGroup {
     public MoveKobraToPosition(Arm arm, Wrist wrist, Intake intake, Indexer indexer, Shooter shooter, KobraState state,
             NoteSensor noteSensor,
             boolean stowIntake) {
-        addCommands(intake.stopWheels(), shooter.stopFlywheels());
+        addCommands(intake.stopWheels(), indexer.stopIndexer(), shooter.stopFlywheels());
         /*
          * addCommands(new InstantCommand(() -> {
          * if (state != KobraState.STOW && !noteSensor.noteInIndexer()) {
