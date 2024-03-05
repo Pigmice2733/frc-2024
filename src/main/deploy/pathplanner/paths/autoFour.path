@@ -96,12 +96,12 @@
     },
     {
       "anchor": {
-        "x": 1.8633319397604393,
-        "y": 7.197962808800202
+        "x": 1.091513737949015,
+        "y": 7.003080254377342
       },
       "prevControl": {
-        "x": 2.267206842959745,
-        "y": 7.0602781827095304
+        "x": 1.3842846515935527,
+        "y": 7.284140331476098
       },
       "nextControl": null,
       "isLocked": false,
@@ -137,19 +137,8 @@
   ],
   "constraintZones": [
     {
-      "name": "Fire 1",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.05,
-      "constraints": {
-        "maxVelocity": 0.3,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    },
-    {
       "name": "Grab 2",
-      "minWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.85,
       "maxWaypointRelativePos": 1.1500000000000001,
       "constraints": {
         "maxVelocity": 0.3,
@@ -161,9 +150,9 @@
     {
       "name": "Fire 2",
       "minWaypointRelativePos": 1.9500000000000002,
-      "maxWaypointRelativePos": 2.0,
+      "maxWaypointRelativePos": 2.0999999999999996,
       "constraints": {
-        "maxVelocity": 0.3,
+        "maxVelocity": 0.1,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
@@ -182,10 +171,10 @@
     },
     {
       "name": "Fire 3",
-      "minWaypointRelativePos": 4.050000000000001,
-      "maxWaypointRelativePos": 4.1,
+      "minWaypointRelativePos": 4.0,
+      "maxWaypointRelativePos": 4.199999999999999,
       "constraints": {
-        "maxVelocity": 0.3,
+        "maxVelocity": 0.1,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
@@ -204,7 +193,7 @@
     },
     {
       "name": "Fire 4",
-      "minWaypointRelativePos": 6.0,
+      "minWaypointRelativePos": 5.8999999999999995,
       "maxWaypointRelativePos": 6.0,
       "constraints": {
         "maxVelocity": 3.0,
@@ -216,10 +205,10 @@
   ],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxVelocity": 1.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 90.0,
+    "maxAngularAcceleration": 180.0
   },
   "goalEndState": {
     "velocity": 0.0,
@@ -232,5 +221,5 @@
     "rotation": 119.14807184571302,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

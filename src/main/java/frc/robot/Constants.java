@@ -265,6 +265,7 @@ public final class Constants {
     public static class SemiAutoConfig {
         // In meters
         public static final double PREPARE_ACTION_DISTANCE = 2;
+        public static final double FINAL_ACTION_DISTANCE = Units.inchesToMeters(5);
     }
 
     public static class ControlBindings {

@@ -3,7 +3,7 @@ package frc.robot.commands.semi_auto.subtasks;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.manual.FireShooter;
 import frc.robot.commands.manual.RunIntake;
-import frc.robot.commands.semi_auto.SemiAutoTask.SemiAutoTaskType;
+import frc.robot.commands.semi_auto.RunSemiAutoTask.SemiAutoTaskType;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
