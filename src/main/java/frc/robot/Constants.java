@@ -89,7 +89,7 @@ public final class Constants {
 
         // TODO: sort out speeds and (maybe) sync with path config
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
-                1, 1, 1, 1);
+                1, 1, 3, 2);
 
         // From what I have seen, it is common to only use a P value in path
         // following

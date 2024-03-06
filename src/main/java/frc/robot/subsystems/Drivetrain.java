@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -118,10 +119,9 @@ public class Drivetrain extends SubsystemBase {
         if (estimatedPose == null)
             return;
 
-        /*
-         * swerveDrive.addVisionMeasurement(estimatedPose,
-         * Timer.getFPGATimestamp());
-         */
+        swerveDrive.addVisionMeasurement(estimatedPose,
+                Timer.getFPGATimestamp());
+
     }
 
     public SwerveDrive getSwerveDrive() {

@@ -163,13 +163,13 @@ public class RobotContainer {
                         .resetOdometry(new Pose2d())));
 
         // POV UP - lineup speaker center
-        new POVButton(operator, 0) // up
+        new POVButton(driver, 0) // up
                 .whileTrue(new LineupSemiAuto(drivetrain, SemiAutoTaskType.SCORE_SPEAKER_CENTER));
 
         // TODO: lineup speaker left/right based on alliance color from driverstation
 
         // POV DOWN - lineup amp
-        new POVButton(operator, 180) // down
+        new POVButton(driver, 180) // down
                 .whileTrue(new LineupSemiAuto(drivetrain, SemiAutoTaskType.SCORE_AMP));
 
         /*
