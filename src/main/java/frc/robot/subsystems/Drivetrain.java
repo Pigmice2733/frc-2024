@@ -12,7 +12,6 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -44,10 +43,7 @@ public class Drivetrain extends SubsystemBase {
         }
 
         AutoBuilder.configureHolonomic(
-                () -> {
-                    var pose = swerveDrive.getPose();
-                    return new Pose2d(pose.getX(), pose.getY(), new Rotation2d(pose.getRotation().getRadians()));
-                }, // Robot pose supplier
+                () -> swerveDrive.getPose(), // Robot pose supplier
                 swerveDrive::resetOdometry, // Method to reset odometry (will be
                                             // called if your auto has
                                             // a starting

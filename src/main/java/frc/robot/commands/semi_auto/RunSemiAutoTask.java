@@ -61,7 +61,7 @@ public class RunSemiAutoTask extends Command {
         Translation2d endTranslation = trajectory.getPoint(trajectory.numPoints() -
                 1).position;
 
-        driveCommand = new LineupSemiAuto(drivetrain, trajectory);
+        driveCommand = new LineupSemiAuto(drivetrain, trajectory).andThen(() -> pathFinished());
 
         prepareCommand =
                 // Runs while the path is being followed
@@ -74,11 +74,11 @@ public class RunSemiAutoTask extends Command {
                                         endTranslation,
                                         SemiAutoConfig.PREPARE_ACTION_DISTANCE)),
 
-                        // Prepares for the action by moving the Kobra, climber, etc.
-                        new PrepareSemiAutoAction(arm, wrist, intake, indexer, shooter, noteSensor, taskType),
-
-                        // Runs the final action
-                        new CompleteSemiAutoAction(arm, wrist, intake, indexer, shooter, noteSensor, taskType));
+                        // Prepares for the action by moving the Kobra, climber, etc. TODO test actual
+                        // command
+                        // new PrepareSemiAutoAction(arm, wrist, intake, indexer, shooter, noteSensor,
+                        // taskType)
+                        Commands.runOnce(() -> System.out.println("Preparing command!")));
 
         actionCommand =
                 // Runs while the path is being followed
@@ -89,19 +89,20 @@ public class RunSemiAutoTask extends Command {
                         Commands.waitUntil(
                                 () -> drivetrain.withinDistanceOfPoint(
                                         endTranslation,
-                                        SemiAutoConfig.PREPARE_ACTION_DISTANCE)),
+                                        SemiAutoConfig.FINAL_ACTION_DISTANCE)),
 
-                        // Prepares for the action by moving the Kobra, climber, etc.
-                        new PrepareSemiAutoAction(arm, wrist, intake, indexer, shooter, noteSensor, taskType),
+                        // Runs the final action TODO: test actual command
+                        // new CompleteSemiAutoAction(arm, wrist, intake, indexer, shooter, noteSensor,
+                        // taskType)
 
-                        // Runs the final action
-                        new CompleteSemiAutoAction(arm, wrist, intake, indexer, shooter, noteSensor, taskType));
+                        Commands.runOnce(() -> System.out.println("Completing action!")));
 
         // Don't add requirement to this command because commands this runs have them
     }
 
     @Override
     public void initialize() {
+        actionCommand.schedule();
         prepareCommand.schedule();
     }
 
@@ -120,6 +121,10 @@ public class RunSemiAutoTask extends Command {
     @Override
     public void end(boolean interrupted) {
         CommandScheduler.getInstance().cancel(driveCommand, prepareCommand, actionCommand);
+    }
+
+    private void pathFinished() {
+        System.out.println("Path finished!");
     }
 
     public static String getPathName(SemiAutoTaskType taskType) {
