@@ -17,22 +17,10 @@ public class LineupSemiAuto extends SequentialCommandGroup {
 
         PathPlannerPath trajectory = PathPlannerPath.fromPathFile(pathName);
 
-        /*
-         * Command pathCommand = AutoBuilder.pathfindToPose(new Pose2d(1.82, 7.47, new
-         * Rotation2d(-90)),
-         * DrivetrainConfig.PATH_CONSTRAINTS);
-         */
-
         Command pathCommand = AutoBuilder.pathfindThenFollowPath(trajectory,
                 DrivetrainConfig.PATH_CONSTRAINTS);
 
-        addCommands(Commands.sequence(/*
-                                       * Commands.runOnce(
-                                       * () -> drivetrain.getSwerveDrive().resetOdometry(
-                                       * trajectory
-                                       * .getPreviewStartingHolonomicPose())),
-                                       */
-                pathCommand));
+        addCommands(pathCommand);
         addRequirements(drivetrain);
     }
 
