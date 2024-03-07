@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -29,6 +31,7 @@ import frc.robot.commands.manual.MoveKobraToPosition;
 import frc.robot.commands.manual.RunClimber;
 import frc.robot.commands.manual.RunIntake;
 import frc.robot.commands.manual.MoveKobraToPosition.KobraState;
+import frc.robot.commands.semi_auto.RunSemiAutoTask;
 import frc.robot.commands.semi_auto.RunSemiAutoTask.SemiAutoTaskType;
 import frc.robot.commands.semi_auto.subtasks.LineupSemiAuto;
 import frc.robot.subsystems.Arm;
@@ -172,6 +175,11 @@ public class RobotContainer {
         new POVButton(driver, 180) // down
                 .whileTrue(new LineupSemiAuto(drivetrain, SemiAutoTaskType.SCORE_AMP));
 
+        // POV RIGHT - run score amp semi auto
+        new POVButton(driver, 90) // right
+                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter, noteSensor,
+                        SemiAutoTaskType.SCORE_AMP, () -> driver.getAButton()));
+
         /*
          * OPERATOR CONTROLS
          */
@@ -221,7 +229,7 @@ public class RobotContainer {
         new POVButton(operator, 180) // down
                 .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW,
                         noteSensor,
-                        false));
+                        true));
 
         // A - hold to run the intake and indexer backward
         new JoystickButton(operator, Button.kA.value)
@@ -275,7 +283,13 @@ public class RobotContainer {
          */
 
         // TODO: Test auto chooser - might be responsible for the intake not running
-        return autoChooser.getSelected();
+
+        return Commands.sequence(Commands.runOnce(
+                () -> drivetrain.getSwerveDrive().resetOdometry(
+                        PathPlannerPath.fromPathFile("autoTwoClose")
+                                .getPreviewStartingHolonomicPose())),
+                AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoTwoClose")));
+        // return autoChooser.getSelected();
     }
 
     public static enum AutoCommands {

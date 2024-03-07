@@ -3,12 +3,18 @@ package frc.robot.commands.semi_auto;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pigmice.frc.lib.controller_rumbler.ControllerRumbler;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.SemiAutoConfig;
+import frc.robot.commands.manual.FireShooter;
+import frc.robot.commands.manual.MoveKobraToPosition;
+import frc.robot.commands.manual.MoveKobraToPosition.KobraState;
 import frc.robot.commands.semi_auto.subtasks.CompleteSemiAutoAction;
 import frc.robot.commands.semi_auto.subtasks.LineupSemiAuto;
 import frc.robot.commands.semi_auto.subtasks.PrepareSemiAutoAction;
@@ -21,47 +27,35 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 
 public class RunSemiAutoTask extends Command {
-    // TODO: Remove if not needed after initial testing
-    /*
-     * private final Drivetrain drivetrain;
-     * private final Arm arm;
-     * private final Wrist wrist;
-     * private final Intake intake;
-     * private final Indexer indexer;
-     * private final Shooter shooter;
-     * private final NoteSensor noteSensor;
-     * private final SemiAutoTaskType taskType;
-     */
-    private final Supplier<Boolean> manualDriving;
+    private final Drivetrain drivetrain;
+    private final Indexer indexer;
+    private final Shooter shooter;
+    private final Supplier<Boolean> autoDriving;
+    private final PathPlannerPath lineupPath;
 
-    private final Command driveCommand;
+    private Command driveCommand;
     private final Command prepareCommand;
     private final Command actionCommand;
+    private final Command resetCommand;
+
+    private boolean pathFinished;
 
     public RunSemiAutoTask(Drivetrain drivetrain, Arm arm, Wrist wrist, Intake intake, Indexer indexer,
-            Shooter shooter, NoteSensor noteSensor, SemiAutoTaskType taskType, Supplier<Boolean> manualDriving) {
+            Shooter shooter, NoteSensor noteSensor, SemiAutoTaskType taskType,
+            Supplier<Boolean> autoDriving) {
 
-        // TODO: remove if not needed after initial testing
-        /*
-         * this.drivetrain = drivetrain;
-         * this.arm = arm;
-         * this.wrist = wrist;
-         * this.intake = intake;
-         * this.indexer = indexer;
-         * this.shooter = shooter;
-         * this.noteSensor = noteSensor;
-         * this.taskType = taskType;
-         */
-
-        this.manualDriving = manualDriving;
+        this.drivetrain = drivetrain;
+        this.indexer = indexer;
+        this.shooter = shooter;
+        this.autoDriving = autoDriving;
 
         String pathName = getPathName(taskType);
 
-        PathPlannerPath trajectory = PathPlannerPath.fromPathFile(pathName);
-        Translation2d endTranslation = trajectory.getPoint(trajectory.numPoints() -
+        lineupPath = PathPlannerPath.fromPathFile(pathName);
+        Translation2d endTranslation = lineupPath.getPoint(lineupPath.numPoints() -
                 1).position;
 
-        driveCommand = new LineupSemiAuto(drivetrain, trajectory).andThen(() -> pathFinished());
+        driveCommand = generateDrivingCommand();
 
         prepareCommand =
                 // Runs while the path is being followed
@@ -74,57 +68,99 @@ public class RunSemiAutoTask extends Command {
                                         endTranslation,
                                         SemiAutoConfig.PREPARE_ACTION_DISTANCE)),
 
-                        // Prepares for the action by moving the Kobra, climber, etc. TODO test actual
-                        // command
-                        // new PrepareSemiAutoAction(arm, wrist, intake, indexer, shooter, noteSensor,
-                        // taskType)
-                        Commands.runOnce(() -> System.out.println("Preparing command!")));
+                        // Prepares for the action by moving the Kobra, climber, etc.
+                        new PrepareSemiAutoAction(arm, wrist, intake, indexer, shooter, noteSensor,
+                                taskType));
 
-        actionCommand =
-                // Runs while the path is being followed
-                Commands.sequence(
-                        // Waits to be within preparation range
-                        // TODO: maybe check the amount of time left in the path
-                        // (if possible)
-                        Commands.waitUntil(
-                                () -> drivetrain.withinDistanceOfPoint(
-                                        endTranslation,
-                                        SemiAutoConfig.FINAL_ACTION_DISTANCE)),
-
-                        // Runs the final action TODO: test actual command
-                        // new CompleteSemiAutoAction(arm, wrist, intake, indexer, shooter, noteSensor,
-                        // taskType)
-
-                        Commands.runOnce(() -> System.out.println("Completing action!")));
+        actionCommand = Commands.sequence(Commands.waitUntil(
+                () -> drivetrain.withinDistanceOfPoint(
+                        endTranslation,
+                        SemiAutoConfig.FINAL_ACTION_DISTANCE) || pathFinished),
+                new FireShooter(indexer, shooter, noteSensor).withTimeout(3));
+        // Runs while the path is being followed
+        /*
+         * Commands.sequence(
+         * // Waits to be within preparation range
+         * // TODO: maybe check the amount of time left in the path
+         * // (if possible)
+         * Commands.run(() -> System.out.println("TEST")),
+         * Commands.waitUntil(
+         * () -> {
+         * System.out.println(drivetrain.withinDistanceOfPoint(
+         * endTranslation,
+         * SemiAutoConfig.FINAL_ACTION_DISTANCE) + " " + pathFinished);
+         * return drivetrain.withinDistanceOfPoint(
+         * endTranslation,
+         * SemiAutoConfig.FINAL_ACTION_DISTANCE) || pathFinished;
+         * }),
+         * 
+         * // Runs the final action
+         * new CompleteSemiAutoAction(arm, wrist, intake, indexer, shooter, noteSensor,
+         * taskType));
+         */
 
         // Don't add requirement to this command because commands this runs have them
+
+        resetCommand = new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW, noteSensor, true);
+    }
+
+    private Command generateDrivingCommand() {
+        return new LineupSemiAuto(drivetrain, SemiAutoTaskType.SCORE_AMP).andThen(() -> pathFinished());
     }
 
     @Override
     public void initialize() {
-        actionCommand.schedule();
-        prepareCommand.schedule();
+        CommandScheduler.getInstance().schedule(actionCommand, prepareCommand);
     }
+
+    private boolean runningDriveCommand = false;
 
     @Override
     public void execute() {
-        if (manualDriving.get()) {
-            if (driveCommand.isScheduled())
-                driveCommand.cancel();
-        } else {
-            if (!driveCommand.isScheduled()) {
-                driveCommand.schedule();
-            }
+        if (!runningDriveCommand && autoDriving.get()) {
+            driveCommand.schedule();
+            runningDriveCommand = true;
         }
+
+        if (!autoDriving.get() && runningDriveCommand) {
+            driveCommand.cancel();
+            runningDriveCommand = false;
+        }
+
+        /*
+         * if (!autoDriving.get()) {
+         * if (runningDriveCommand) {
+         * System.out.println("canceled drive command");
+         * driveCommand.cancel();
+         * runningDriveCommand = false;
+         * }
+         * } else {
+         * if (!runningDriveCommand) {
+         * System.out.println("scheduled drive command");
+         * driveCommand = generateDrivingCommand();
+         * runningDriveCommand = true;
+         * driveCommand.schedule();
+         * }
+         * }
+         */
     }
 
     @Override
     public void end(boolean interrupted) {
         CommandScheduler.getInstance().cancel(driveCommand, prepareCommand, actionCommand);
+        ControllerRumbler.rumbleBoth(RumbleType.kBothRumble, 1, 0.5);
+
+        resetCommand.schedule();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return !actionCommand.isScheduled();
+        // return false;
     }
 
     private void pathFinished() {
-        System.out.println("Path finished!");
+        pathFinished = true;
     }
 
     public static String getPathName(SemiAutoTaskType taskType) {

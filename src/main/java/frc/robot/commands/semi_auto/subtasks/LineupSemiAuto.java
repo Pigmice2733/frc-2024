@@ -33,7 +33,6 @@ public class LineupSemiAuto extends SequentialCommandGroup {
                                        * .getPreviewStartingHolonomicPose())),
                                        */
                 pathCommand));
-        addCommands();
         addRequirements(drivetrain);
     }
 

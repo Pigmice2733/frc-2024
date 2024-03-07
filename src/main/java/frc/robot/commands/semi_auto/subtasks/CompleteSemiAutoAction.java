@@ -1,5 +1,6 @@
 package frc.robot.commands.semi_auto.subtasks;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.manual.FireShooter;
 import frc.robot.commands.manual.RunIntake;
@@ -15,17 +16,16 @@ public class CompleteSemiAutoAction extends SequentialCommandGroup {
     public CompleteSemiAutoAction(Arm arm, Wrist wrist, Intake intake, Indexer indexer,
             Shooter shooter, NoteSensor noteSensor, SemiAutoTaskType taskType) {
 
+        addCommands(Commands.print("RUNNING FINAL ACTION"));
+
         if (taskType == SemiAutoTaskType.INTAKE_SOURCE) {
             addCommands(new RunIntake(intake, indexer, arm, wrist, shooter, noteSensor));
-            addRequirements();
             return;
         } else if (taskType == SemiAutoTaskType.CLIMB) {
             // TODO: automatically run a climb cycle
         } else {
             addCommands(new FireShooter(indexer, shooter, noteSensor));
-            addRequirements();
         }
-
-        addRequirements(arm, wrist, intake, indexer, shooter);
+        // TODO: requirements
     }
 }

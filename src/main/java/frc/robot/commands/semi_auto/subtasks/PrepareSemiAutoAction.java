@@ -42,6 +42,6 @@ public class PrepareSemiAutoAction extends SequentialCommandGroup {
                 // TODO: raise the climber, but only when it wont collide with the stage
                 break;
         }
-        addRequirements(arm, wrist, intake, indexer, shooter);
+        addRequirements(arm, wrist, intake);
     }
 }
