@@ -4,10 +4,7 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
@@ -313,15 +310,13 @@ public class RobotContainer {
 
         // TODO: Test auto chooser - might be responsible for the intake not running
 
-        return Commands.sequence(Commands.runOnce(
-                () -> drivetrain.getSwerveDrive().resetOdometry(
-                        PathPlannerPath.fromPathFile("autoTwoClose")
-                                .getPreviewStartingHolonomicPose())),
-                AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoTwoClose")));
-        // return autoChooser.getSelected();
-    }
-
-    public static enum AutoCommands {
-        NONE, STRAIGHT_TEST, CURVED_TEST, PATHFINDING_TEST
+        /*
+         * return Commands.sequence(Commands.runOnce(
+         * () -> drivetrain.getSwerveDrive().resetOdometry(
+         * PathPlannerPath.fromPathFile("autoTwoClose")
+         * .getPreviewStartingHolonomicPose())),
+         * AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoTwoClose")));
+         */
+        return autoChooser.getSelected();
     }
 }

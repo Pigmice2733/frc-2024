@@ -83,7 +83,19 @@
       "rotateFast": false
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "score 1",
+      "minWaypointRelativePos": 1.8,
+      "maxWaypointRelativePos": 2.15,
+      "constraints": {
+        "maxVelocity": 0.2,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 90.0,
+        "maxAngularAcceleration": 180.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "prepIntake",
@@ -95,24 +107,7 @@
             {
               "type": "named",
               "data": {
-                "name": null
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "prepScore",
-      "waypointRelativePos": 1.25,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": null
+                "name": "prepIntakeCenter"
               }
             }
           ]
@@ -121,7 +116,7 @@
     },
     {
       "name": "fireShooter",
-      "waypointRelativePos": 1.6,
+      "waypointRelativePos": 1.75,
       "command": {
         "type": "parallel",
         "data": {
@@ -146,41 +141,7 @@
             {
               "type": "named",
               "data": {
-                "name": null
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "prepShooter",
-      "waypointRelativePos": 3.15,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": null
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "fireShooter",
-      "waypointRelativePos": 3.7,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "fireShooter"
+                "name": "prepIntakeSide"
               }
             }
           ]

@@ -92,6 +92,28 @@ public class RunAutoRoutine extends SequentialCommandGroup {
                         AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoOneFar")),
                         Commands.parallel(intake.stopWheels(), indexer.stopIndexer()));
                 break;
+            case THREE_CENTER_TO_CLOSE:
+                addCommands(
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true, KobraState.SPEAKER_SIDE,
+                                noteSensor),
+                        Commands.runOnce(
+                                () -> drivetrain.getSwerveDrive().resetOdometry(
+                                        PathPlannerPath.fromPathFile("autoThreeToClose")
+                                                .getPreviewStartingHolonomicPose())),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoThreeToClose")),
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, false, KobraState.SPEAKER_SIDE,
+                                noteSensor));
+            case THREE_CENTER_TO_FAR:
+                addCommands(
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true, KobraState.SPEAKER_SIDE,
+                                noteSensor),
+                        Commands.runOnce(
+                                () -> drivetrain.getSwerveDrive().resetOdometry(
+                                        PathPlannerPath.fromPathFile("autoThreeToClose")
+                                                .getPreviewStartingHolonomicPose())),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoThreeToFar")),
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, false, KobraState.SPEAKER_SIDE,
+                                noteSensor));
             default:
                 break;
         }
