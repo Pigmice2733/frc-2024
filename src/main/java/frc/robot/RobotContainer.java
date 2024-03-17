@@ -171,14 +171,50 @@ public class RobotContainer {
 
         // TODO: lineup speaker left/right based on alliance color from driverstation
 
-        // POV DOWN - lineup amp
-        new POVButton(driver, 180) // down
+        /**
+         * Auto lineup command (does not automatically score)
+         */
+
+        // Y - lineup speaker center
+        new JoystickButton(driver, Button.kY.value)
+                .whileTrue(new LineupSemiAuto(drivetrain, SemiAutoTaskType.SCORE_SPEAKER_CENTER));
+
+        // X - lineup speaker side
+        new JoystickButton(driver, Button.kX.value)
+                .whileTrue(new LineupSemiAuto(drivetrain, SemiAutoTaskType.SCORE_SPEAKER_FAR));
+
+        // B - lineup amp
+        new JoystickButton(driver, Button.kB.value)
                 .whileTrue(new LineupSemiAuto(drivetrain, SemiAutoTaskType.SCORE_AMP));
 
-        // POV RIGHT - run score amp semi auto
+        // A - lineup climb
+        new JoystickButton(driver, Button.kA.value)
+                .whileTrue(new LineupSemiAuto(drivetrain, SemiAutoTaskType.CLIMB));
+
+        /**
+         * Semi Auto Commands
+         */
+
+        // POV UP - score speaker center semi auto
+        new POVButton(driver, 0) // up
+                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter, noteSensor,
+                        SemiAutoTaskType.SCORE_SPEAKER_CENTER, () -> driver.getLeftBumper(),
+                        () -> driver.getXButton()));
+
+        // POV LEFT - score speaker side semi auto
+        new POVButton(driver, 270) // left
+                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter, noteSensor,
+                        SemiAutoTaskType.SCORE_SPEAKER_FAR, () -> driver.getAButton(), () -> driver.getXButton()));
+
+        // POV RIGHT - score amp semi auto
         new POVButton(driver, 90) // right
                 .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter, noteSensor,
-                        SemiAutoTaskType.SCORE_AMP, () -> driver.getAButton()));
+                        SemiAutoTaskType.SCORE_AMP, () -> driver.getAButton(), () -> driver.getXButton()));
+
+        // POV DOWN - intake from source semi auto
+        new POVButton(driver, 180) // down
+                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter, noteSensor,
+                        SemiAutoTaskType.CLIMB, () -> driver.getAButton(), () -> driver.getXButton()));
 
         /*
          * OPERATOR CONTROLS
@@ -198,13 +234,6 @@ public class RobotContainer {
 
         // Y - stow the intake
         new JoystickButton(operator, Button.kY.value).onTrue(intake.setTargetState(IntakeState.STOW));
-
-        // TODO: test this and see if the drive team likes it better
-        // B - press to toggle in intake cycle command
-        /*
-         * new JoystickButton(operator, Button.kB.value).toggleOnTrue(
-         * new IntakeCycle(intake, indexer, arm, wrist, noteSensor));
-         */
 
         // POV UP - press for center speaker position
         new POVButton(operator, 0) // up

@@ -27,6 +27,7 @@ import frc.robot.subsystems.Wrist;
 public class RunSemiAutoTask extends Command {
     private final Drivetrain drivetrain;
     private final Supplier<Boolean> autoDriving;
+    private final Supplier<Boolean> cancelButtonDown;
 
     private final PathPlannerPath lineupPath;
     private Command driveCommand;
@@ -40,10 +41,11 @@ public class RunSemiAutoTask extends Command {
 
     public RunSemiAutoTask(Drivetrain drivetrain, Arm arm, Wrist wrist, Intake intake, Indexer indexer,
             Shooter shooter, NoteSensor noteSensor, SemiAutoTaskType taskType,
-            Supplier<Boolean> autoDriving) {
+            Supplier<Boolean> autoDriving, Supplier<Boolean> cancelButtonDown) {
 
         this.drivetrain = drivetrain;
         this.autoDriving = autoDriving;
+        this.cancelButtonDown = cancelButtonDown;
 
         lineupPath = PathPlannerPath.fromPathFile(getPathName(taskType));
         Translation2d endTranslation = lineupPath.getPoint(lineupPath.numPoints() -
@@ -128,7 +130,7 @@ public class RunSemiAutoTask extends Command {
 
     @Override
     public boolean isFinished() {
-        return !actionCommand.isScheduled();
+        return !actionCommand.isScheduled() || cancelButtonDown.get();
         // return false;
     }
 

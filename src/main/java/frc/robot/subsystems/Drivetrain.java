@@ -14,6 +14,7 @@ import com.pigmice.frc.lib.shuffleboard_helper.ShuffleboardHelper;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -68,13 +69,13 @@ public class Drivetrain extends SubsystemBase {
                     // TODO: test this at some point (very important for actual
                     // matches)
 
-                    // var alliance = DriverStation.getAlliance();
-                    // if (alliance.isPresent()) {
-                    // return alliance.get() == DriverStation.Alliance.Red;
-                    // }
-                    // return false;
-
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
                     return false;
+
+                    // return false;
                 },
                 this // Reference to this subsystem to set requirements
         );

@@ -9,6 +9,8 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -259,6 +261,9 @@ public final class Constants {
              * public final static Pose2d CENTRAL_RING_SEARCH = new Pose2d(10.2, 4,
              * new Rotation2d(0));
              */
+
+            public static final Translation2d BLUE_SPEAKER = new Translation2d(0.25, 5.55);
+            public static final Translation2d RED_SPEAKER = new Translation2d(16.3, 5.55);
         }
     }
 
