@@ -102,14 +102,15 @@ public class RunAutoRoutine extends SequentialCommandGroup {
                                                 .getPreviewStartingHolonomicPose())),
                         AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoThreeToClose")),
                         new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, false, KobraState.SPEAKER_SIDE,
-                                noteSensor));
+                                noteSensor),
+                        Commands.print("AUTO DONE"));
             case THREE_CENTER_TO_FAR:
                 addCommands(
                         new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, true, KobraState.SPEAKER_SIDE,
                                 noteSensor),
                         Commands.runOnce(
                                 () -> drivetrain.getSwerveDrive().resetOdometry(
-                                        PathPlannerPath.fromPathFile("autoThreeToClose")
+                                        PathPlannerPath.fromPathFile("autoThreeToFar")
                                                 .getPreviewStartingHolonomicPose())),
                         AutoBuilder.followPath(PathPlannerPath.fromPathFile("autoThreeToFar")),
                         new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter, false, KobraState.SPEAKER_SIDE,

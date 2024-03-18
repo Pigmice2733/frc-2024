@@ -33,13 +33,14 @@ public class Indexer extends SubsystemBase {
         bottomMotor.setInverted(false);
         bottomMotor.setSmartCurrentLimit(30);
 
-        bottomMotor.follow(topMotor);
+        // bottomMotor.follow(topMotor);
 
         ShuffleboardHelper.addOutput("Motor Output", Constants.INDEXER_TAB, () -> topMotor.get());
     }
 
     public void outputToMotor(double output) {
         topMotor.set(output);
+        bottomMotor.set(output);
     }
 
     /** Spins the indexer at full power for shooting */

@@ -76,7 +76,7 @@ public class RunSemiAutoTask extends Command {
                 // (didn't work in testing for some reason)
                 new FireShooter(indexer, shooter, noteSensor).withTimeout(3));
 
-        resetCommand = new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW, noteSensor, true);
+        resetCommand = new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW, true);
 
         // Don't add requirement to this command because commands this runs have them
     }

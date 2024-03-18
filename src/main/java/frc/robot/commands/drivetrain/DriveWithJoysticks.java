@@ -7,6 +7,9 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.internal.DriverStationModeThread;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 
@@ -39,6 +42,9 @@ public class DriveWithJoysticks extends Command {
 
     @Override
     public void execute() {
+        // TODO
+        boolean inverted = DriverStation.getAlliance().get() == Alliance.Red;
+
         if (centerOffset == null) {
             drivetrain.getSwerveDrive().driveFieldOriented(new ChassisSpeeds(driveSpeedY.get(), driveSpeedX.get(),
                     turnSpeed.get()));

@@ -18,7 +18,7 @@ public class RunIntake extends SequentialCommandGroup {
     public RunIntake(Intake intake, Indexer indexer, Arm arm, Wrist wrist, Shooter shooter, NoteSensor noteSensor) {
         addCommands(
                 // Stow kobra, keeping intake down
-                new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW, noteSensor, false),
+                new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW, false),
 
                 // Start the intake + indexer
                 Commands.parallel(intake.runWheelsForward(), indexer.indexForward()),

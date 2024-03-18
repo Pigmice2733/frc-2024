@@ -39,7 +39,7 @@ public class Intake extends PIDSubsystemBase {
 
         addLimitSwitch(0, DIOConfig.INTAKE_LIMIT_SWITCH, true, LimitSwitchSide.POSITIVE);
 
-        setMaxAllowedOutput(0.3);
+        setMaxAllowedOutput(0); // TODO
     }
 
     /**
@@ -48,6 +48,12 @@ public class Intake extends PIDSubsystemBase {
      */
     public void outputToWheels(double percent) {
         wheelsMotor.set(-percent);
+    }
+
+    // TODO
+    @Override
+    public void outputToMotor(double percent) {
+
     }
 
     /**
@@ -80,17 +86,26 @@ public class Intake extends PIDSubsystemBase {
 
     /** Sets the target rotation, then waits until it gets to that rotation */
     public Command goToState(IntakeState state) {
-        return Commands.parallel(setTargetState(state), Commands.waitUntil(
-                () -> atState(state)));
+        return Commands.none(); // TODO
+        /*
+         * return Commands.parallel(setTargetState(state), Commands.waitUntil(
+         * () -> atState(state)));
+         */
     }
 
     /** @return true if the intake pivot is at a certain state */
     public boolean atState(IntakeState state) {
-        return Math.abs(getCurrentRotation() - state.getPosition()) < IntakeConfig.POSITION_TOLERANCE;
+        // TODO
+        return true;
+        // return Math.abs(getCurrentRotation() - state.getPosition()) <
+        // IntakeConfig.POSITION_TOLERANCE;
     }
 
     /** Waits until the intake is at a state, without commanding it to go there */
     public Command waitForState(IntakeState state) {
-        return Commands.waitUntil(() -> atState(state));
+        // TODO
+        return Commands.none();
+
+        // return Commands.waitUntil(() -> atState(state));
     }
 }

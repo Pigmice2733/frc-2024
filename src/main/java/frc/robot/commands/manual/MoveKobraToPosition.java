@@ -13,13 +13,11 @@ import frc.robot.Constants.WristConfig.WristState;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.NoteSensor;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 
 public class MoveKobraToPosition extends SequentialCommandGroup {
     public MoveKobraToPosition(Arm arm, Wrist wrist, Intake intake, Indexer indexer, Shooter shooter, KobraState state,
-            NoteSensor noteSensor,
             boolean stowIntake) {
         addCommands(intake.stopWheels(), indexer.stopIndexer(), shooter.stopFlywheels());
         /*

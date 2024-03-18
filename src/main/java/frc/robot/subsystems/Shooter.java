@@ -21,16 +21,15 @@ public class Shooter extends SubsystemBase {
 
     /** Controls the flywheels on the far end of the box for shooting */
     public Shooter() {
-        topMotor = new CANSparkMax(CANConfig.TOP_SHOOTER, MotorType.kBrushed);
+        topMotor = new CANSparkMax(CANConfig.TOP_SHOOTER, MotorType.kBrushless);
         topMotor.restoreFactoryDefaults();
         topMotor.setInverted(false);
-        topMotor.setSmartCurrentLimit(100);
+        topMotor.setSmartCurrentLimit(60);
 
-        bottomMotor = new CANSparkMax(CANConfig.BOTTOM_SHOOTER, MotorType.kBrushed);
+        bottomMotor = new CANSparkMax(CANConfig.BOTTOM_SHOOTER, MotorType.kBrushless);
         bottomMotor.restoreFactoryDefaults();
         bottomMotor.setInverted(false);
-        bottomMotor.setSmartCurrentLimit(100);
-        bottomMotor.follow(topMotor);
+        bottomMotor.setSmartCurrentLimit(60);
 
         ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> topMotor.get());
     }
@@ -38,6 +37,7 @@ public class Shooter extends SubsystemBase {
     /* Sets the output to the flywheels as a percent. */
     private void outputToFlywheels(double output) {
         topMotor.set(-output);
+        bottomMotor.set(-output);
     }
 
     /* Spin the flywheels in the shooting direction. */

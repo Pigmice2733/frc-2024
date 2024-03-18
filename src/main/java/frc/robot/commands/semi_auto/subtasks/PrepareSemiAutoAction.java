@@ -16,27 +16,24 @@ public class PrepareSemiAutoAction extends SequentialCommandGroup {
             Shooter shooter, NoteSensor noteSensor, SemiAutoTaskType taskType) {
         switch (taskType) {
             case INTAKE_SOURCE:
-                addCommands(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW, noteSensor,
+                addCommands(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW,
                         false));
                 break;
             case SCORE_AMP:
-                addCommands(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.AMP, noteSensor,
+                addCommands(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.AMP,
                         true));
                 break;
             case SCORE_SPEAKER_CLOSE:
                 addCommands(
-                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE,
-                                noteSensor, true));
+                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE, true));
                 break;
             case SCORE_SPEAKER_CENTER:
                 addCommands(
-                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_CENTER,
-                                noteSensor, true));
+                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_CENTER, true));
                 break;
             case SCORE_SPEAKER_FAR:
                 addCommands(
-                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE,
-                                noteSensor, true));
+                        new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE, true));
                 break;
             case CLIMB:
                 // TODO: raise the climber, but only when it wont collide with the stage

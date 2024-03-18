@@ -116,7 +116,7 @@
     },
     {
       "name": "fireShooter",
-      "waypointRelativePos": 1.6,
+      "waypointRelativePos": 2.05,
       "command": {
         "type": "parallel",
         "data": {
@@ -133,7 +133,7 @@
     },
     {
       "name": "prepIntake",
-      "waypointRelativePos": 2.3,
+      "waypointRelativePos": 2.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -150,7 +150,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 0.5,
     "maxAcceleration": 2.0,
     "maxAngularVelocity": 90.0,
     "maxAngularAcceleration": 180.0
@@ -166,5 +166,5 @@
     "rotation": 0.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

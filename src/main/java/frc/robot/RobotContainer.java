@@ -85,10 +85,11 @@ public class RobotContainer {
         ControllerRumbler.setControllers(driver, operator);
 
         // Change to HIGH for debug info about swerve modules
-        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
+        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
         configureDefaultCommands();
         configureButtonBindings();
+
         configureNamedCommands();
         configureAutoChooser();
     }
@@ -148,6 +149,13 @@ public class RobotContainer {
         autoChooser.addOption("Two Far", new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
                 noteSensor, AutoRoutine.TWO_FAR));
 
+        autoChooser.addOption("Three Center to Close",
+                new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
+                        noteSensor, AutoRoutine.THREE_CENTER_TO_CLOSE));
+        autoChooser.addOption("Three Center to Far",
+                new RunAutoRoutine(drivetrain, intake, arm, wrist, indexer, shooter,
+                        noteSensor, AutoRoutine.THREE_CENTER_TO_FAR));
+
         Constants.DRIVER_TAB.add("Auto Command", autoChooser).withPosition(0, 0);
     }
 
@@ -194,24 +202,31 @@ public class RobotContainer {
 
         // POV UP - score speaker center semi auto
         new POVButton(driver, 0) // up
-                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter, noteSensor,
+                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter,
+                        noteSensor,
                         SemiAutoTaskType.SCORE_SPEAKER_CENTER, () -> driver.getLeftBumper(),
                         () -> driver.getXButton()));
 
         // POV LEFT - score speaker side semi auto
         new POVButton(driver, 270) // left
-                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter, noteSensor,
-                        SemiAutoTaskType.SCORE_SPEAKER_FAR, () -> driver.getAButton(), () -> driver.getXButton()));
+                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter,
+                        noteSensor,
+                        SemiAutoTaskType.SCORE_SPEAKER_FAR, () -> driver.getAButton(),
+                        () -> driver.getXButton()));
 
         // POV RIGHT - score amp semi auto
         new POVButton(driver, 90) // right
-                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter, noteSensor,
-                        SemiAutoTaskType.SCORE_AMP, () -> driver.getAButton(), () -> driver.getXButton()));
+                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter,
+                        noteSensor,
+                        SemiAutoTaskType.SCORE_AMP, () -> driver.getAButton(),
+                        () -> driver.getXButton()));
 
         // POV DOWN - intake from source semi auto
         new POVButton(driver, 180) // down
-                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter, noteSensor,
-                        SemiAutoTaskType.CLIMB, () -> driver.getAButton(), () -> driver.getXButton()));
+                .onTrue(new RunSemiAutoTask(drivetrain, arm, wrist, intake, indexer, shooter,
+                        noteSensor,
+                        SemiAutoTaskType.CLIMB, () -> driver.getAButton(),
+                        () -> driver.getXButton()));
 
         /*
          * OPERATOR CONTROLS
@@ -236,25 +251,25 @@ public class RobotContainer {
         new POVButton(operator, 0) // up
                 .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter,
                         KobraState.SPEAKER_CENTER,
-                        noteSensor, false));
+                        false));
 
         // POV LEFT - press for side speaker position
         new POVButton(operator, 270) // left
                 .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter,
                         KobraState.SPEAKER_SIDE,
-                        noteSensor,
+
                         false));
 
         // POV RIGHT - press for amp position
         new POVButton(operator, 90) // right
                 .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.AMP,
-                        noteSensor,
+
                         false));
 
         // POV DOWN - press for stow position
         new POVButton(operator, 180) // down
                 .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW,
-                        noteSensor,
+
                         true));
 
         // A - hold to run the intake and indexer backward
@@ -268,36 +283,44 @@ public class RobotContainer {
         // TODO: both speaker sides
         NamedCommands.registerCommand("prepIntakeCenter",
                 Commands.sequence(
+                        Commands.print("PREP INTAKE CENTER"),
                         Commands.parallel(
                                 new RunIntake(intake, indexer, arm, wrist, shooter,
-                                        noteSensor)),
+                                        noteSensor))
+                                .withTimeout(2),
+                        new CancelIntake(intake, indexer), // TODO: should not be needed
                         new MoveKobraToPosition(arm, wrist, intake, indexer, shooter,
                                 KobraState.SPEAKER_CENTER,
-                                noteSensor, false)));
+                                false)));
 
         NamedCommands.registerCommand("prepIntakeSide",
                 Commands.sequence(
+                        Commands.print("PREP INTAKE SIDE"),
                         Commands.parallel(
                                 new RunIntake(intake, indexer, arm, wrist, shooter,
-                                        noteSensor)),
+                                        noteSensor))
+                                .withTimeout(2),
+                        new CancelIntake(intake, indexer), // TODO: should not be needed
                         new MoveKobraToPosition(arm, wrist, intake, indexer, shooter,
                                 KobraState.SPEAKER_SIDE,
-                                noteSensor, false)));
+                                false)));
 
         NamedCommands.registerCommand("prepIntake",
                 new RunIntake(intake, indexer, arm, wrist, shooter, noteSensor));
 
         NamedCommands.registerCommand("prepScoreCenter",
                 new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_CENTER,
-                        noteSensor,
                         true));
 
         NamedCommands.registerCommand("prepScoreSide",
                 new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.SPEAKER_SIDE,
-                        noteSensor,
                         true));
 
-        NamedCommands.registerCommand("fireShooter", new FireShooter(indexer, shooter, noteSensor));
+        // TODO: diff for side
+        NamedCommands.registerCommand("fireShooter",
+                Commands.sequence(Commands.print("FIRE SHOOTER"),
+                        new ScoreFromStartAuto(intake, indexer, arm, wrist, shooter,
+                                true, KobraState.SPEAKER_CENTER, noteSensor)));
     }
 
     /** Use this to pass the autonomous command to the main {@link Robot} class. */

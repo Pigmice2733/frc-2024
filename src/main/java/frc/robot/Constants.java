@@ -60,21 +60,21 @@ public final class Constants {
         public static final int INTAKE_WHEELS = 40;
         public static final int INTAKE_PIVOT = 17;
 
-        public static final int TOP_SHOOTER = 34;
-        public static final int BOTTOM_SHOOTER = 35;
+        public static final int TOP_SHOOTER = 35;
+        public static final int BOTTOM_SHOOTER = 34;
 
         public static final int WRIST_ROTATION = 32;
 
-        public static final int TOP_INDEXER = 14;
-        public static final int BOTTOM_INDEXER = 33;
+        public static final int TOP_INDEXER = 33;
+        public static final int BOTTOM_INDEXER = 14;
     }
 
     public static final class DIOConfig {
         public static final int ARM_LIMIT_SWITCH = 8;
         public static final int INTAKE_LIMIT_SWITCH = 9;
         public static final int INTAKE_BEAM_BREAK = 0;
-        public static final int INDEXER_BEAM_BREAK = 2;
-        public static final int SHOOTER_BEAM_BREAK = 1;
+        public static final int INDEXER_BEAM_BREAK = 1;
+        public static final int SHOOTER_BEAM_BREAK = 2;
     }
 
     public final static class DrivetrainConfig {
@@ -131,8 +131,8 @@ public final class Constants {
         public static enum ArmState {
             STOW(0),
             AMP(100),
-            SPEAKER_CENTER(68),
-            SPEAKER_SIDE(63),
+            SPEAKER_CENTER(35),
+            SPEAKER_SIDE(35),
             SOURCE(60),
             TRAP(45),
             WRIST_ROTATION(60),
@@ -152,8 +152,8 @@ public final class Constants {
 
     public final static class ClimberConfig {
         public static final double climbingSpeed = -0.8;
-        public static final double downPosition = -29;
-        public static final double upPosition = 120;
+        public static final double downPosition = 10;
+        public static final double upPosition = 150;
     }
 
     public final static class WristConfig {
@@ -173,8 +173,8 @@ public final class Constants {
         public static enum WristState {
             STOW(0),
             AMP(140),
-            SPEAKER_CENTER(64),
-            SPEAKER_SIDE(63),
+            SPEAKER_CENTER(57),
+            SPEAKER_SIDE(60),
             TRAP(0),
             SOURCE(0),
             GRAB_FROM_CHASSIS(259);

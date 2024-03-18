@@ -116,8 +116,10 @@ public class Drivetrain extends SubsystemBase {
         if (estimatedPose == null)
             return;
 
-        swerveDrive.addVisionMeasurement(estimatedPose,
-                Timer.getFPGATimestamp());
+        /*
+         * swerveDrive.addVisionMeasurement(estimatedPose,
+         * Timer.getFPGATimestamp());
+         */
 
     }
 
@@ -125,11 +127,11 @@ public class Drivetrain extends SubsystemBase {
         return swerveDrive;
     }
 
-    public boolean withinDistanceOfPathEnd(Translation2d point, double positionTolerance) {
-        return swerveDrive.getPose().getTranslation().getDistance(point) < positionTolerance;
+    public double getDistanceFromPoint(Translation2d point) {
+        return swerveDrive.getPose().getTranslation().getDistance(point);
     }
 
     public boolean withinDistanceOfPoint(Translation2d point, double positionTolerance) {
-        return swerveDrive.getPose().getTranslation().getDistance(point) < positionTolerance;
+        return getDistanceFromPoint(point) < positionTolerance;
     }
 }
