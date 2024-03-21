@@ -88,8 +88,10 @@ public class Arm extends PIDSubsystemBase {
     }
 
     public static double calculateMaxArmAngle(double wristAngle) {
-        if (wristAngle < 90)
-            return 80;
+        /*
+         * if (wristAngle < 90)
+         * return 80;
+         */
 
         return 110;
     }

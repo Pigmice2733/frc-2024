@@ -116,8 +116,8 @@ public final class Constants {
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 300;
-        public static final double MAX_VELOCITY = 300;
+        public static final double MAX_ACCELERATION = 200;
+        public static final double MAX_VELOCITY = 180;
 
         public static final double MOTOR_POSITION_CONVERSION = (1 / 165.0) * 360;
 
@@ -130,10 +130,10 @@ public final class Constants {
 
         public static enum ArmState {
             STOW(0),
-            AMP(100),
+            AMP(110),
             SPEAKER_CENTER(35),
             SPEAKER_SIDE(35),
-            SOURCE(60),
+            SOURCE(80),
             TRAP(45),
             WRIST_ROTATION(60),
             GRAB_FROM_CHASSIS(38);
@@ -161,8 +161,8 @@ public final class Constants {
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 700;
-        public static final double MAX_VELOCITY = 500;
+        public static final double MAX_ACCELERATION = 500;
+        public static final double MAX_VELOCITY = 300;
 
         public static final double MOTOR_POSITION_CONVERSION = (1 / 68.75) * 360;
 
@@ -172,11 +172,11 @@ public final class Constants {
 
         public static enum WristState {
             STOW(0),
-            AMP(140),
+            AMP(120),
             SPEAKER_CENTER(57),
             SPEAKER_SIDE(60),
             TRAP(0),
-            SOURCE(0),
+            SOURCE(45),
             GRAB_FROM_CHASSIS(259);
 
             private double position;
@@ -196,18 +196,18 @@ public final class Constants {
         public static final double I = 0;
         public static final double D = 0;
 
-        public static final double MAX_ACCELERATION = 220;
-        public static final double MAX_VELOCITY = 150;
+        public static final double MAX_ACCELERATION = 200;
+        public static final double MAX_VELOCITY = 160;
 
         public static final double MOTOR_POSITION_CONVERSION = 10.5;
 
-        public static final double POSITION_TOLERANCE = 3;
+        public static final double POSITION_TOLERANCE = 10;
 
         public static final double WHEELS_SPEED = 0.75;
 
         public static enum IntakeState {
             STOW(0),
-            DOWN(-115);
+            DOWN(-180);
 
             private double position;
 
@@ -223,7 +223,7 @@ public final class Constants {
 
     public final static class ShooterConfig {
         public static final double DEFAULT_SPEED = 1;
-        public static final double BACKWARD_SPEED = -0.4;
+        public static final double BACKWARD_SPEED = -0.5;
     }
 
     public final static class IndexerConfig {

@@ -24,6 +24,7 @@ import frc.robot.commands.autonomous.subcommands.ScoreFromStartAuto;
 import frc.robot.commands.drivetrain.DriveWithJoysticks;
 import frc.robot.commands.manual.CancelIntake;
 import frc.robot.commands.manual.FireShooter;
+import frc.robot.commands.manual.IntakeSource;
 import frc.robot.commands.manual.MoveKobraToPosition;
 import frc.robot.commands.manual.RunClimber;
 import frc.robot.commands.manual.RunIntake;
@@ -85,7 +86,7 @@ public class RobotContainer {
         ControllerRumbler.setControllers(driver, operator);
 
         // Change to HIGH for debug info about swerve modules
-        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
 
         configureDefaultCommands();
         configureButtonBindings();
@@ -193,8 +194,13 @@ public class RobotContainer {
                 .whileTrue(new LineupSemiAuto(drivetrain, SemiAutoTaskType.SCORE_AMP));
 
         // A - lineup climb
-        new JoystickButton(driver, Button.kA.value)
-                .whileTrue(new LineupSemiAuto(drivetrain, SemiAutoTaskType.CLIMB));
+        /*
+         * new JoystickButton(driver, Button.kA.value)
+         * .whileTrue(new LineupSemiAuto(drivetrain, SemiAutoTaskType.CLIMB));
+         */
+
+        new JoystickButton(driver, Button.kA.value).onTrue(Commands.runOnce(() -> intake.outputToWheels(-1)))
+                .onTrue(Commands.runOnce(() -> intake.outputToWheels(0)));
 
         /**
          * Semi Auto Commands
@@ -237,6 +243,10 @@ public class RobotContainer {
                 .whileTrue(new FireShooter(indexer, shooter, noteSensor))
                 .onFalse(Commands.parallel(indexer.stopIndexer(), shooter.stopFlywheels()));
 
+        // LEFT BUMPER - intake human player
+        new JoystickButton(operator, Button.kLeftBumper.value).onTrue(
+                new IntakeSource(intake, indexer, arm, wrist, shooter, noteSensor));
+
         // B - press to toggle the intake
         new JoystickButton(operator, Button.kB.value).onTrue(
                 new RunIntake(intake, indexer, arm, wrist, shooter, noteSensor));
@@ -269,13 +279,14 @@ public class RobotContainer {
         // POV DOWN - press for stow position
         new POVButton(operator, 180) // down
                 .onTrue(new MoveKobraToPosition(arm, wrist, intake, indexer, shooter, KobraState.STOW,
-
                         true));
 
         // A - hold to run the intake and indexer backward
         new JoystickButton(operator, Button.kA.value)
-                .onTrue(intake.runWheelsBackward())
-                .onFalse(intake.stopWheels());
+                .onTrue(Commands.parallel(intake.runWheelsBackward(), indexer.indexBackward(),
+                        shooter.spinFlywheelsBackward()))
+                .onFalse(Commands.parallel(intake.stopWheels(), indexer.stopIndexer(),
+                        shooter.stopFlywheels()));
     }
 
     /** Configures the named commands used in path planner */

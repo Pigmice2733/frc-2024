@@ -118,15 +118,19 @@ public class Wrist extends PIDSubsystemBase {
          * return Math.acos(maxWristLengthX / WristConfig.LENGTH_INCHES);
          */
 
-        if (armAngle >= 80) {
-            return 90;
-        }
+        /*
+         * if (armAngle >= 80) {
+         * return 90;
+         * }
+         */
         return -armAngle;
     }
 
     public static double calculateMaxWristAngle(double armAngle) {
-        if (armAngle < 40)
-            return 90;
+        /*
+         * if (armAngle < 40)
+         * return 90;
+         */
 
         return 270;
     }

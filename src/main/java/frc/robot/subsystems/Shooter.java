@@ -24,12 +24,12 @@ public class Shooter extends SubsystemBase {
         topMotor = new CANSparkMax(CANConfig.TOP_SHOOTER, MotorType.kBrushless);
         topMotor.restoreFactoryDefaults();
         topMotor.setInverted(false);
-        topMotor.setSmartCurrentLimit(60);
+        topMotor.setSmartCurrentLimit(70);
 
         bottomMotor = new CANSparkMax(CANConfig.BOTTOM_SHOOTER, MotorType.kBrushless);
         bottomMotor.restoreFactoryDefaults();
         bottomMotor.setInverted(false);
-        bottomMotor.setSmartCurrentLimit(60);
+        bottomMotor.setSmartCurrentLimit(70);
 
         ShuffleboardHelper.addOutput("Motor Output", Constants.SHOOTER_TAB, () -> topMotor.get());
     }
